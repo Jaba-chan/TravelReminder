@@ -44,7 +44,11 @@ fun App() {
     ) {
         Box {
             Column {
-                Text(text = if (viewModel.travels.collectAsState().value.isNotEmpty()) viewModel.travels.collectAsState().value.get(0).destinationByAddress?:"ffff" else "fffff", fontSize = 30.sp)
+                Text(
+                    text = if (viewModel.travels.collectAsState().value.isNotEmpty()) viewModel.travels.collectAsState().value.get(
+                        0
+                    ).destinationByAddress ?: "ffff" else "fffff", fontSize = 30.sp
+                )
             }
         }
     }
