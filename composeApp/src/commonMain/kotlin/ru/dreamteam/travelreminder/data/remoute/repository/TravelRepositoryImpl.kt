@@ -20,7 +20,7 @@ class TravelRepositoryImpl: TravelRepository {
         TODO("Not yet implemented")
     }
 
-    override fun editTravel(travel: Travel): Travel {
+    override suspend fun editTravel(travel: Travel): Travel {
         TODO("Not yet implemented")
     }
 

@@ -1,18 +1,27 @@
 package ru.dreamteam.travelreminder.data.local.repository
 
+import ru.dreamteam.travelreminder.data.local.model.TravelEntity
+import ru.dreamteam.travelreminder.data.local.room_db.TravelsDatabase
+import ru.dreamteam.travelreminder.data.mapper.toDomain
+import ru.dreamteam.travelreminder.data.mapper.toEntity
 import ru.dreamteam.travelreminder.domen.model.Travel
 import ru.dreamteam.travelreminder.domen.repository.TravelRepository
 
-class TravelLocalRepositoryImpl: TravelRepository {
-    override suspend fun getTravels(): List<Travel> {
+class TravelLocalRepositoryImpl(private val travelsDatabase: TravelsDatabase): TravelRepository {
 
+    override fun getTravels(): List<Travel> {
+        return travelsDatabase.travelsDao().getAllUserId().map(TravelEntity::toDomain)
     }
 
     override fun deleteTravelById(id: Int) {
-        TODO("Not yet implemented")
+        travelsDatabase.travelsDao().deleteById(id)
     }
 
-    override fun editTravel(travel: Travel): Travel {
-        TODO("Not yet implemented")
+    override suspend fun addTravel(travel: Travel) {
+        travelsDatabase.travelsDao().insert(travel)
+    }
+
+    override suspend fun editTravel(travel: Travel) {
+        travelsDatabase.travelsDao().edit(travel.toEntity())
     }
 }

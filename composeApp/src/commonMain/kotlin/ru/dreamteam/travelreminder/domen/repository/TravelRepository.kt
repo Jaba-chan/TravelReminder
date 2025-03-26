@@ -3,9 +3,11 @@ package ru.dreamteam.travelreminder.domen.repository
 import ru.dreamteam.travelreminder.domen.model.Travel
 
 interface TravelRepository {
-    suspend fun getTravels(): List<Travel>
+    fun getTravels(): List<Travel>
 
     fun deleteTravelById(id: Int)
 
-    fun editTravel(travel: Travel): Travel
+    suspend fun addTravel(travel: Travel)
+
+    suspend fun editTravel(travel: Travel)
 }

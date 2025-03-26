@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Travel (
-    val id: Int,
+    val id: Long,
     val date: String,
     val destinationByAddress: String?,
     val destinationByPoint: Point?,
