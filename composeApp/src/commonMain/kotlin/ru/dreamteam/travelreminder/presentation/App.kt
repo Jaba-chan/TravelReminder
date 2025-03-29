@@ -14,12 +14,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinContext
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
+import ru.dreamteam.travelreminder.presentation.auth.AuthScreen
 import ru.dreamteam.travelreminder.presentation.auth.AuthViewModel
+import ru.dreamteam.travelreminder.presentation.navigation.AppNavGraph
+import ru.dreamteam.travelreminder.presentation.navigation.Screen
+import ru.dreamteam.travelreminder.presentation.travels_list.TravelsListScreen
+import ru.dreamteam.travelreminder.presentation.travels_list.TravelsViewModel
 import travelreminder.composeapp.generated.resources.Res
 import travelreminder.composeapp.generated.resources.ic_add
 
@@ -28,13 +34,13 @@ import travelreminder.composeapp.generated.resources.ic_add
 @Composable
 fun App() {
     KoinContext {
-        val viewModel = koinViewModel<AuthViewModel>()
-        val state by viewModel.state.collectAsState()
-
+        val authViewModel = koinViewModel<AuthViewModel>()
+        val travelsViewModel = koinViewModel<TravelsViewModel>()
+        val navController = rememberNavController()
         Scaffold(
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = {},
+                    onClick = {navController.navigate(Screen.TravelsListScreen.route)},
                     content = {
                         Icon(
                             painter = painterResource(Res.drawable.ic_add),
@@ -44,39 +50,12 @@ fun App() {
                 )
             }
         ) {
-            Column {
-                Text(
-                    text = if (viewModel.travels.collectAsState().value.isNotEmpty()) viewModel.travels.collectAsState().value.get(
-                        0
-                    ).destinationByAddress ?: "ffff" else "fffff", fontSize = 30.sp
-                )
-                var emailText by remember { mutableStateOf("") }
-
-                OutlinedTextField(
-                    value = emailText,
-                    onValueChange = { emailText = it },
-                    label = { Text("Email") },
-                    placeholder = { Text("Введите email") }
-                )
-                var passwordText by remember { mutableStateOf("") }
-
-                OutlinedTextField(
-                    value = passwordText,
-                    onValueChange = { passwordText = it },
-                    label = { Text("Password") },
-                    placeholder = { Text("Введите password") }
-                )
-                Button(
-                    onClick = { viewModel.onSignInButtonPressed(emailText, passwordText) },
-                    content = { Text("SingIn") }
-                )
-                when(state){
-                    is AuthViewModel.State.Loading -> Text(text = "Loading...")
-                    is AuthViewModel.State.Error -> Text(text = (state as AuthViewModel.State.Error).error)
-                    is AuthViewModel.State.Success -> Text(text = (state as AuthViewModel.State.Success).data)
-                }
-            }
-
+            AppNavGraph(
+                navController,
+                { AuthScreen(authViewModel) },
+                { TravelsListScreen(travelsViewModel) },
+                { Text(text = "fsaf") }
+            )
         }
     }
 }

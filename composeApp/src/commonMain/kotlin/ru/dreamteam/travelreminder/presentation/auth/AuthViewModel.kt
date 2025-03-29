@@ -16,26 +16,11 @@ import ru.dreamteam.travelreminder.common.Resource
 import ru.dreamteam.travelreminder.domen.repository.TravelRepository
 
 
-class AuthViewModel(private val repository: TravelRepository,
-                    private val authUseCase: SignInWithEmailAndPasswordUseCase
+class AuthViewModel(private val authUseCase: SignInWithEmailAndPasswordUseCase
 ) : ViewModel() {
-
-    private val _travels = MutableStateFlow<List<Travel>>(emptyList())
-    val travels: StateFlow<List<Travel>> = _travels
 
     private val _state = MutableStateFlow<State>(State.Loading)
     val state = _state.asStateFlow()
-
-    init {
-        loadTravels()
-
-    }
-    fun loadTravels() {
-        viewModelScope.launch {
-                val travelsList = repository.getTravels()
-                _travels.value = travelsList
-        }
-    }
 
     fun onSignInButtonPressed(email: String, password: String){
         singIn(SignInWithEmailAndPasswordParams(email = email, password = password))

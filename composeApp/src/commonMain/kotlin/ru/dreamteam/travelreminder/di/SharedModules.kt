@@ -11,12 +11,14 @@ import ru.dreamteam.travelreminder.data.remoute.repository.TravelRepositoryImpl
 import ru.dreamteam.travelreminder.domen.repository.AuthRepository
 import ru.dreamteam.travelreminder.domen.repository.TravelRepository
 import ru.dreamteam.travelreminder.domen.use_cases.SignInWithEmailAndPasswordUseCase
+import ru.dreamteam.travelreminder.presentation.travels_list.TravelsViewModel
 
 val sharedModule = module {
     single { AuthRepositoryImpl(get()) }.bind<AuthRepository>()
     single<TravelRepository>(named("local")) { TravelLocalRepositoryImpl(get()) }
-    single<TravelRepository>(named("remote")) { TravelRepositoryImpl() }
+    single<TravelRepository>(named("remote")) { TravelRepositoryImpl(get()) }
     single { SignInWithEmailAndPasswordUseCase(get()) }
 
-    viewModel { AuthViewModel(get(named("remote")), get()) }
+    viewModel { TravelsViewModel(get(named("remote"))) }
+    viewModel { AuthViewModel( get()) }
 }
