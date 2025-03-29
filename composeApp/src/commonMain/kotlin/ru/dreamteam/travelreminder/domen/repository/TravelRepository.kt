@@ -1,9 +1,9 @@
 package ru.dreamteam.travelreminder.domen.repository
 
-import ru.dreamteam.travelreminder.domen.model.Travel
+import ru.dreamteam.travelreminder.data.remoute.model.Travel
 
 interface TravelRepository {
-    fun getTravels(): List<Travel>
+    suspend fun getTravels(): List<Travel>
 
     fun deleteTravelById(id: Int)
 

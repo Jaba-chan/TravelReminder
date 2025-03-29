@@ -1,8 +1,8 @@
 package ru.dreamteam.travelreminder.data.mapper
 
 import ru.dreamteam.travelreminder.data.local.model.TravelEntity
-import ru.dreamteam.travelreminder.domen.model.Point
-import ru.dreamteam.travelreminder.domen.model.Travel
+import ru.dreamteam.travelreminder.data.remoute.model.Point
+import ru.dreamteam.travelreminder.data.remoute.model.Travel
 
 fun TravelEntity.toDomain(): Travel = Travel(
     id = id,

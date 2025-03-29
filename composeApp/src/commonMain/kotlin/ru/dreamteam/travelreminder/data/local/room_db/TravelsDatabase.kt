@@ -1,14 +1,13 @@
 package ru.dreamteam.travelreminder.data.local.room_db
 
-import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.RoomDatabaseConstructor
 import ru.dreamteam.travelreminder.data.local.dao.TravelsDao
-import ru.dreamteam.travelreminder.domen.model.Travel
+import ru.dreamteam.travelreminder.data.local.model.TravelEntity
+import ru.dreamteam.travelreminder.data.remoute.model.Travel
 
 private const val DATABASE_VERSION = 1
-@Database(entities = [Travel::class], version = DATABASE_VERSION)
+@Database(entities = [TravelEntity::class], version = DATABASE_VERSION)
 abstract  class TravelsDatabase: RoomDatabase() {
     abstract fun travelsDao(): TravelsDao
 }

@@ -1,15 +1,17 @@
 package ru.dreamteam.travelreminder.data.local.dao
 
+import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import ru.dreamteam.travelreminder.data.local.model.TravelEntity
-import ru.dreamteam.travelreminder.domen.model.Travel
+import ru.dreamteam.travelreminder.data.remoute.model.Travel
 
+@Dao
 interface TravelsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(travel: Travel)
+    suspend fun insert(travel: TravelEntity)
 
     @Query("DELETE FROM travels WHERE id = :id")
     fun deleteById(id: Int)

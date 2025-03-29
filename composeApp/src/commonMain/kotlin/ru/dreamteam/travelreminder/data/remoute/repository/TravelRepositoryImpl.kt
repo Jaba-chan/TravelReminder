@@ -4,7 +4,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.serialization.json.Json
 import ru.dreamteam.travelreminder.data.remoute.KtorClient
-import ru.dreamteam.travelreminder.domen.model.Travel
+import ru.dreamteam.travelreminder.data.remoute.model.Travel
 import ru.dreamteam.travelreminder.domen.repository.TravelRepository
 
 class TravelRepositoryImpl: TravelRepository {
@@ -20,7 +20,11 @@ class TravelRepositoryImpl: TravelRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun editTravel(travel: Travel): Travel {
+    override suspend fun addTravel(travel: Travel) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun editTravel(travel: Travel) {
         TODO("Not yet implemented")
     }
 

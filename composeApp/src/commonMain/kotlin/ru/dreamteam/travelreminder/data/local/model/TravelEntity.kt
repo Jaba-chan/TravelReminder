@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import ru.dreamteam.travelreminder.data.mapper.TransportationModeConverter
-import ru.dreamteam.travelreminder.domen.model.TransportationMode
+import ru.dreamteam.travelreminder.data.remoute.model.TransportationMode
 
 @Entity(tableName = "travels")
 @TypeConverters(TransportationModeConverter::class)

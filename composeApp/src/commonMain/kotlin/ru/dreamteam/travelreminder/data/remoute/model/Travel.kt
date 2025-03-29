@@ -1,4 +1,4 @@
-package ru.dreamteam.travelreminder.domen.model
+package ru.dreamteam.travelreminder.data.remoute.model
 
 import kotlinx.serialization.Serializable
 

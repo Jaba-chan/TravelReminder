@@ -21,3 +21,4 @@ captures
 .classpath
 .fleet
 build
+gradle.properties
