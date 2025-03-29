@@ -22,3 +22,4 @@ captures
 .fleet
 build
 gradle.properties
+iosApp/iosApp/Info.plist
