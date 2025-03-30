@@ -1,4 +1,4 @@
-package ru.dreamteam.travelreminder.presentation.auth
+package ru.dreamteam.travelreminder.presentation.sing_in
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
@@ -12,7 +12,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
 @Composable
-fun AuthScreen(viewModel: AuthViewModel) {
+fun SignInScreen(
+    viewModel: SingInViewModel,
+    onNavigateToSignUp: () -> Unit,
+    onNavigateToChangePassword: () -> Unit,
+) {
     val state by viewModel.state.collectAsState()
     Column {
         var emailText by remember { mutableStateOf("") }
@@ -35,10 +39,16 @@ fun AuthScreen(viewModel: AuthViewModel) {
             onClick = { viewModel.onSignInButtonPressed(emailText, passwordText) },
             content = { Text("SingIn") }
         )
-        when(state){
-            is AuthViewModel.State.Loading -> Text(text = "Loading...")
-            is AuthViewModel.State.Error -> Text(text = (state as AuthViewModel.State.Error).error)
-            is AuthViewModel.State.Success -> Text(text = (state as AuthViewModel.State.Success).data)
+        when (state) {
+            is SingInViewModel.State.Loading -> Text(text = "Loading...")
+            is SingInViewModel.State.Error -> Text(text = (state as SingInViewModel.State.Error).error)
+            is SingInViewModel.State.Success -> Text(text = (state as SingInViewModel.State.Success).data)
         }
+        Button(
+            onClick = { onNavigateToSignUp() },
+            content = { Text(text = "SignUp") })
+        Button(
+            onClick = { onNavigateToChangePassword() },
+            content = { Text(text = "Change password") })
     }
 }

@@ -1,10 +1,10 @@
 package ru.dreamteam.travelreminder.data.mapper
 
 import ru.dreamteam.travelreminder.data.local.model.TravelEntity
-import ru.dreamteam.travelreminder.data.remoute.model.Point
-import ru.dreamteam.travelreminder.data.remoute.model.Travel
+import ru.dreamteam.travelreminder.data.remoute.model.travel.Point
+import ru.dreamteam.travelreminder.data.remoute.model.travel.TravelDto
 
-fun TravelEntity.toDomain(): Travel = Travel(
+fun TravelEntity.toDomain(): TravelDto = TravelDto(
     id = id,
     date = date,
     destinationByAddress = destinationByAddress,
@@ -15,7 +15,7 @@ fun TravelEntity.toDomain(): Travel = Travel(
     userId = 1
 )
 
-fun Travel.toEntity(): TravelEntity = TravelEntity(
+fun TravelDto.toEntity(): TravelEntity = TravelEntity(
     id = id,
     date = date,
     destinationByAddress = destinationByAddress,

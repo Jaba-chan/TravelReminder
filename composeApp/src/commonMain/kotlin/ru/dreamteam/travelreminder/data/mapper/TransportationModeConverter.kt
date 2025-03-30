@@ -1,7 +1,7 @@
 package ru.dreamteam.travelreminder.data.mapper
 
 import androidx.room.TypeConverter
-import ru.dreamteam.travelreminder.data.remoute.model.TransportationMode
+import ru.dreamteam.travelreminder.data.remoute.model.travel.TransportationMode
 
 class TransportationModeConverter {
     @TypeConverter

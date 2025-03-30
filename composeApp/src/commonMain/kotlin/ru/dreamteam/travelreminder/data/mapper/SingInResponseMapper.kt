@@ -1,9 +1,9 @@
 package ru.dreamteam.travelreminder.data.mapper
 
-import ru.dreamteam.travelreminder.data.remoute.model.SignInResponseDao
+import ru.dreamteam.travelreminder.data.remoute.model.SignInResponseDto
 import ru.dreamteam.travelreminder.domen.model.SignInResponse
 
-fun SignInResponseDao.toDomain(): SignInResponse = SignInResponse(
+fun SignInResponseDto.toDomain(): SignInResponse = SignInResponse(
     idToken = idToken,
     email = email,
     refreshToken = refreshToken,
@@ -12,7 +12,7 @@ fun SignInResponseDao.toDomain(): SignInResponse = SignInResponse(
     registered = registered
 )
 
-fun SignInResponse.toDao(): SignInResponseDao = SignInResponseDao(
+fun SignInResponse.toDao(): SignInResponseDto = SignInResponseDto(
     idToken = idToken,
     email = email,
     refreshToken = refreshToken,
