@@ -4,7 +4,6 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import ru.dreamteam.travelreminder.data.local.dao.TravelsDao
 import ru.dreamteam.travelreminder.data.local.model.TravelEntity
-import ru.dreamteam.travelreminder.data.remoute.model.Travel
 
 private const val DATABASE_VERSION = 1
 @Database(entities = [TravelEntity::class], version = DATABASE_VERSION)

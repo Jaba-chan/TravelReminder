@@ -1,29 +1,24 @@
 package ru.dreamteam.travelreminder.presentation
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Button
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinContext
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
-import ru.dreamteam.travelreminder.presentation.auth.AuthScreen
-import ru.dreamteam.travelreminder.presentation.auth.AuthViewModel
+import ru.dreamteam.travelreminder.presentation.change_password.ChangePasswordScreen
+import ru.dreamteam.travelreminder.presentation.change_password.ChangePasswordViewModel
+import ru.dreamteam.travelreminder.presentation.sing_in.SingInViewModel
 import ru.dreamteam.travelreminder.presentation.navigation.AppNavGraph
 import ru.dreamteam.travelreminder.presentation.navigation.Screen
+import ru.dreamteam.travelreminder.presentation.sing_in.SignInScreen
+import ru.dreamteam.travelreminder.presentation.sing_up.SignUpScreen
+import ru.dreamteam.travelreminder.presentation.sing_up.SignUpViewModel
 import ru.dreamteam.travelreminder.presentation.travels_list.TravelsListScreen
 import ru.dreamteam.travelreminder.presentation.travels_list.TravelsViewModel
 import travelreminder.composeapp.generated.resources.Res
@@ -34,13 +29,15 @@ import travelreminder.composeapp.generated.resources.ic_add
 @Composable
 fun App() {
     KoinContext {
-        val authViewModel = koinViewModel<AuthViewModel>()
+        val singInViewModel = koinViewModel<SingInViewModel>()
         val travelsViewModel = koinViewModel<TravelsViewModel>()
+        val signUpViewModel = koinViewModel<SignUpViewModel>()
+        val changePasswordViewModel = koinViewModel<ChangePasswordViewModel>()
         val navController = rememberNavController()
         Scaffold(
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = {navController.navigate(Screen.TravelsListScreen.route)},
+                    onClick = { navController.navigate(Screen.TravelsListScreen.route) },
                     content = {
                         Icon(
                             painter = painterResource(Res.drawable.ic_add),
@@ -52,9 +49,16 @@ fun App() {
         ) {
             AppNavGraph(
                 navController,
-                { AuthScreen(authViewModel) },
-                { TravelsListScreen(travelsViewModel) },
-                { Text(text = "fsaf") }
+                signInScreenContent = {
+                    SignInScreen(singInViewModel,
+                        onNavigateToSignUp = {navController.navigate(Screen.SignUpScreen.route)},
+                        onNavigateToChangePassword = {navController.navigate(Screen.ChangePasswordScreen.route)}
+                    )
+                },
+                travelsListScreenContent = { TravelsListScreen(travelsViewModel) },
+                addTravelScreenContent = { Text(text = "fsaf") },
+                signUpScreenContent = { SignUpScreen(signUpViewModel) },
+                changePasswordScreenContent = { ChangePasswordScreen(changePasswordViewModel) }
             )
         }
     }

@@ -1,33 +1,28 @@
-package ru.dreamteam.travelreminder.presentation.auth
+package ru.dreamteam.travelreminder.presentation.sing_in
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
-import ru.dreamteam.travelreminder.data.remoute.repository.TravelRepositoryImpl
-import ru.dreamteam.travelreminder.data.remoute.model.Travel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import ru.dreamteam.travelreminder.domen.model.SignInWithEmailAndPasswordParams
-import ru.dreamteam.travelreminder.domen.use_cases.SignInWithEmailAndPasswordUseCase
+import ru.dreamteam.travelreminder.domen.use_cases.SignInByEmailAndPasswordUseCase
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.dreamteam.travelreminder.common.Resource
-import ru.dreamteam.travelreminder.domen.repository.TravelRepository
+import ru.dreamteam.travelreminder.domen.model.SignInByEmailAndPasswordParams
 
 
-class AuthViewModel(private val authUseCase: SignInWithEmailAndPasswordUseCase
+class SingInViewModel(private val signInUseCase: SignInByEmailAndPasswordUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<State>(State.Loading)
     val state = _state.asStateFlow()
 
     fun onSignInButtonPressed(email: String, password: String){
-        singIn(SignInWithEmailAndPasswordParams(email = email, password = password))
+        singIn(SignInByEmailAndPasswordParams(email = email, password = password))
     }
 
-    private fun singIn(params: SignInWithEmailAndPasswordParams) {
-        authUseCase(params).onEach { result ->
+    private fun singIn(params: SignInByEmailAndPasswordParams) {
+        signInUseCase(params).onEach { result ->
             when (result) {
                 is Resource.Error -> _state.value = State.Error(result.message ?: "aaa")
 

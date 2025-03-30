@@ -1,0 +1,57 @@
+package ru.dreamteam.travelreminder.presentation.change_password
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Button
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+
+@Composable
+fun ChangePasswordScreen(viewModel: ChangePasswordViewModel) {
+    val state by viewModel.state.collectAsState()
+    Column {
+        var emailText by remember { mutableStateOf("") }
+        OutlinedTextField(
+            value = emailText,
+            onValueChange = { emailText = it },
+            label = { Text("Email") },
+            placeholder = { Text("Введите email") }
+        )
+        var passwordText by remember { mutableStateOf("") }
+        OutlinedTextField(
+            value = passwordText,
+            onValueChange = { passwordText = it },
+            label = { Text("Password") },
+            placeholder = { Text("Введите password") }
+        )
+
+        var repeatPasswordText by remember { mutableStateOf("") }
+        OutlinedTextField(
+            value = repeatPasswordText,
+            onValueChange = { repeatPasswordText = it },
+            label = { Text("Password") },
+            placeholder = { Text("Введите password ещё раз") }
+        )
+
+        Button(
+            onClick = {
+                viewModel.onSignInButtonPressed(
+                    emailText,
+                    passwordText,
+                    repeatPasswordText
+                )
+            },
+            content = { Text("SingUp") }
+        )
+        when (state) {
+            is ChangePasswordViewModel.State.Error -> Text(text = (state as ChangePasswordViewModel.State.Error).error)
+            ChangePasswordViewModel.State.Loading -> Text(text = "Loading...")
+            is ChangePasswordViewModel.State.Success -> Text(text = (state as ChangePasswordViewModel.State.Success).data)
+        }
+    }
+}
