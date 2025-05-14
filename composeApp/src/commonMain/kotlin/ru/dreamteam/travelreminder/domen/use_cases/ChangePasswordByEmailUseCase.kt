@@ -4,13 +4,9 @@ import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.dreamteam.travelreminder.common.Resource
-import ru.dreamteam.travelreminder.data.mapper.toDomain
-import ru.dreamteam.travelreminder.data.remoute.model.ChangePasswordByEmailResultDto
-import ru.dreamteam.travelreminder.data.remoute.model.SignUpResultDto
-import ru.dreamteam.travelreminder.domen.model.ChangePasswordByEmailParam
-import ru.dreamteam.travelreminder.domen.model.ChangePasswordByEmailResponse
-import ru.dreamteam.travelreminder.domen.model.SignUpByEmailAndPasswordParams
-import ru.dreamteam.travelreminder.domen.model.SignUpResponse
+import ru.dreamteam.travelreminder.domen.model.ResponseResult
+import ru.dreamteam.travelreminder.domen.model.params.ChangePasswordByEmailParam
+import ru.dreamteam.travelreminder.domen.model.response.ChangePasswordByEmailResponse
 import ru.dreamteam.travelreminder.domen.repository.AuthRepository
 
 class ChangePasswordByEmailUseCase(private val authRepository: AuthRepository) {
@@ -18,8 +14,8 @@ class ChangePasswordByEmailUseCase(private val authRepository: AuthRepository) {
         try {
             emit(Resource.Loading())
             when (val response = authRepository.changePasswordByEmail(params)){
-                is ChangePasswordByEmailResultDto.Failure -> emit(Resource.Error(message = response.error.error.message))
-                is ChangePasswordByEmailResultDto.Success -> emit(Resource.Success(data = response.response.toDomain()))
+                is ResponseResult.Failure -> emit(Resource.Error(message = response.error.error.message))
+                is ResponseResult.Success -> emit(Resource.Success(data = response.response))
             }
         } catch (e: ClientRequestException){
             emit(Resource.Error("!!!"))

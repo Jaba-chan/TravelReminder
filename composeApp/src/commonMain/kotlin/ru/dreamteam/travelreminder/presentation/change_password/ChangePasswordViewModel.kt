@@ -7,10 +7,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.dreamteam.travelreminder.common.Resource
-import ru.dreamteam.travelreminder.domen.model.ChangePasswordByEmailParam
-import ru.dreamteam.travelreminder.domen.model.SignInByEmailAndPasswordParams
+import ru.dreamteam.travelreminder.domen.model.params.ChangePasswordByEmailParam
 import ru.dreamteam.travelreminder.domen.use_cases.ChangePasswordByEmailUseCase
-import ru.dreamteam.travelreminder.domen.use_cases.SignInByEmailAndPasswordUseCase
 
 class ChangePasswordViewModel(
     private val changePasswordUseCase: ChangePasswordByEmailUseCase

@@ -2,7 +2,6 @@ package ru.dreamteam.travelreminder.data.local.room_db
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.Module
 import org.koin.dsl.module

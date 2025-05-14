@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="app_name">Travel Reminder</string>
+    <string name="email">Email</string>
+    <string name="enter_email">E-mail</string>
+    <string name="enter_password">Пароль</string>
+    <string name="enter_password_again">Повторите пароль</string>
+    <string name="password">Password</string>
+    <string name="bt_sign_in">Войти с Tincoff</string>
+    <string name="sign_in">Авторизация</string>
+    <string name="bt_sign_up">Зарегистрироваться</string>
+    <string name="sign_up">Регистрирация</string>
+    <string name="my_travels">Мои Поездки</string>
+    <string name="date_patter">Дата: </string>
+    <string name="time_pattern">Время: </string>
+    <string name="transportation_mode">Способ передвижения:</string>
+    <string name="empty_now">Здесь пока пусто. Нажмите "+" и запланируйте поездку.</string>
+    <string name="something_error">Упс, что-то пошло не так во время загрузки данных.</string>
+    <string name="retry">Попробовать снова</string>
+</resources>

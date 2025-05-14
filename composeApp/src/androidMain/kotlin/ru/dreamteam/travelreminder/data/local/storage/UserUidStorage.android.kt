@@ -51,10 +51,18 @@ actual class UserUidStorage(context: Context) {
         editor.apply()
     }
 
+    actual fun clear() {
+        setUserUid(null)
+        setIdToken(null)
+        setRefreshToken(null)
+    }
+
     companion object {
         private const val USER_UID_KEY = "user_uid"
         private const val ID_TOKEN_KEY = "id_token"
         private const val REFRESH_TOKEN_KEY = "refresh_token"
     }
+
+
 }
 

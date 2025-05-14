@@ -9,4 +9,6 @@ expect class UserUidStorage{
 
     fun getRefreshToken(): String?
     fun setRefreshToken(token: String?)
+
+    fun clear()
 }
