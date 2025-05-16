@@ -7,6 +7,7 @@ import ru.dreamteam.travelreminder.domen.model.GoogleMapViewEntries
 @Composable
 actual fun GoogleMapView(
     modifier: Modifier,
-    viewModel: MapViewModel
+    viewModel: MapViewModel,
+    changeAddress: () -> Unit
 ) {
 }

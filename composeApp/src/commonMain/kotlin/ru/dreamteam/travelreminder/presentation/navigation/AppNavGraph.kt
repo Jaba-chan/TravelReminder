@@ -16,7 +16,8 @@ fun AppNavGraph(
     travelsListScreenContent: @Composable () -> Unit,
     changePasswordScreenContent: @Composable () -> Unit,
     addTravelScreenContent: @Composable () -> Unit,
-    showMap: @Composable () -> Unit
+    showMap: @Composable () -> Unit,
+    placeSuggestionsScreen: @Composable () -> Unit
 ) {
     NavHost(
         navController = navHostController,
@@ -39,6 +40,9 @@ fun AppNavGraph(
         }
         composable(Screen.ShowMap.route) {
             showMap()
+        }
+        composable(Screen.PlaceSuggestionsScreen.route) {
+            placeSuggestionsScreen()
         }
     }
 }

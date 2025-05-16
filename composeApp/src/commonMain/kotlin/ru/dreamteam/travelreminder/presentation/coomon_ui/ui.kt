@@ -1,14 +1,14 @@
-package ru.dreamteam.travelreminder.presentation
+package ru.dreamteam.travelreminder.presentation.coomon_ui
 
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -45,4 +45,9 @@ fun ColumnScope.SomethingErrorScreen(onRetryButtonClicked: () -> Unit){
         )
     )
     Spacer(modifier = Modifier.height(16.dp))
+}
+
+@Composable
+fun CircularProgressBar(){
+    CircularProgressIndicator()
 }

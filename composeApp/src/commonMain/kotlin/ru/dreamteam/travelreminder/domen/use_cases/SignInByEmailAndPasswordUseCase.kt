@@ -6,7 +6,7 @@ import ru.dreamteam.travelreminder.common.Resource
 import ru.dreamteam.travelreminder.domen.model.response.SignInResponse
 import ru.dreamteam.travelreminder.domen.repository.AuthRepository
 import io.ktor.client.plugins.*
-import ru.dreamteam.travelreminder.domen.model.ResponseResult
+import ru.dreamteam.travelreminder.data.local.model.map.ResponseResult
 import ru.dreamteam.travelreminder.domen.model.params.SignInByEmailAndPasswordParams
 
 class SignInByEmailAndPasswordUseCase(private val authRepository: AuthRepository) {

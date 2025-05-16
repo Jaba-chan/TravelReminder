@@ -1,6 +1,6 @@
 package ru.dreamteam.travelreminder.domen.repository
 
-import ru.dreamteam.travelreminder.domen.model.ResponseResult
+import ru.dreamteam.travelreminder.data.local.model.map.ResponseResult
 import ru.dreamteam.travelreminder.domen.model.params.ChangePasswordByEmailParam
 import ru.dreamteam.travelreminder.domen.model.params.SignInByEmailAndPasswordParams
 import ru.dreamteam.travelreminder.domen.model.params.SignUpByEmailAndPasswordParams

@@ -18,11 +18,11 @@ import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.SwipeToDismiss
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -35,7 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.stringResource
 import ru.dreamteam.travelreminder.domen.model.travel.Travel
-import ru.dreamteam.travelreminder.presentation.SomethingErrorScreen
+import ru.dreamteam.travelreminder.presentation.coomon_ui.CircularProgressBar
+import ru.dreamteam.travelreminder.presentation.coomon_ui.SomethingErrorScreen
 import travelreminder.composeapp.generated.resources.Res
 import travelreminder.composeapp.generated.resources.date_patter
 import travelreminder.composeapp.generated.resources.empty_now
@@ -56,7 +57,7 @@ fun TravelsListScreen(
         when (state) {
             TravelsViewModel.TravelsState.Empty -> Text(text = stringResource(Res.string.empty_now))
             is TravelsViewModel.TravelsState.Error -> SomethingErrorScreen(onRetryButtonClicked = {})
-            TravelsViewModel.TravelsState.Loading -> CircularProgressIndicator()
+            TravelsViewModel.TravelsState.Loading -> CircularProgressBar()
             is TravelsViewModel.TravelsState.Success -> TravelsColumn(
                 travels = state.data,
                 onDeleteTravel = { viewModel.onTravelDeleted(it) })

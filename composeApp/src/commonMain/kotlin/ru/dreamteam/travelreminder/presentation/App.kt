@@ -24,6 +24,7 @@ import ru.dreamteam.travelreminder.presentation.navigation.NavigationState
 import ru.dreamteam.travelreminder.presentation.navigation.Screen
 import ru.dreamteam.travelreminder.presentation.show_map.GoogleMapView
 import ru.dreamteam.travelreminder.presentation.show_map.MapViewModel
+import ru.dreamteam.travelreminder.presentation.show_map.PlaceSuggestionsScreen
 import ru.dreamteam.travelreminder.presentation.sing_in.SignInScreen
 import ru.dreamteam.travelreminder.presentation.sing_up.SignUpScreen
 import ru.dreamteam.travelreminder.presentation.sing_up.SignUpViewModel
@@ -89,7 +90,14 @@ fun App() {
                     showMap = {
                         GoogleMapView(
                             modifier = Modifier,
-                            viewModel = mapViewModel
+                            viewModel = mapViewModel,
+                            changeAddress = { navState.navigateTo(Screen.PlaceSuggestionsScreen.route) }
+                        )
+                    },
+                    placeSuggestionsScreen = {
+                        PlaceSuggestionsScreen(
+                            viewModel = mapViewModel,
+                            returnToMap = { navState.navigateTo(Screen.ShowMap.route) },
                         )
                     }
                 )

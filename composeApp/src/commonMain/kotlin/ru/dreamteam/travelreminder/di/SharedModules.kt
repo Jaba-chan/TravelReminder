@@ -8,16 +8,20 @@ import ru.dreamteam.travelreminder.data.local.repository.TravelLocalRepositoryIm
 import ru.dreamteam.travelreminder.data.local.storage.provideFirebaseApiKey
 import ru.dreamteam.travelreminder.data.remoute.provideHttpClient
 import ru.dreamteam.travelreminder.data.remoute.repository.AuthRepositoryImpl
-import ru.dreamteam.travelreminder.data.remoute.repository.MapNavigationRepositoryImpl
+import ru.dreamteam.travelreminder.data.remoute.repository.MapRepositoryImpl
 import ru.dreamteam.travelreminder.data.remoute.repository.TravelRepositoryImpl
 import ru.dreamteam.travelreminder.domen.repository.AuthRepository
-import ru.dreamteam.travelreminder.domen.repository.MapNavigationRepository
+import ru.dreamteam.travelreminder.domen.repository.MapRepository
 import ru.dreamteam.travelreminder.domen.repository.TravelLocalRepository
 import ru.dreamteam.travelreminder.domen.repository.TravelRepository
 import ru.dreamteam.travelreminder.domen.use_cases.AddTravelUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.ChangePasswordByEmailUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.CheckFirstLaunchUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.DeleteTravelUseCase
+import ru.dreamteam.travelreminder.domen.use_cases.GetNavigationRouteUseCase
+import ru.dreamteam.travelreminder.domen.use_cases.GetNearbyPlacesUseCase
+import ru.dreamteam.travelreminder.domen.use_cases.GetPlaceCoordinatesUseCase
+import ru.dreamteam.travelreminder.domen.use_cases.GetPlaceSuggestionUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.GetTravelsUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.SignInByEmailAndPasswordUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.SignUpByEmailAndPasswordUseCase
@@ -33,7 +37,7 @@ val sharedModule = module {
     single { provideFirebaseApiKey() }
 
     single { AuthRepositoryImpl(get(), get()) }.bind<AuthRepository>()
-    single { MapNavigationRepositoryImpl(get()) }.bind<MapNavigationRepository>()
+    single { MapRepositoryImpl(get()) }.bind<MapRepository>()
     single { TravelLocalRepositoryImpl(get()) }.bind<TravelLocalRepository>()
     single { TravelRepositoryImpl(get(), get()) }.bind<TravelRepository>()
 
@@ -44,11 +48,15 @@ val sharedModule = module {
     single { DeleteTravelUseCase(get()) }
     single { AddTravelUseCase(get()) }
     single { GetTravelsUseCase(get()) }
+    single { GetPlaceSuggestionUseCase(get()) }
+    single { GetNearbyPlacesUseCase(get()) }
+    single { GetPlaceCoordinatesUseCase(get()) }
+    single { GetNavigationRouteUseCase(get()) }
 
     viewModel { MainActivityViewModel(get()) }
     viewModel { TravelsViewModel(get(), get(), get()) }
     viewModel { SingInViewModel(get()) }
     viewModel { SignUpViewModel(get()) }
     viewModel { ChangePasswordViewModel(get()) }
-    viewModel { MapViewModel(get(), get()) }
+    viewModel { MapViewModel(get(), get(), get(), get(), get()) }
 }

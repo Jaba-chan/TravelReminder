@@ -7,6 +7,7 @@ sealed class Screen(val route: String) {
     object AddTravelScreen: Screen(ROUTE_ADD_TRAVEL)
     object ChangePasswordScreen: Screen(ROUTE_CHANGE_PASSWORD)
     object ShowMap: Screen(ROUTE_SHOW_MAP)
+    object PlaceSuggestionsScreen: Screen(ROUTE_PLACE_SUGGESTIONS)
 
     companion object {
         private const val ROUTE_SIGN_IN = "sign_in"
@@ -15,5 +16,6 @@ sealed class Screen(val route: String) {
         private const val ROUTE_SIGN_UP = "sign_up"
         private const val ROUTE_CHANGE_PASSWORD = "change_password"
         private const val ROUTE_SHOW_MAP = "show_map"
+        private const val ROUTE_PLACE_SUGGESTIONS = "place_suggestions"
     }
 }

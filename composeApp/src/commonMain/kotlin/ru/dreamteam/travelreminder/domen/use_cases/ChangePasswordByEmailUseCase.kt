@@ -4,7 +4,7 @@ import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.dreamteam.travelreminder.common.Resource
-import ru.dreamteam.travelreminder.domen.model.ResponseResult
+import ru.dreamteam.travelreminder.data.local.model.map.ResponseResult
 import ru.dreamteam.travelreminder.domen.model.params.ChangePasswordByEmailParam
 import ru.dreamteam.travelreminder.domen.model.response.ChangePasswordByEmailResponse
 import ru.dreamteam.travelreminder.domen.repository.AuthRepository

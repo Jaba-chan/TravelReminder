@@ -5,11 +5,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RouteResponse(
-    val routes: List<Route>
+    val routes: List<RouteDto>
 )
 
 @Serializable
-data class Route(
+data class RouteDto(
     val distanceMeters: Int,
     val duration: String,
     val polyline: Polyline
