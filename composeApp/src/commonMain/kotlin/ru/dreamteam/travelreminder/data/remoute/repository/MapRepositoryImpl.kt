@@ -10,26 +10,26 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.add
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import kotlinx.serialization.json.putJsonArray
 import kotlinx.serialization.json.putJsonObject
-import ru.dreamteam.travelreminder.data.mapper.toDomain
-import ru.dreamteam.travelreminder.domen.model.PlaceSuggestion
 import ru.dreamteam.travelreminder.data.local.model.map.Route
-import ru.dreamteam.travelreminder.data.remoute.model.map.PlaceDetailsResponseDto
+import ru.dreamteam.travelreminder.data.mapper.toDomain
 import ru.dreamteam.travelreminder.data.remoute.model.map.AutocompleteResponseDto
 import ru.dreamteam.travelreminder.data.remoute.model.map.NearbySearchResponseDto
+import ru.dreamteam.travelreminder.data.remoute.model.map.PlaceDetailsResponseDto
 import ru.dreamteam.travelreminder.domen.model.Place
+import ru.dreamteam.travelreminder.domen.model.PlaceSuggestion
 import ru.dreamteam.travelreminder.domen.model.response.RouteResponse
 import ru.dreamteam.travelreminder.domen.model.travel.Point
 import ru.dreamteam.travelreminder.domen.model.travel.TransportationMode
 import ru.dreamteam.travelreminder.domen.repository.MapRepository
 
-class MapRepositoryImpl(private val client: HttpClient): MapRepository {
+class MapRepositoryImpl(
+    private val client: HttpClient,
+    private val apiKey: String
+): MapRepository {
     private val regionCode = Locale.current.region
-    private val apiKey = "AIzaSyBAHRxw9BMEMvBMv_lUwJ8uFd1QtW68Aiw"
     override suspend fun buildRoute(
         origin: Point,
         destination: Point,
@@ -56,7 +56,9 @@ class MapRepositoryImpl(private val client: HttpClient): MapRepository {
                 })
             })
             put("travelMode", mode.name)
-            put("routingPreference", "TRAFFIC_AWARE")
+            if (mode == TransportationMode.DRIVE) {
+                put("routingPreference", "TRAFFIC_AWARE")
+            }
         }
 
 

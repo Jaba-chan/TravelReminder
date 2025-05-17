@@ -11,4 +11,11 @@ class NavigationState(
             restoreState = true
         }
     }
+    fun navigateToTravelListForSignedUser(){
+        navController.navigate(Screen.TravelsListScreen.route){
+            popUpTo(Screen.SignInScreen.route){
+                inclusive = true
+            }
+        }
+    }
 }

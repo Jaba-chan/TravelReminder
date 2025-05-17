@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.DismissDirection
 import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
@@ -55,10 +54,20 @@ fun TravelsListScreen(
 
     Column {
         when (state) {
-            TravelsViewModel.TravelsState.Empty -> Text(text = stringResource(Res.string.empty_now))
-            is TravelsViewModel.TravelsState.Error -> SomethingErrorScreen(onRetryButtonClicked = {})
-            TravelsViewModel.TravelsState.Loading -> CircularProgressBar()
-            is TravelsViewModel.TravelsState.Success -> TravelsColumn(
+            TravelsViewModel.TravelsState.Empty         -> Text(text = stringResource(Res.string.empty_now))
+            is TravelsViewModel.TravelsState.Error      -> SomethingErrorScreen(onRetryButtonClicked = {})
+            TravelsViewModel.TravelsState.Loading       ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressBar(
+                        size        = 48.dp,
+                        strokeWidth = 4.dp
+                    )
+                }
+            is TravelsViewModel.TravelsState.Success    -> TravelsColumn(
                 travels = state.data,
                 onDeleteTravel = { viewModel.onTravelDeleted(it) })
         }
@@ -105,12 +114,13 @@ fun TravelsColumn(
                 background = {
                     Box(
                         modifier = Modifier
+                            .padding(top = 20.dp)
                             .fillMaxSize()
-                            .background(Color.Red)
-                            .padding(top = 20.dp, start = 20.dp, end = 20.dp),
+                            .background(color = MaterialTheme.colorScheme.error, shape = RoundedCornerShape(4.dp)),
                         contentAlignment = Alignment.CenterEnd
                     ) {
                         Icon(
+                            modifier = Modifier.padding(end = 16.dp),
                             imageVector = Icons.Default.Delete,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onError
@@ -136,7 +146,7 @@ fun TravelCard(travel: Travel) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.tertiary, shape = RoundedCornerShape(4.dp))
+                .background(color = MaterialTheme.colorScheme.tertiary, shape = RoundedCornerShape(4.dp))
                 .padding(20.dp)
         ) {
             Text(

@@ -36,7 +36,6 @@ class TravelsViewModel(
                         data == null -> TravelsState.Error("Something wrong")
                         data.isEmpty() -> TravelsState.Empty
                         else -> TravelsState.Success(data)
-
                     }
                 }
             }

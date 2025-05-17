@@ -6,7 +6,9 @@
     <string name="enter_password">Пароль</string>
     <string name="enter_password_again">Повторите пароль</string>
     <string name="password">Password</string>
-    <string name="bt_sign_in">Войти с Tincoff</string>
+    <string name="bt_sign_in_with">Войти с </string>
+    <string name="bt_sign_in">Войти</string>
+    <string name="t_bank">T-Bank</string>
     <string name="sign_in">Авторизация</string>
     <string name="bt_sign_up">Зарегистрироваться</string>
     <string name="sign_up">Регистрирация</string>
@@ -17,4 +19,9 @@
     <string name="empty_now">Здесь пока пусто. Нажмите "+" и запланируйте поездку.</string>
     <string name="something_error">Упс, что-то пошло не так во время загрузки данных.</string>
     <string name="retry">Попробовать снова</string>
+    <string name="search">Поиск</string>
+    <string name="minutes_pattern">м. </string>
+    <string name="hours_pattern">ч. </string>
+    <string name="days_pattern">д. </string>
+
 </resources>

@@ -2,10 +2,11 @@ package ru.dreamteam.travelreminder.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import ru.dreamteam.travelreminder.presentation.MainActivityViewModel
-import ru.dreamteam.travelreminder.presentation.sing_up.SignUpViewModel
 
 @Composable
 fun AppNavGraph(
@@ -17,7 +18,7 @@ fun AppNavGraph(
     changePasswordScreenContent: @Composable () -> Unit,
     addTravelScreenContent: @Composable () -> Unit,
     showMap: @Composable () -> Unit,
-    placeSuggestionsScreen: @Composable () -> Unit
+    placeSuggestionsScreen: @Composable (isOriginPlace: Boolean) -> Unit
 ) {
     NavHost(
         navController = navHostController,
@@ -41,8 +42,13 @@ fun AppNavGraph(
         composable(Screen.ShowMap.route) {
             showMap()
         }
-        composable(Screen.PlaceSuggestionsScreen.route) {
-            placeSuggestionsScreen()
+        composable(
+            route = Screen.PlaceSuggestionsScreen.route,
+            arguments = listOf(navArgument("isOriginPlace") { type = NavType.BoolType })
+        ) {
+            backStackEntry ->
+            val isOriginPlace = backStackEntry.arguments?.getBoolean("isOriginPlace") ?: true
+            placeSuggestionsScreen(isOriginPlace)
         }
     }
 }

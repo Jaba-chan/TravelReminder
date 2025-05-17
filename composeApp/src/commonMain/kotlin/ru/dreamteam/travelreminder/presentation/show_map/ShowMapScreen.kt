@@ -4,4 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-expect fun GoogleMapView(modifier: Modifier, viewModel: MapViewModel, changeAddress: () -> Unit)
+expect fun GoogleMapView(
+    modifier: Modifier,
+    viewModel: MapViewModel,
+    changeAddress: (isOriginPlace: Boolean) -> Unit,
+    returnToAddTravel: () -> Unit
+)

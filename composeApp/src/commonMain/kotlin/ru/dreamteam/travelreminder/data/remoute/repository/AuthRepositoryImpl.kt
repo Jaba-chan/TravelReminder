@@ -7,7 +7,6 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.serialization.json.Json
-import ru.dreamteam.travelreminder.data.local.storage.FirebaseApiKey
 import ru.dreamteam.travelreminder.data.local.storage.UserUidStorage
 import ru.dreamteam.travelreminder.data.mapper.params.toRequest
 import ru.dreamteam.travelreminder.data.mapper.params.toSignInRequest
@@ -26,123 +25,108 @@ private const val ERROR_FIELD = "error"
 
 class AuthRepositoryImpl(
     private val client: HttpClient,
-    private val storage: UserUidStorage
+    private val storage: UserUidStorage,
+    apiKey: String
 ) : AuthRepository {
 
-    private val apiKey = FirebaseApiKey.getApiKey()
-    private val singInBaseUrl =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$apiKey"
-    private val singUpBaseUrl =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=$apiKey"
-    private val changePasswordBaseUrl =
-        "https://identitytoolkit.googleapis.com/v1/accounts:update?key=$apiKey"
+    private val signInUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$apiKey"
+    private val signUpUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=$apiKey"
+    private val changePasswordUrl = "https://identitytoolkit.googleapis.com/v1/accounts:update?key=$apiKey"
+    private val refreshTokenUrl = "https://securetoken.googleapis.com/v1/token?key=$apiKey"
 
-    override fun isFirstLaunch(): Boolean {
-        return storage.getUserUid() == null
-    }
+    override fun isFirstLaunch(): Boolean =
+        storage.getUserUid() == null
 
     override suspend fun refreshToken(refreshToken: String?) {
-        val refreshUrl = "https://securetoken.googleapis.com/v1/token?key=$apiKey"
-        val stringResponse: String = client.post(refreshUrl) {
+        val body = mapOf("refresh_token" to (storage.getRefreshToken() ?: ""))
+        val responseText = client.post(refreshTokenUrl) {
             contentType(ContentType.Application.Json)
-            setBody("refresh_token" to storage.getRefreshToken())
-        }.body()
+            setBody(body)
+        }.body<String>()
 
-        val response = Json.decodeFromString<RefreshTokenResponse>(stringResponse)
-        println("idToken!!!!!!!!!!!!!!!!!!!!!" + response.idToken)
+        val response = Json.decodeFromString<RefreshTokenResponse>(responseText)
         storage.setIdToken(response.idToken)
     }
 
-    override suspend fun signInByEmailAndPassword(params: SignInByEmailAndPasswordParams): ResponseResult<SignInResponse> {
-        val stringResponse: String = client.post(singInBaseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(params.toRequest(returnSecureToken = true))
-        }.body()
+    override suspend fun signInByEmailAndPassword(
+        params: SignInByEmailAndPasswordParams
+    ): ResponseResult<SignInResponse> =
+        performRequest(
+            url = signInUrl,
+            body = params.toRequest(returnSecureToken = true),
+            onSuccess = { resp ->
+                saveInLocalStorage(resp.localId, resp.idToken, resp.refreshToken)
+                ResponseResult.Success(resp)
+            }
+        )
 
-        val response = if (ERROR_FIELD in stringResponse) {
-            val error = Json.decodeFromString<ErrorResponse>(stringResponse)
-            ResponseResult.Failure(error)
-        } else {
-            val success = Json.decodeFromString<SignInResponse>(stringResponse)
-            saveInLocalStorage(
-                success.localId,
-                success.idToken,
-                success.refreshToken
-            )
-            ResponseResult.Success(success)
-        }
-        return response
-    }
+    override suspend fun signUpByEmailAndPassword(
+        params: SignUpByEmailAndPasswordParams
+    ): ResponseResult<SignUpResponse> =
+        performRequest(
+            url = signUpUrl,
+            body = params.toRequest(returnSecureToken = true),
+            onSuccess = { resp ->
+                saveInLocalStorage(resp.localId, resp.idToken, resp.refreshToken)
+                ResponseResult.Success(resp)
+            }
+        )
 
-    override suspend fun signUpByEmailAndPassword(params: SignUpByEmailAndPasswordParams): ResponseResult<SignUpResponse> {
-        val stringResponse: String = client.post(singUpBaseUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(params.toRequest(returnSecureToken = true))
-        }.body()
-
-        val response = if (ERROR_FIELD in stringResponse) {
-            val error = Json.decodeFromString<ErrorResponse>(stringResponse)
-            ResponseResult.Failure(error)
-        } else {
-            val success = Json.decodeFromString<SignUpResponse>(stringResponse)
-            saveInLocalStorage(
-                success.localId,
-                success.idToken,
-                success.refreshToken
-            )
-            ResponseResult.Success(success)
-        }
-        return response
-    }
-
-    override suspend fun changePasswordByEmail(params: ChangePasswordByEmailParam): ResponseResult<ChangePasswordByEmailResponse> {
-        val stringResponse: String = client.post(singInBaseUrl) {
+    override suspend fun changePasswordByEmail(
+        params: ChangePasswordByEmailParam
+    ): ResponseResult<ChangePasswordByEmailResponse> {
+        val signInRaw = client.post(signInUrl) {
             contentType(ContentType.Application.Json)
             setBody(params.toSignInRequest(returnSecureToken = true))
-        }.body()
+        }.body<String>()
 
-        return if (ERROR_FIELD in stringResponse) {
-            val signInError = Json.decodeFromString<ErrorResponse>(stringResponse)
-            ResponseResult.Failure(signInError)
-        } else {
-            val signInSuccess = Json.decodeFromString<SignUpResponse>(stringResponse)
-            saveInLocalStorage(
-                signInSuccess.localId,
-                signInSuccess.idToken,
-                signInSuccess.refreshToken
+        if (ERROR_FIELD in signInRaw) {
+            val error = Json.decodeFromString<ErrorResponse>(signInRaw)
+            return ResponseResult.Failure(error)
+        }
+        val signInSuccess = Json.decodeFromString<SignInResponse>(signInRaw)
+        saveInLocalStorage(
+            signInSuccess.localId,
+            signInSuccess.idToken,
+            signInSuccess.refreshToken
+        )
+
+        return performRequest(
+            url = changePasswordUrl,
+            body = params.toRequest(
+                idToken = signInSuccess.idToken ?: "",
+                returnSecureToken = true
             )
-            val stringResponseChangePassword: String = client.post(changePasswordBaseUrl) {
-                contentType(ContentType.Application.Json)
-                setBody(
-                    params.toRequest(
-                        idToken = signInSuccess.idToken ?: "",
-                        returnSecureToken = true
-                    )
-                )
-            }.body()
-
-            if (ERROR_FIELD in stringResponseChangePassword) {
-                println(stringResponseChangePassword)
-                val changePasswordError =
-                    Json.decodeFromString<ErrorResponse>(stringResponseChangePassword)
-                ResponseResult.Failure(changePasswordError)
-            } else {
-
-                val changePasswordSuccess =
-                    Json.decodeFromString<ChangePasswordByEmailResponse>(
-                        stringResponseChangePassword
-                    )
-                saveInLocalStorage(
-                    changePasswordSuccess.localId,
-                    changePasswordSuccess.idToken,
-                    changePasswordSuccess.refreshToken
-                )
-                ResponseResult.Success(changePasswordSuccess)
-            }
+        ) { resp ->
+            saveInLocalStorage(resp.localId, resp.idToken, resp.refreshToken)
+            ResponseResult.Success(resp)
         }
     }
 
-    private fun saveInLocalStorage(localId: String?, idToken: String?, refreshToken: String?) {
+    private suspend inline fun <reified T : Any> performRequest(
+        url: String,
+        body: Any,
+        crossinline onSuccess: (T) -> ResponseResult<T>
+    ): ResponseResult<T> {
+        val raw = client.post(url) {
+            contentType(ContentType.Application.Json)
+            setBody(body)
+        }.body<String>()
+
+        return if (ERROR_FIELD in raw) {
+            val error = Json.decodeFromString<ErrorResponse>(raw)
+            ResponseResult.Failure(error)
+        } else {
+            val success = Json.decodeFromString<T>(raw)
+            onSuccess(success)
+        }
+    }
+
+    private fun saveInLocalStorage(
+        localId: String?,
+        idToken: String?,
+        refreshToken: String?
+    ) {
         storage.setUserUid(localId)
         storage.setIdToken(idToken)
         storage.setRefreshToken(refreshToken)

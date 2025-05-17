@@ -48,16 +48,14 @@ class MapViewModel(
     private var _userLocation = mutableStateOf<Point?>(null)
     val userLocation: State<Point?> = _userLocation
 
-//    private var _originPlace = mutableStateOf<Place?>(null)
-//    val originPlace: State<Place?> = _originPlace
-//
-//    private var _destinationPlace = mutableStateOf<Place?>(null)
-//    val destinationPlace: State<Place?> = _destinationPlace
-
     private var _selectedPoints = mutableStateOf<Pair<Place?, Place?>>(Pair(null, null))
     val selectedPoints: State<Pair<Place?, Place?>> = _selectedPoints
 
+    private var _transportationMode = mutableStateOf(TransportationMode.DRIVE)
+    val transportationMode: State<TransportationMode> = _transportationMode
+
     private var isOriginPoint = true
+    private var isReversed = false
     private var sessionToken = Random.nextInt().toString()
 
     fun setPointSelectorAsOrigin() {
@@ -66,6 +64,19 @@ class MapViewModel(
 
     fun setPointSelectorAsDestination() {
         isOriginPoint = false
+    }
+
+    fun setPlaceSuggestionsQuery(isOriginPlace: Boolean){
+        if (isOriginPlace) {
+            _placeSuggestionsQuery.value = _selectedPoints.value.first?.title ?: ""
+        } else _placeSuggestionsQuery.value = _selectedPoints.value.second?.title ?: ""
+        getPlaceSuggestions()
+    }
+
+    fun onReverseButtonPressed(){
+        isReversed = !isReversed
+        _selectedPoints.value = Pair(_selectedPoints.value.second, _selectedPoints.value.first)
+        getRoute()
     }
 
     fun onPlaceSuggestionsQueryTextChanged(text: String) {
@@ -79,29 +90,38 @@ class MapViewModel(
         _suggestions.value = emptyList()
     }
 
+    fun onTransportationModeChanged(mode: TransportationMode){
+        _transportationMode.value = mode
+        getRoute()
+    }
+
     fun onMapClicked(point: Point) {
         getNearbyPlacesUseCase(point).onEach { result ->
             when (result) {
                 is Resource.Error -> {}
                 is Resource.Loading -> {}
                 is Resource.Success -> {
-                    setPlaces(result.data)
-                    if (selectedPoints.value.first != null && selectedPoints.value.second != null) {
-                        getNavigationRouteUseCase(
-                            origin = selectedPoints.value.first!!.point,
-                            destination = selectedPoints.value.second!!.point,
-                            mode = TransportationMode.DRIVE
-                        ).onEach { routeResult ->
-                            when (routeResult) {
-                                is Resource.Error -> _route.value = null
-                                is Resource.Loading -> _route.value = null
-                                is Resource.Success -> _route.value = routeResult.data
-                            }
-                        }.launchIn(viewModelScope)
-                    }
+                    setPlaces(result.data, isOriginPoint)
+                    getRoute()
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun getRoute(){
+        if (selectedPoints.value.first != null && selectedPoints.value.second != null) {
+            getNavigationRouteUseCase(
+                origin = selectedPoints.value.first!!.point,
+                destination = selectedPoints.value.second!!.point,
+                mode = _transportationMode.value
+            ).onEach { routeResult ->
+                when (routeResult) {
+                    is Resource.Error -> _route.value = null
+                    is Resource.Loading -> _route.value = null
+                    is Resource.Success -> _route.value = routeResult.data
+                }
+            }.launchIn(viewModelScope)
+        }
     }
 
     private fun getPlaceSuggestions() {
@@ -114,17 +134,17 @@ class MapViewModel(
         }.launchIn(viewModelScope)
     }
 
-    fun getPlaceCoordinates(placeSuggestion: PlaceSuggestion) {
+    fun getPlaceCoordinates(placeSuggestion: PlaceSuggestion, isOriginPlace: Boolean) {
         getPlaceCoordinatesUseCase.invoke(placeSuggestion).onEach { result ->
             when (result) {
                 is Resource.Error -> {}
                 is Resource.Loading -> {}
-                is Resource.Success -> setPlaces(result.data)
+                is Resource.Success -> setPlaces(result.data, isOriginPlace)
             }
         }.launchIn(viewModelScope)
     }
 
-    private fun setPlaces(place: Place?) = if (isOriginPoint) _selectedPoints.value =
+    private fun setPlaces(place: Place?, isOriginPlace: Boolean) = if (isOriginPlace) _selectedPoints.value =
         Pair(place, _selectedPoints.value.second)
     else _selectedPoints.value =
         Pair(_selectedPoints.value.first, place)

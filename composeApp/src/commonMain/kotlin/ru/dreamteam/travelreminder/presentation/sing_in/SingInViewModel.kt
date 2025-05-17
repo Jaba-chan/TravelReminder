@@ -44,7 +44,6 @@ class SingInViewModel(private val signInUseCase: SignInByEmailAndPasswordUseCase
                 is Resource.Success -> _state.value = SignInState.Success
             }
         }.launchIn(viewModelScope)
-        _state.value = SignInState.Idle
     }
 
     sealed interface SignInState{

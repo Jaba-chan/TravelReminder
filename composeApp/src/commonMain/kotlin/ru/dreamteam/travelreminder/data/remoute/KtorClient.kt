@@ -19,13 +19,13 @@ import io.ktor.http.Parameters
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import ru.dreamteam.travelreminder.data.local.storage.FirebaseApiKey
+import ru.dreamteam.travelreminder.data.local.storage.SecretApiKeys
 import ru.dreamteam.travelreminder.data.local.storage.UserUidStorage
 import ru.dreamteam.travelreminder.domen.model.response.RefreshTokenResponse
 
 fun provideHttpClient(
     storage: UserUidStorage,
-    firebaseApiKey: FirebaseApiKey
+    firebaseApiKey: SecretApiKeys
 ): HttpClient {
     val client = HttpClient {
         install(ContentNegotiation) {
@@ -41,7 +41,7 @@ fun provideHttpClient(
         if (response.response.status == HttpStatusCode.Unauthorized) {
             val body = response.response.bodyAsText()
             if ("Permission denied" in body) {
-                val refreshUrl = "https://securetoken.googleapis.com/v1/token?key=${firebaseApiKey.getApiKey()}"
+                val refreshUrl = "https://securetoken.googleapis.com/v1/token?key=${firebaseApiKey.getFirebaseApiKey()}"
                 val refreshRequest = HttpRequestBuilder().apply {
                     method = HttpMethod.Post
                     url.takeFrom(refreshUrl)

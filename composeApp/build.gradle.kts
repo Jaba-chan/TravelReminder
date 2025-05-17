@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -71,7 +70,6 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.lifecycle.viewmodel)
             implementation(libs.navigation.compose)
-
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -99,6 +97,11 @@ android {
             "FIREBASE_API_KEY",
             "\"${project.findProperty("FIREBASE_API_KEY")}\""
         )
+        buildConfigField(
+            "String",
+            "GOOGLE_API_SERVICES_KEY",
+            "\"${project.findProperty("GOOGLE_API_SERVICES_KEY")}\""
+        )
     }
     packaging {
         resources {
@@ -122,6 +125,7 @@ android {
 
 dependencies {
     implementation(libs.play.services.location)
+    implementation(libs.play.services.maps)
     add("kspAndroid", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     add("kspIosX64", libs.androidx.room.compiler)

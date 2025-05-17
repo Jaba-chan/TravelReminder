@@ -2,6 +2,7 @@ package ru.dreamteam.travelreminder.di
 
 
 import org.koin.compose.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import ru.dreamteam.travelreminder.data.local.repository.TravelLocalRepositoryImpl
@@ -33,11 +34,22 @@ import ru.dreamteam.travelreminder.presentation.sing_up.SignUpViewModel
 import ru.dreamteam.travelreminder.presentation.travels_list.TravelsViewModel
 
 val sharedModule = module {
-    single { provideHttpClient(get(), get())}
+    single { provideHttpClient(get(), get()) }
     single { provideFirebaseApiKey() }
 
-    single { AuthRepositoryImpl(get(), get()) }.bind<AuthRepository>()
-    single { MapRepositoryImpl(get()) }.bind<MapRepository>()
+    single {
+        AuthRepositoryImpl(
+            get(),
+            get(),
+            apiKey = get(named("firebaseApiKey"))
+        )
+    }.bind<AuthRepository>()
+    single {
+        MapRepositoryImpl(
+            get(),
+            apiKey = get(named("googleApiServicesKey"))
+        )
+    }.bind<MapRepository>()
     single { TravelLocalRepositoryImpl(get()) }.bind<TravelLocalRepository>()
     single { TravelRepositoryImpl(get(), get()) }.bind<TravelRepository>()
 

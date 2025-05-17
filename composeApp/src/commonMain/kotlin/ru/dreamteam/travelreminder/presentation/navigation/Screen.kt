@@ -1,13 +1,15 @@
 package ru.dreamteam.travelreminder.presentation.navigation
 
 sealed class Screen(val route: String) {
-    object SignInScreen: Screen(ROUTE_SIGN_IN)
-    object SignUpScreen: Screen(ROUTE_SIGN_UP)
-    object TravelsListScreen: Screen(ROUTE_TRAVELS_LIST)
-    object AddTravelScreen: Screen(ROUTE_ADD_TRAVEL)
-    object ChangePasswordScreen: Screen(ROUTE_CHANGE_PASSWORD)
-    object ShowMap: Screen(ROUTE_SHOW_MAP)
-    object PlaceSuggestionsScreen: Screen(ROUTE_PLACE_SUGGESTIONS)
+    object SignInScreen : Screen(ROUTE_SIGN_IN)
+    object SignUpScreen : Screen(ROUTE_SIGN_UP)
+    object TravelsListScreen : Screen(ROUTE_TRAVELS_LIST)
+    object AddTravelScreen : Screen(ROUTE_ADD_TRAVEL)
+    object ChangePasswordScreen : Screen(ROUTE_CHANGE_PASSWORD)
+    object ShowMap : Screen(ROUTE_SHOW_MAP)
+    object PlaceSuggestionsScreen : Screen(ROUTE_WITH_ARG_PLACE_SUGGESTIONS) {
+        fun createRoute(isOriginPlace: Boolean) = "$BASE_ROUTE_PLACE_SUGGESTIONS?isOriginPlace=$isOriginPlace"
+    }
 
     companion object {
         private const val ROUTE_SIGN_IN = "sign_in"
@@ -16,6 +18,8 @@ sealed class Screen(val route: String) {
         private const val ROUTE_SIGN_UP = "sign_up"
         private const val ROUTE_CHANGE_PASSWORD = "change_password"
         private const val ROUTE_SHOW_MAP = "show_map"
-        private const val ROUTE_PLACE_SUGGESTIONS = "place_suggestions"
+        private const val BASE_ROUTE_PLACE_SUGGESTIONS = "place_suggestions"
+        private const val ROUTE_WITH_ARG_PLACE_SUGGESTIONS =
+            "$BASE_ROUTE_PLACE_SUGGESTIONS?isOriginPlace={isOriginPlace}"
     }
 }
