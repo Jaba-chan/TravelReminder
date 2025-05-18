@@ -2,7 +2,6 @@ package ru.dreamteam.travelreminder.presentation.travels_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -22,20 +21,19 @@ class TravelsViewModel(
     private val deleteTravelUseCase: DeleteTravelUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<TravelsState>(TravelsState.Loading)
-    val state: StateFlow<TravelsState> = _state
+    private val _state                  = MutableStateFlow<TravelsState>(TravelsState.Loading)
+    val state: StateFlow<TravelsState>  = _state
 
     fun loadTravels() {
         getTravelsUseCase.invoke().onEach { result ->
             when (result) {
-                is Resource.Error -> TravelsState.Error("Something wrong")
+                is Resource.Error   -> TravelsState.Error("Something wrong")
                 is Resource.Loading -> _state.value = TravelsState.Loading
                 is Resource.Success -> {
                     val data = result.data
                     _state.value = when {
-                        data == null -> TravelsState.Error("Something wrong")
                         data.isEmpty() -> TravelsState.Empty
-                        else -> TravelsState.Success(data)
+                        else -> TravelsState.Error("Something wrong")
                     }
                 }
             }
@@ -43,11 +41,12 @@ class TravelsViewModel(
     }
 
     fun onTravelDeleted(travel: Travel) {
-        deleteTravelUseCase(travel).onEach {
-        }.launchIn(viewModelScope)
+        deleteTravelUseCase(travel).onEach {}.launchIn(viewModelScope)
         val currentState = _state.value
         if (currentState is TravelsState.Success) {
-            val updatedList = currentState.data.toMutableList().apply { remove(travel) }
+            val updatedList = currentState.data
+                .toMutableList()
+                .apply { remove(travel) }
             _state.value = if (updatedList.isEmpty()) {
                 TravelsState.Empty
             } else {
@@ -76,10 +75,10 @@ class TravelsViewModel(
 
 
     sealed interface TravelsState {
-        class Success(val data: List<Travel>) : TravelsState
-        object Loading : TravelsState
-        data class Error(val reason: String) : TravelsState
-        object Empty : TravelsState
+        data class Success(val data: List<Travel>) : TravelsState
+        object Loading                             : TravelsState
+        data class Error(val reason: String)       : TravelsState
+        object Empty                               : TravelsState
     }
 
 }

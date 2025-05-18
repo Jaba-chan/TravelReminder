@@ -21,7 +21,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import ru.dreamteam.travelreminder.data.local.storage.SecretApiKeys
 import ru.dreamteam.travelreminder.data.local.storage.UserUidStorage
-import ru.dreamteam.travelreminder.domen.model.response.RefreshTokenResponse
+import ru.dreamteam.travelreminder.data.remoute.model.response.RefreshTokenResponse
 
 fun provideHttpClient(
     storage: UserUidStorage,

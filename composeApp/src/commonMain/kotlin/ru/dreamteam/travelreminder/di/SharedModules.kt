@@ -5,6 +5,7 @@ import org.koin.compose.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import ru.dreamteam.travelreminder.common.ErrorMapper
 import ru.dreamteam.travelreminder.data.local.repository.TravelLocalRepositoryImpl
 import ru.dreamteam.travelreminder.data.local.storage.provideFirebaseApiKey
 import ru.dreamteam.travelreminder.data.remoute.provideHttpClient
@@ -26,6 +27,7 @@ import ru.dreamteam.travelreminder.domen.use_cases.GetPlaceSuggestionUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.GetTravelsUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.SignInByEmailAndPasswordUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.SignUpByEmailAndPasswordUseCase
+import ru.dreamteam.travelreminder.presentation.DefaultErrorMapper
 import ru.dreamteam.travelreminder.presentation.MainActivityViewModel
 import ru.dreamteam.travelreminder.presentation.change_password.ChangePasswordViewModel
 import ru.dreamteam.travelreminder.presentation.show_map.MapViewModel
@@ -36,6 +38,7 @@ import ru.dreamteam.travelreminder.presentation.travels_list.TravelsViewModel
 val sharedModule = module {
     single { provideHttpClient(get(), get()) }
     single { provideFirebaseApiKey() }
+    single { DefaultErrorMapper() }.bind<ErrorMapper>()
 
     single {
         AuthRepositoryImpl(
@@ -50,20 +53,21 @@ val sharedModule = module {
             apiKey = get(named("googleApiServicesKey"))
         )
     }.bind<MapRepository>()
+
     single { TravelLocalRepositoryImpl(get()) }.bind<TravelLocalRepository>()
     single { TravelRepositoryImpl(get(), get()) }.bind<TravelRepository>()
 
     single { CheckFirstLaunchUseCase(get()) }
-    single { SignInByEmailAndPasswordUseCase(get()) }
-    single { SignUpByEmailAndPasswordUseCase(get()) }
-    single { ChangePasswordByEmailUseCase(get()) }
-    single { DeleteTravelUseCase(get()) }
-    single { AddTravelUseCase(get()) }
-    single { GetTravelsUseCase(get()) }
-    single { GetPlaceSuggestionUseCase(get()) }
-    single { GetNearbyPlacesUseCase(get()) }
-    single { GetPlaceCoordinatesUseCase(get()) }
-    single { GetNavigationRouteUseCase(get()) }
+    single { SignInByEmailAndPasswordUseCase(get(), get()) }
+    single { SignUpByEmailAndPasswordUseCase(get(), get()) }
+    single { ChangePasswordByEmailUseCase(get(), get()) }
+    single { DeleteTravelUseCase(get(), get()) }
+    single { AddTravelUseCase(get(), get()) }
+    single { GetTravelsUseCase(get(), get()) }
+    single { GetPlaceSuggestionUseCase(get(), get()) }
+    single { GetNearbyPlacesUseCase(get(), get()) }
+    single { GetPlaceCoordinatesUseCase(get(), get()) }
+    single { GetNavigationRouteUseCase(get(), get()) }
 
     viewModel { MainActivityViewModel(get()) }
     viewModel { TravelsViewModel(get(), get(), get()) }

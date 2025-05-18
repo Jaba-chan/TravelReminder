@@ -33,6 +33,7 @@ import ru.dreamteam.travelreminder.R
 import ru.dreamteam.travelreminder.domen.model.Place
 import ru.dreamteam.travelreminder.domen.model.travel.Point
 import ru.dreamteam.travelreminder.presentation.coomon_ui.CircularProgressBar
+import ru.dreamteam.travelreminder.presentation.coomon_ui.FullScreenLoading
 
 @Composable
 actual fun GoogleMapView(
@@ -56,21 +57,22 @@ actual fun GoogleMapView(
     }
 
     Column(Modifier.fillMaxSize()) {
-        MapHead(viewModel, changeAddress, returnToAddTravel)
+        MapHead(
+            viewModel           = viewModel,
+            changeAddress       = changeAddress,
+            returnToAddTravel   = returnToAddTravel
+        )
 
         Box(Modifier.weight(1f)) {
-            if (userLocation == null) {
-                CircularProgressBar(size = 24.dp)
-            } else {
-                MapContent(
-                    modifier            = modifier,
-                    cameraState         = cameraState,
-                    contentPadding      = padding,
-                    onMapClick          = { viewModel.onMapClicked(it) },
-                    selectedPoints      = viewModel.selectedPoints.value,
-                    routePoints         = viewModel.route.value?.poly
-                )
-            }
+            MapContent(
+                modifier            = modifier,
+                cameraState         = cameraState,
+                contentPadding      = padding,
+                onMapClick          = { viewModel.onMapClicked(it) },
+                selectedPoints      = viewModel.selectedPoints.value,
+                routePoints         = viewModel.route.value?.poly
+            )
+
         }
     }
 }
@@ -118,15 +120,25 @@ private fun MapContent(
         val icon         = rememberMarkerIcon(R.drawable.ic_circle, Color.Blue)
 
         start?.let {
-            MapMarker(it.point, icon, "Начало маршрута")
+            MapMarker(
+                point = it.point,
+                icon  = icon,
+                title = "Начало маршрута")
         }
         end?.let {
-            MapMarker(it.point, null, "Конец маршрута")
+            MapMarker(
+                point = it.point,
+                icon  = null,
+                title = "Конец маршрута")
         }
         routePoints
             ?.takeIf(List<Point>::isNotEmpty)
             ?.map { LatLng(it.latitude, it.longitude) }
-            ?.let { Polyline(points = it, color = Color.Blue, width = 5f) }
+            ?.let { Polyline(
+                points = it,
+                color = Color.Blue,
+                width = 5f)
+            }
     }
 }
 

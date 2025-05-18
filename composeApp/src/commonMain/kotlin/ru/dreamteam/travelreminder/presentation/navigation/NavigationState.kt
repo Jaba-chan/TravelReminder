@@ -18,4 +18,12 @@ class NavigationState(
             }
         }
     }
+
+    fun navigateToSignIn(){
+        navController.navigate(Screen.SignInScreen.route){
+            popUpTo(Screen.TravelsListScreen.route){
+                inclusive = true
+            }
+        }
+    }
 }

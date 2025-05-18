@@ -129,7 +129,7 @@ class MapViewModel(
             when (result) {
                 is Resource.Error -> _suggestions.value = emptyList()
                 is Resource.Loading -> _suggestions.value = emptyList()
-                is Resource.Success -> _suggestions.value = result.data ?: emptyList()
+                is Resource.Success -> _suggestions.value = result.data
             }
         }.launchIn(viewModelScope)
     }
@@ -144,9 +144,9 @@ class MapViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private fun setPlaces(place: Place?, isOriginPlace: Boolean) = if (isOriginPlace) _selectedPoints.value =
-        Pair(place, _selectedPoints.value.second)
-    else _selectedPoints.value =
-        Pair(_selectedPoints.value.first, place)
-
+    private fun setPlaces(place: Place?, isOriginPlace: Boolean) =
+        if (isOriginPlace) _selectedPoints.value =
+            Pair(place, _selectedPoints.value.second)
+        else _selectedPoints.value =
+            Pair(_selectedPoints.value.first, place)
 }

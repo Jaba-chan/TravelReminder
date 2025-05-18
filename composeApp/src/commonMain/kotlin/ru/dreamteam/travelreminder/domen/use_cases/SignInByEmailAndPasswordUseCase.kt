@@ -1,25 +1,24 @@
 package ru.dreamteam.travelreminder.domen.use_cases
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import ru.dreamteam.travelreminder.common.ErrorMapper
 import ru.dreamteam.travelreminder.common.Resource
-import ru.dreamteam.travelreminder.domen.model.response.SignInResponse
-import ru.dreamteam.travelreminder.domen.repository.AuthRepository
-import io.ktor.client.plugins.*
-import ru.dreamteam.travelreminder.data.local.model.map.ResponseResult
 import ru.dreamteam.travelreminder.domen.model.params.SignInByEmailAndPasswordParams
+import ru.dreamteam.travelreminder.domen.repository.AuthRepository
 
-class SignInByEmailAndPasswordUseCase(private val authRepository: AuthRepository) {
-    operator fun invoke(params: SignInByEmailAndPasswordParams): Flow<Resource<SignInResponse>> =
+class SignInByEmailAndPasswordUseCase(
+    private val authRepository: AuthRepository,
+    private val errorMapper: ErrorMapper
+) {
+    operator fun invoke(params: SignInByEmailAndPasswordParams): Flow<Resource<Unit>> =
         flow {
-            try {
-                emit(Resource.Loading())
-                when (val response = authRepository.signInByEmailAndPassword(params)){
-                    is ResponseResult.Failure -> emit(Resource.Error(message = response.error.error.message))
-                    is ResponseResult.Success -> emit(Resource.Success(data = response.response))
-                }
-            } catch (e: ClientRequestException) {
-                emit(Resource.Error("Пользователя нет!"))
-            }
+            emit(Resource.Loading())
+            authRepository.signInByEmailAndPassword(params)
+            emit(Resource.Success(Unit))
+        }.catch { e ->
+            val error = errorMapper.map(e)
+            emit(Resource.Error(error = error, message = e.message))
         }
 }

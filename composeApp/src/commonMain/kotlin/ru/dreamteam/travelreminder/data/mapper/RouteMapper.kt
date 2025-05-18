@@ -1,7 +1,7 @@
 package ru.dreamteam.travelreminder.data.mapper
 
 import ru.dreamteam.travelreminder.data.local.model.map.Route
-import ru.dreamteam.travelreminder.domen.model.response.RouteDto
+import ru.dreamteam.travelreminder.data.remoute.model.response.RouteDto
 import ru.dreamteam.travelreminder.domen.model.travel.Point
 
 fun RouteDto.toDomain() = Route(

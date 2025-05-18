@@ -87,30 +87,37 @@ fun App() {
                     },
                     signUpScreenContent = {
                         SignUpScreen(
-                            viewModel           = signUpViewModel,
-                            onNavigateToSignIn  = { navState.navigateTo(Screen.SignInScreen.route) }
+                            viewModel                   = signUpViewModel,
+                            onNavigateToSignIn          = { navState.navigateToSignIn() }
                         )
                     },
-                    travelsListScreenContent    = { TravelsListScreen(travelsViewModel) },
-                    addTravelScreenContent      = { Text(text = "fsaf") },
-                    changePasswordScreenContent = { ChangePasswordScreen(changePasswordViewModel) },
+                    travelsListScreenContent = {
+                        TravelsListScreen(
+                            viewModel                   = travelsViewModel,
+                            logOut                      = { navState.navigateToSignIn() }
+                        )
+                    },
+                    addTravelScreenContent = {
+                        Text(text = "fsaf")
+                    },
+                    changePasswordScreenContent = {
+                        ChangePasswordScreen(
+                            viewModel                  = changePasswordViewModel
+                        )
+                    },
                     showMap = {
                         GoogleMapView(
-                            modifier            = Modifier,
-                            viewModel           = mapViewModel,
-                            changeAddress = {
-                                    navState.navigateTo(
-                                        Screen.PlaceSuggestionsScreen.createRoute(it)
-                                    )
-                            },
-                            returnToAddTravel   = { navState.navigateTo(Screen.AddTravelScreen.route) }
+                            modifier                   = Modifier,
+                            viewModel                  = mapViewModel,
+                            changeAddress              = { navState.navigateTo(Screen.PlaceSuggestionsScreen.createRoute(it)) },
+                            returnToAddTravel          = { navState.navigateTo(Screen.AddTravelScreen.route) }
                         )
                     },
-                    placeSuggestionsScreen = { isOriginPlace ->
+                    placeSuggestionsScreen  = { isOriginPlace ->
                         PlaceSuggestionsScreen(
-                            viewModel       = mapViewModel,
-                            returnToMap     = { navState.navigateTo(Screen.ShowMap.route) },
-                            isOriginPlace   = isOriginPlace
+                            viewModel                  = mapViewModel,
+                            returnToMap                = { navState.navigateTo(Screen.ShowMap.route) },
+                            isOriginPlace              = isOriginPlace
                         )
                     }
                 )

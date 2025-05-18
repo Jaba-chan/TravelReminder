@@ -1,4 +1,4 @@
-package ru.dreamteam.travelreminder.domen.model.response
+package ru.dreamteam.travelreminder.data.remoute.model.response
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

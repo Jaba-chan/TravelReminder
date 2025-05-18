@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.material3.Icon
@@ -27,7 +28,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ru.dreamteam.travelreminder.presentation.CaughtErrorImpl
 import ru.dreamteam.travelreminder.presentation.coomon_ui.CircularProgressBar
+import ru.dreamteam.travelreminder.presentation.coomon_ui.ErrorText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.InnerButtonsText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.ScreenHeadingText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledButton
@@ -72,6 +75,19 @@ fun SignInScreen(
             placeholder             = stringResource(Res.string.enter_password),
             visualTransformation    = PasswordVisualTransformation()
         )
+
+        ErrorText(
+            modifier = Modifier
+                .padding(
+                    horizontal  = 28.dp,
+                    vertical    = 4.dp
+                ),
+            text = ((state as? SingInViewModel.SignInState.Error)?.error as? CaughtErrorImpl.ErrorForUser)
+                ?.let {
+                    stringResource(it.resId)
+                } ?: ""
+        )
+
         Spacer(modifier = Modifier.height(56.dp))
         StyledButton(
             onButtonClicked = viewModel::onSignInButtonPressed,

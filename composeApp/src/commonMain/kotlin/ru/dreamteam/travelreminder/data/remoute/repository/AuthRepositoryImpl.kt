@@ -10,18 +10,16 @@ import kotlinx.serialization.json.Json
 import ru.dreamteam.travelreminder.data.local.storage.UserUidStorage
 import ru.dreamteam.travelreminder.data.mapper.params.toRequest
 import ru.dreamteam.travelreminder.data.mapper.params.toSignInRequest
-import ru.dreamteam.travelreminder.domen.model.response.ChangePasswordByEmailResponse
+import ru.dreamteam.travelreminder.data.remoute.model.FirebaseAuthException
+import ru.dreamteam.travelreminder.data.remoute.model.response.ChangePasswordByEmailResponse
+import ru.dreamteam.travelreminder.data.remoute.model.response.RefreshTokenResponse
+import ru.dreamteam.travelreminder.data.remoute.model.response.SignInResponse
+import ru.dreamteam.travelreminder.data.remoute.model.response.SignUpResponse
 import ru.dreamteam.travelreminder.domen.model.error_response.ErrorResponse
-import ru.dreamteam.travelreminder.data.local.model.map.ResponseResult
 import ru.dreamteam.travelreminder.domen.model.params.ChangePasswordByEmailParam
 import ru.dreamteam.travelreminder.domen.model.params.SignInByEmailAndPasswordParams
 import ru.dreamteam.travelreminder.domen.model.params.SignUpByEmailAndPasswordParams
-import ru.dreamteam.travelreminder.domen.model.response.RefreshTokenResponse
-import ru.dreamteam.travelreminder.domen.model.response.SignInResponse
-import ru.dreamteam.travelreminder.domen.model.response.SignUpResponse
 import ru.dreamteam.travelreminder.domen.repository.AuthRepository
-
-private const val ERROR_FIELD = "error"
 
 class AuthRepositoryImpl(
     private val client: HttpClient,
@@ -29,9 +27,11 @@ class AuthRepositoryImpl(
     apiKey: String
 ) : AuthRepository {
 
-    private val signInUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$apiKey"
+    private val signInUrl =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$apiKey"
     private val signUpUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=$apiKey"
-    private val changePasswordUrl = "https://identitytoolkit.googleapis.com/v1/accounts:update?key=$apiKey"
+    private val changePasswordUrl =
+        "https://identitytoolkit.googleapis.com/v1/accounts:update?key=$apiKey"
     private val refreshTokenUrl = "https://securetoken.googleapis.com/v1/token?key=$apiKey"
 
     override fun isFirstLaunch(): Boolean =
@@ -39,96 +39,88 @@ class AuthRepositoryImpl(
 
     override suspend fun refreshToken(refreshToken: String?) {
         val body = mapOf("refresh_token" to (storage.getRefreshToken() ?: ""))
-        val responseText = client.post(refreshTokenUrl) {
+        val raw = client.post(refreshTokenUrl) {
             contentType(ContentType.Application.Json)
             setBody(body)
         }.body<String>()
 
-        val response = Json.decodeFromString<RefreshTokenResponse>(responseText)
-        storage.setIdToken(response.idToken)
+        if (ERROR_FIELD in raw) {
+            val err = Json.decodeFromString<ErrorResponse>(raw)
+            throw FirebaseAuthException(err)
+        }
+
+        val resp = Json.decodeFromString<RefreshTokenResponse>(raw)
+        storage.setIdToken(resp.idToken)
     }
 
-    override suspend fun signInByEmailAndPassword(
-        params: SignInByEmailAndPasswordParams
-    ): ResponseResult<SignInResponse> =
-        performRequest(
-            url = signInUrl,
-            body = params.toRequest(returnSecureToken = true),
-            onSuccess = { resp ->
-                saveInLocalStorage(resp.localId, resp.idToken, resp.refreshToken)
-                ResponseResult.Success(resp)
-            }
-        )
+    override suspend fun signInByEmailAndPassword(params: SignInByEmailAndPasswordParams) {
+        performRequest<SignInResponse>(
+            signInUrl,
+            params.toRequest(returnSecureToken = true)
+        ) { resp ->
+            saveInLocalStorage(resp.localId, resp.idToken, resp.refreshToken)
+        }
+    }
 
-    override suspend fun signUpByEmailAndPassword(
-        params: SignUpByEmailAndPasswordParams
-    ): ResponseResult<SignUpResponse> =
-        performRequest(
-            url = signUpUrl,
-            body = params.toRequest(returnSecureToken = true),
-            onSuccess = { resp ->
-                saveInLocalStorage(resp.localId, resp.idToken, resp.refreshToken)
-                ResponseResult.Success(resp)
-            }
-        )
+    override suspend fun signUpByEmailAndPassword(params: SignUpByEmailAndPasswordParams) {
+        performRequest<SignUpResponse>(
+            signUpUrl,
+            params.toRequest(returnSecureToken = true)
+        ) { resp ->
+            saveInLocalStorage(resp.localId, resp.idToken, resp.refreshToken)
+        }
+    }
 
-    override suspend fun changePasswordByEmail(
-        params: ChangePasswordByEmailParam
-    ): ResponseResult<ChangePasswordByEmailResponse> {
-        val signInRaw = client.post(signInUrl) {
+    override suspend fun changePasswordByEmail(params: ChangePasswordByEmailParam) {
+        val rawSignIn = client.post(signInUrl) {
             contentType(ContentType.Application.Json)
             setBody(params.toSignInRequest(returnSecureToken = true))
         }.body<String>()
 
-        if (ERROR_FIELD in signInRaw) {
-            val error = Json.decodeFromString<ErrorResponse>(signInRaw)
-            return ResponseResult.Failure(error)
+        if (ERROR_FIELD in rawSignIn) {
+            val err = Json.decodeFromString<ErrorResponse>(rawSignIn)
+            throw FirebaseAuthException(err)
         }
-        val signInSuccess = Json.decodeFromString<SignInResponse>(signInRaw)
-        saveInLocalStorage(
-            signInSuccess.localId,
-            signInSuccess.idToken,
-            signInSuccess.refreshToken
-        )
+        val signInResp = Json.decodeFromString<SignInResponse>(rawSignIn)
+        saveInLocalStorage(signInResp.localId, signInResp.idToken, signInResp.refreshToken)
 
-        return performRequest(
+        performRequest<ChangePasswordByEmailResponse>(
             url = changePasswordUrl,
             body = params.toRequest(
-                idToken = signInSuccess.idToken ?: "",
+                idToken = signInResp.idToken ?: "",
                 returnSecureToken = true
             )
         ) { resp ->
             saveInLocalStorage(resp.localId, resp.idToken, resp.refreshToken)
-            ResponseResult.Success(resp)
         }
     }
 
     private suspend inline fun <reified T : Any> performRequest(
         url: String,
         body: Any,
-        crossinline onSuccess: (T) -> ResponseResult<T>
-    ): ResponseResult<T> {
+        crossinline onSuccess: (T) -> Unit
+    ) {
         val raw = client.post(url) {
             contentType(ContentType.Application.Json)
             setBody(body)
         }.body<String>()
 
-        return if (ERROR_FIELD in raw) {
-            val error = Json.decodeFromString<ErrorResponse>(raw)
-            ResponseResult.Failure(error)
-        } else {
-            val success = Json.decodeFromString<T>(raw)
-            onSuccess(success)
+        if (ERROR_FIELD in raw) {
+            val err = Json.decodeFromString<ErrorResponse>(raw)
+            throw FirebaseAuthException(err)
         }
+
+        val success = Json.decodeFromString<T>(raw)
+        onSuccess(success)
     }
 
-    private fun saveInLocalStorage(
-        localId: String?,
-        idToken: String?,
-        refreshToken: String?
-    ) {
+    private fun saveInLocalStorage(localId: String?, idToken: String?, refreshToken: String?) {
         storage.setUserUid(localId)
         storage.setIdToken(idToken)
         storage.setRefreshToken(refreshToken)
+    }
+
+    private companion object {
+        const val ERROR_FIELD = "error"
     }
 }

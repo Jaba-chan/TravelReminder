@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -16,16 +17,20 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
+import ru.dreamteam.travelreminder.presentation.CaughtErrorImpl
 import ru.dreamteam.travelreminder.presentation.coomon_ui.CircularProgressBar
+import ru.dreamteam.travelreminder.presentation.coomon_ui.ErrorText
+import ru.dreamteam.travelreminder.presentation.coomon_ui.HeadingTextWithIcon
 import ru.dreamteam.travelreminder.presentation.coomon_ui.InnerButtonsText
-import ru.dreamteam.travelreminder.presentation.coomon_ui.ScreenHeadingText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledButton
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledTextField
+import ru.dreamteam.travelreminder.presentation.sing_in.SingInViewModel
 import travelreminder.composeapp.generated.resources.Res
 import travelreminder.composeapp.generated.resources.bt_sign_up
 import travelreminder.composeapp.generated.resources.enter_email
 import travelreminder.composeapp.generated.resources.enter_password
 import travelreminder.composeapp.generated.resources.enter_password_again
+import travelreminder.composeapp.generated.resources.ic_arrow_back
 import travelreminder.composeapp.generated.resources.sign_up
 
 @Composable
@@ -42,7 +47,12 @@ fun SignUpScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(24.dp))
-        ScreenHeadingText(text = stringResource(Res.string.sign_up))
+        HeadingTextWithIcon(
+            iconRes         = Res.drawable.ic_arrow_back,
+            iconSize        = 24.dp,
+            text            = stringResource(Res.string.sign_up),
+            onIconClicked   = onNavigateToSignIn
+        )
         Spacer(modifier = Modifier.height(96.dp))
         StyledTextField(
             value                   = viewModel.email.value,
@@ -63,6 +73,17 @@ fun SignUpScreen(
             onValueChange           = { viewModel.onPasswordAgainTextChanged(it) },
             placeholder             = stringResource(Res.string.enter_password_again),
             visualTransformation    = PasswordVisualTransformation()
+        )
+        ErrorText(
+            modifier = Modifier
+                .padding(
+                    horizontal  = 28.dp,
+                    vertical    = 4.dp
+                ),
+            text = ((state as? SignUpViewModel.SignUpState.Error)?.error as? CaughtErrorImpl.ErrorForUser)
+                ?.let {
+                        stringResource(it.resId)
+                } ?: ""
         )
         Spacer(modifier = Modifier.height(80.dp))
         StyledButton(

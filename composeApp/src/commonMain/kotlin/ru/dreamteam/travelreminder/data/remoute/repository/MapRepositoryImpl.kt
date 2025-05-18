@@ -15,12 +15,12 @@ import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
 import ru.dreamteam.travelreminder.data.local.model.map.Route
 import ru.dreamteam.travelreminder.data.mapper.toDomain
-import ru.dreamteam.travelreminder.data.remoute.model.map.AutocompleteResponseDto
-import ru.dreamteam.travelreminder.data.remoute.model.map.NearbySearchResponseDto
-import ru.dreamteam.travelreminder.data.remoute.model.map.PlaceDetailsResponseDto
+import ru.dreamteam.travelreminder.data.remoute.model.response.AutocompleteResponseDto
+import ru.dreamteam.travelreminder.data.remoute.model.response.NearbySearchResponseDto
+import ru.dreamteam.travelreminder.data.remoute.model.response.PlaceDetailsResponseDto
 import ru.dreamteam.travelreminder.domen.model.Place
 import ru.dreamteam.travelreminder.domen.model.PlaceSuggestion
-import ru.dreamteam.travelreminder.domen.model.response.RouteResponse
+import ru.dreamteam.travelreminder.data.remoute.model.response.RouteResponse
 import ru.dreamteam.travelreminder.domen.model.travel.Point
 import ru.dreamteam.travelreminder.domen.model.travel.TransportationMode
 import ru.dreamteam.travelreminder.domen.repository.MapRepository

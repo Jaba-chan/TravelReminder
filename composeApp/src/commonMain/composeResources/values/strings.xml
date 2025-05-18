@@ -24,4 +24,18 @@
     <string name="hours_pattern">ч. </string>
     <string name="days_pattern">д. </string>
 
+    <string name="auth_error_default_error">Упс. Что-то пошло не так. Пожалуйста, обратитесь в поддержку</string>
+
+    <string name="auth_error_invalid_email">Неверный формат почты</string>
+    <string name="auth_error_invalid_login_credentials">Неверная почта или пароль</string>
+    <string name="auth_error_missing_password">Введите пароль</string>
+    <string name="auth_error_user_disabled">Пользователь недоступен</string>
+
+    <string name="auth_error_weak_password">Слабый пароль</string>
+    <string name="auth_error_email_exists">Пользователь с такой почтой уже существует</string>
+    <string name="auth_error_operation_not_allowed">Вход с паролем недоступен</string>
+    <string name="auth_error_too_many_attempts_try_later">Подозрительная активность. Повторите попытку позже</string>
+
+    <string name="auth_error_user_not_found">Пользователь не найден</string>
+
 </resources>

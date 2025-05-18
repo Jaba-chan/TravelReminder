@@ -4,18 +4,18 @@ import ru.dreamteam.travelreminder.data.local.model.map.ResponseResult
 import ru.dreamteam.travelreminder.domen.model.params.ChangePasswordByEmailParam
 import ru.dreamteam.travelreminder.domen.model.params.SignInByEmailAndPasswordParams
 import ru.dreamteam.travelreminder.domen.model.params.SignUpByEmailAndPasswordParams
-import ru.dreamteam.travelreminder.domen.model.response.ChangePasswordByEmailResponse
-import ru.dreamteam.travelreminder.domen.model.response.SignInResponse
-import ru.dreamteam.travelreminder.domen.model.response.SignUpResponse
+import ru.dreamteam.travelreminder.data.remoute.model.response.ChangePasswordByEmailResponse
+import ru.dreamteam.travelreminder.data.remoute.model.response.SignInResponse
+import ru.dreamteam.travelreminder.data.remoute.model.response.SignUpResponse
 
 interface AuthRepository {
     fun isFirstLaunch(): Boolean
 
     suspend fun refreshToken(refreshToken: String?)
 
-    suspend fun signInByEmailAndPassword(params: SignInByEmailAndPasswordParams): ResponseResult<SignInResponse>
+    suspend fun signInByEmailAndPassword(params: SignInByEmailAndPasswordParams)
 
-    suspend fun signUpByEmailAndPassword(params: SignUpByEmailAndPasswordParams): ResponseResult<SignUpResponse>
+    suspend fun signUpByEmailAndPassword(params: SignUpByEmailAndPasswordParams)
 
-    suspend fun changePasswordByEmail(params: ChangePasswordByEmailParam): ResponseResult<ChangePasswordByEmailResponse>
+    suspend fun changePasswordByEmail(params: ChangePasswordByEmailParam)
 }

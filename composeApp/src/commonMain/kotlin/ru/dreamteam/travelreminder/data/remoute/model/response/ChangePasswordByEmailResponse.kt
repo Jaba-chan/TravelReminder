@@ -1,4 +1,5 @@
-package ru.dreamteam.travelreminder.domen.model.response
+package ru.dreamteam.travelreminder.data.remoute.model.response
+
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
@@ -8,15 +9,17 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
 @JsonIgnoreUnknownKeys
-data class SignUpResponse(
-    @SerialName("idToken")
-    val idToken: String? = null,
+data class ChangePasswordByEmailResponse(
     @SerialName("email")
-    val email: String? = null,
-    @SerialName("refreshToken")
-    val refreshToken: String? = null,
+    val email: String?,
     @SerialName("expiresIn")
     val expiresIn: String? = null,
+    @SerialName("idToken")
+    val idToken: String? = null,
     @SerialName("localId")
-    val localId: String? = null
+    val localId: String?,
+    @SerialName("passwordHash")
+    val passwordHash: String?,
+    @SerialName("refreshToken")
+    val refreshToken: String? = null
 )
