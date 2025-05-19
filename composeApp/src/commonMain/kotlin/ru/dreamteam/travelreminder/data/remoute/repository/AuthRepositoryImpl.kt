@@ -15,7 +15,7 @@ import ru.dreamteam.travelreminder.data.remoute.model.response.ChangePasswordByE
 import ru.dreamteam.travelreminder.data.remoute.model.response.RefreshTokenResponse
 import ru.dreamteam.travelreminder.data.remoute.model.response.SignInResponse
 import ru.dreamteam.travelreminder.data.remoute.model.response.SignUpResponse
-import ru.dreamteam.travelreminder.domen.model.error_response.ErrorResponse
+import ru.dreamteam.travelreminder.data.remoute.model.error_response.ErrorResponse
 import ru.dreamteam.travelreminder.domen.model.params.ChangePasswordByEmailParam
 import ru.dreamteam.travelreminder.domen.model.params.SignInByEmailAndPasswordParams
 import ru.dreamteam.travelreminder.domen.model.params.SignUpByEmailAndPasswordParams

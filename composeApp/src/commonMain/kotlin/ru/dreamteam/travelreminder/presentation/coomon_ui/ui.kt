@@ -3,6 +3,7 @@ package ru.dreamteam.travelreminder.presentation.coomon_ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
@@ -10,10 +11,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -29,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -36,76 +40,115 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ru.dreamteam.travelreminder.presentation.sing_in.SingInViewModel
 import travelreminder.composeapp.generated.resources.Res
+import travelreminder.composeapp.generated.resources.bt_sign_in
+import travelreminder.composeapp.generated.resources.empty_now
 import travelreminder.composeapp.generated.resources.retry
 import travelreminder.composeapp.generated.resources.something_error
 
 @Composable
-fun ColumnScope.SomethingErrorScreen(
+fun SomethingErrorScreen(
     onRetryButtonClicked: () -> Unit
 ){
-    Icon(
-        imageVector         = Icons.Default.Warning,
-        contentDescription  = null,
-        tint                = MaterialTheme.colorScheme.error)
-    Spacer(modifier = Modifier.height(16.dp))
-    Text(
-        text    = stringResource(Res.string.something_error),
-        style   = MaterialTheme.typography.headlineMedium,
-        color   = MaterialTheme.colorScheme.error
-    )
-    Button(
-        onClick = onRetryButtonClicked,
-        content = {
-            Text(
-                text = stringResource(Res.string.retry)
-            )
-        },
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Spacer(modifier = Modifier.weight(1f))
+        Icon(
+            modifier = Modifier
+                .size(152.dp),
+            imageVector         = Icons.Default.Warning,
+            contentDescription  = null,
+            tint                = MaterialTheme.colorScheme.error)
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            textAlign   = TextAlign.Center,
+            text        = stringResource(Res.string.something_error),
+            style       = MaterialTheme.typography.headlineMedium,
+            color       = MaterialTheme.colorScheme.error
         )
-    )
+        Spacer(modifier = Modifier.height(20.dp))
+        StyledButton(
+            onButtonClicked = onRetryButtonClicked,
+            paddingValues = PaddingValues(horizontal = 28.dp),
+            content = {
+                InnerButtonsText(
+                    text = stringResource(Res.string.retry)
+                )
+            }
+        )
+        Spacer(modifier = Modifier.weight(1f))
+    }
+
 }
 
+@Composable
+fun EmptyScreen(
+    text: String
+){
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Spacer(modifier = Modifier.weight(1F))
+        Text(
+            textAlign   = TextAlign.Center,
+            text        = text
+
+        )
+        Spacer(modifier = Modifier.weight(1F))
+    }
+}
 
 @Composable
 fun StyledTextField(
     value: String,
     placeholder: String,
     onValueChange: (String) -> Unit,
-    visualTransformation: VisualTransformation
+    modifier: Modifier = Modifier,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    tint: Color = MaterialTheme.colorScheme.secondary,
+    textColor: Color = MaterialTheme.colorScheme.onSecondary,
+    height: Dp = 40.dp,
+    contentPadding: PaddingValues = PaddingValues(12.dp)
 ) {
-    TextField(
-        value = value,
-        onValueChange   = { onValueChange(it) },
-        placeholder     = {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text        = placeholder,
-                textAlign   = TextAlign.Center,
-                color       = MaterialTheme.colorScheme.onSecondary,
-                style       = MaterialTheme.typography.labelMedium
-            )
-        },
-        visualTransformation    = visualTransformation,
-        maxLines                = 1,
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor   = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            focusedContainerColor   = MaterialTheme.colorScheme.secondary,
-            unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
-            focusedTextColor        = MaterialTheme.colorScheme.onSecondary,
-            unfocusedTextColor      = MaterialTheme.colorScheme.onSecondary
-        ),
-        modifier = Modifier
-            .height(56.dp)
-            .padding(horizontal = 28.dp)
-            .clip(RoundedCornerShape(4.dp))
+    Box(
+        Modifier.then(modifier)
             .fillMaxWidth()
-            .wrapContentHeight()
-    )
+            .height(height)
+            .background(color = tint, shape = RoundedCornerShape(4.dp))
+
+    ) {
+        BasicTextField(
+            value = value,
+            onValueChange = onValueChange,
+            singleLine = true,
+            visualTransformation = visualTransformation,
+            textStyle = MaterialTheme.typography.bodyMedium.copy(color = textColor),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(contentPadding),
+            decorationBox = { inner ->
+                Box(
+                    Modifier.fillMaxSize(),
+                ) {
+                    if (value.isEmpty()) {
+                        Text(
+                            textAlign = TextAlign.Center,
+                            text = placeholder,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = textColor.copy(alpha = 0.5f)
+                        )
+                    }
+                    inner()
+                }
+            }
+        )
+    }
 }
 
 @Composable
@@ -130,6 +173,7 @@ fun StyledButton(
         ),
     )
 }
+
 
 @Composable
 fun CircularProgressBar(

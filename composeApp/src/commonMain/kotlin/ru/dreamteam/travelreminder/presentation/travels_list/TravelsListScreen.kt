@@ -27,11 +27,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import ru.dreamteam.travelreminder.domen.model.travel.Travel
-import ru.dreamteam.travelreminder.presentation.coomon_ui.CircularProgressBar
+import ru.dreamteam.travelreminder.presentation.coomon_ui.EmptyScreen
 import ru.dreamteam.travelreminder.presentation.coomon_ui.FullScreenLoading
 import ru.dreamteam.travelreminder.presentation.coomon_ui.HeadingTextWithIcon
 import ru.dreamteam.travelreminder.presentation.coomon_ui.SomethingErrorScreen
@@ -65,7 +64,7 @@ fun TravelsListScreen(
             onIconClicked   = logOut,
         )
         when (state) {
-            TravelsViewModel.TravelsState.Empty         -> Text(text = stringResource(Res.string.empty_now))
+            TravelsViewModel.TravelsState.Empty         -> EmptyScreen(text = stringResource(Res.string.empty_now))
             is TravelsViewModel.TravelsState.Error      -> SomethingErrorScreen(onRetryButtonClicked = {})
             TravelsViewModel.TravelsState.Loading       -> FullScreenLoading()
             is TravelsViewModel.TravelsState.Success    ->

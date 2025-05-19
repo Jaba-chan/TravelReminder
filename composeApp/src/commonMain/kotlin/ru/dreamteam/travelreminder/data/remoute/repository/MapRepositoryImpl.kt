@@ -113,7 +113,7 @@ class MapRepositoryImpl(
                         put("latitude",  point.latitude)
                         put("longitude", point.longitude)
                     }
-                    put("radius", 100)
+                    put("radius", 300)
                 }
             }
         }

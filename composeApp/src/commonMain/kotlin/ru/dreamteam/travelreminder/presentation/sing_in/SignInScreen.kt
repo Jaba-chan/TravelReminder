@@ -66,14 +66,18 @@ fun SignInScreen(
             value                   = viewModel.email.value,
             onValueChange           = { viewModel.onEmailTextChanged(it) },
             placeholder             = stringResource(Res.string.enter_email),
-            visualTransformation    = VisualTransformation.None
+            visualTransformation    = VisualTransformation.None,
+            modifier = Modifier
+                .padding(horizontal = 28.dp)
         )
         Spacer(modifier = Modifier.height(80.dp))
         StyledTextField(
             value                   = viewModel.password.value,
             onValueChange           = { viewModel.onPasswordTextChanged(it) },
             placeholder             = stringResource(Res.string.enter_password),
-            visualTransformation    = PasswordVisualTransformation()
+            visualTransformation    = PasswordVisualTransformation(),
+            modifier = Modifier
+                .padding(horizontal = 28.dp)
         )
 
         ErrorText(

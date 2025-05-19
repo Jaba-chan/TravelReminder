@@ -1,4 +1,4 @@
-package ru.dreamteam.travelreminder.domen.model.error_response
+package ru.dreamteam.travelreminder.data.remoute.model.error_response
 
 
 import kotlinx.serialization.ExperimentalSerializationApi

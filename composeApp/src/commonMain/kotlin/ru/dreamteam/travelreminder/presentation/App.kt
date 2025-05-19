@@ -16,6 +16,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinContext
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
+import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelScreen
+import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
 import ru.dreamteam.travelreminder.presentation.change_password.ChangePasswordScreen
 import ru.dreamteam.travelreminder.presentation.change_password.ChangePasswordViewModel
 import ru.dreamteam.travelreminder.presentation.sing_in.SingInViewModel
@@ -47,6 +49,7 @@ fun App() {
             val signUpViewModel         = koinViewModel<SignUpViewModel>()
             val changePasswordViewModel = koinViewModel<ChangePasswordViewModel>()
             val mapViewModel            = koinViewModel<MapViewModel>()
+            val addTravelViewModel      = koinViewModel<AddTravelViewModel>()
 
             val navController   = rememberNavController()
             val navState        = remember { NavigationState(navController) }
@@ -63,7 +66,11 @@ fun App() {
                         Screen.TravelsListScreen.route, Screen.ShowMap.route ->
                             FloatingActionButton(
                                 backgroundColor = MaterialTheme.colorScheme.primary,
-                                onClick = { navState.navigateTo(Screen.ShowMap.route) },
+                                onClick = {
+                                    if (currentRoute == Screen.TravelsListScreen.route)
+                                        navState.navigateTo(Screen.AddTravelScreen.route)
+                                    else navState.navigateTo(Screen.ShowMap.route)
+                                },
                                 content = {
                                     Icon(
                                         painter             = if (currentRoute == Screen.TravelsListScreen.route)
@@ -98,7 +105,10 @@ fun App() {
                         )
                     },
                     addTravelScreenContent = {
-                        Text(text = "fsaf")
+                        AddTravelScreen(
+                            viewModel                   = addTravelViewModel,
+                            onNavigateToTravelList      = { navState.navigateTo(Screen.TravelsListScreen.route) }
+                        )
                     },
                     changePasswordScreenContent = {
                         ChangePasswordScreen(

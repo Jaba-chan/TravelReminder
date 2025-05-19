@@ -29,6 +29,7 @@ import ru.dreamteam.travelreminder.domen.use_cases.SignInByEmailAndPasswordUseCa
 import ru.dreamteam.travelreminder.domen.use_cases.SignUpByEmailAndPasswordUseCase
 import ru.dreamteam.travelreminder.presentation.DefaultErrorMapper
 import ru.dreamteam.travelreminder.presentation.MainActivityViewModel
+import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
 import ru.dreamteam.travelreminder.presentation.change_password.ChangePasswordViewModel
 import ru.dreamteam.travelreminder.presentation.show_map.MapViewModel
 import ru.dreamteam.travelreminder.presentation.sing_in.SingInViewModel
@@ -70,9 +71,10 @@ val sharedModule = module {
     single { GetNavigationRouteUseCase(get(), get()) }
 
     viewModel { MainActivityViewModel(get()) }
-    viewModel { TravelsViewModel(get(), get(), get()) }
+    viewModel { TravelsViewModel(get(), get()) }
     viewModel { SingInViewModel(get()) }
     viewModel { SignUpViewModel(get()) }
     viewModel { ChangePasswordViewModel(get()) }
+    viewModel { AddTravelViewModel() }
     viewModel { MapViewModel(get(), get(), get(), get(), get()) }
 }

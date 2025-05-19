@@ -29,7 +29,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.dreamteam.travelreminder.domen.model.travel.TransportationMode
@@ -55,25 +57,36 @@ fun MapHead(
     Spacer(modifier = Modifier.height(8.dp))
     Row(modifier = Modifier.fillMaxWidth()) {
         val columnHeight = 100.dp
-        Spacer(modifier = Modifier.width(8.dp))
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.End,
+            modifier = Modifier
+                .height(columnHeight)
+                .weight(1f)
+        ) {
+            viewModel.route.value?.let {
+                val time = durationToDHM(it.duration)
+                repeat(time.size){ pos ->
+                    Text(
+                        text = time[pos],
+                        style = MaterialTheme.typography.labelLarge.copy(fontSize = 13.sp),
+                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+            }
+        }
+       Spacer(modifier = Modifier.width(8.dp))
+
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .height(columnHeight)
-
-        ) {
-            viewModel.route.value?.let { Text(text = durationToDHM(it.duration)) }
-        }
-       Spacer(modifier = Modifier.weight(1f))
-
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.height(columnHeight)
         ) {
             Icon(
                 painter = painterResource(Res.drawable.ic_circle),
+                tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f),
                 contentDescription = null,
                 modifier = Modifier
                     .clickable(onClick = viewModel::setPointSelectorAsOrigin)
@@ -82,6 +95,7 @@ fun MapHead(
             Spacer(modifier = Modifier.height(4.dp))
             Icon(
                 painter = painterResource(Res.drawable.ic_more_vert),
+                tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.4f),
                 contentDescription = null,
                 modifier = Modifier
                     .height(20.dp)
@@ -90,6 +104,7 @@ fun MapHead(
             Icon(
                 imageVector = Icons.Outlined.Place,
                 contentDescription = null,
+                tint = MaterialTheme.colorScheme.error,
                 modifier = Modifier
                     .clickable(onClick = viewModel::setPointSelectorAsDestination)
                     .size(20.dp)
@@ -128,13 +143,13 @@ fun MapHead(
         ) {
             Icon(
                 painter = painterResource(Res.drawable.ic_swap),
+                tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
                 contentDescription = null,
                 modifier = Modifier
                     .clickable { viewModel.onReverseButtonPressed() }
                     .size(24.dp)
             )
         }
-
         Spacer(modifier = Modifier.weight(1f))
     }
     Spacer(modifier = Modifier.height(8.dp))
@@ -227,21 +242,22 @@ fun TransportationModeSelector(
 }
 
 @Composable
-private fun durationToDHM(duration: String): String {
-    val seconds = duration.removeSuffix("s").toIntOrNull() ?: return "0"
+private fun durationToDHM(duration: String): List<String> {
+    val seconds = duration.removeSuffix("s").toIntOrNull() ?: return listOf("0")
     val totalMinutes = (seconds + 30) / 60
 
     val days    = totalMinutes / (24 * 60)
     val hours   = (totalMinutes % (24 * 60)) / 60
     val minutes = totalMinutes % 60
 
-    return buildString {
+    val list = mutableListOf<String>()
+    return list.apply {
         if (days != 0){
-            append(days).append(stringResource(Res.string.days_pattern))
+            list.add( "$days${stringResource(Res.string.days_pattern)}" )
         }
         if (hours != 0){
-            append(hours).append(stringResource(Res.string.hours_pattern))
+            list.add( "$hours${stringResource(Res.string.hours_pattern)}" )
         }
-        append(minutes).append(stringResource(Res.string.minutes_pattern))
+            list.add( "$minutes${stringResource(Res.string.minutes_pattern)}" )
     }
 }

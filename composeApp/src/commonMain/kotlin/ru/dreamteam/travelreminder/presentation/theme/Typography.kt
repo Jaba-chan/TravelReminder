@@ -35,5 +35,18 @@ val AppTypography = Typography(
         fontSize = 14.sp,
         lineHeight = 12.sp,
         letterSpacing = 0.sp
-    )
+    ),
+    bodySmall = TextStyle(
+        fontFamily = FontFamily.SansSerif,
+        fontWeight = FontWeight.Light,
+        fontSize = 15.sp,
+        lineHeight = 18.sp,
+        letterSpacing = 0.sp
+    ),
+    labelLarge = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.15.sp
+    ),
 )

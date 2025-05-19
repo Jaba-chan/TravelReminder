@@ -17,7 +17,6 @@ import ru.dreamteam.travelreminder.domen.use_cases.GetTravelsUseCase
 
 class TravelsViewModel(
     private val getTravelsUseCase: GetTravelsUseCase,
-    private val addTravelsUseCase: AddTravelUseCase,
     private val deleteTravelUseCase: DeleteTravelUseCase
 ) : ViewModel() {
 
@@ -33,7 +32,7 @@ class TravelsViewModel(
                     val data = result.data
                     _state.value = when {
                         data.isEmpty() -> TravelsState.Empty
-                        else -> TravelsState.Error("Something wrong")
+                        else -> TravelsState.Success(result.data)
                     }
                 }
             }
@@ -54,25 +53,6 @@ class TravelsViewModel(
             }
         }
     }
-
-    fun onAddButtonPressed() {
-         addTravelsUseCase(
-            Travel(
-                id = "travel3",
-                date = "2025-03-29",
-                title = "Встреча с командой",
-                destinationByAddress = "123 Main St",
-                destinationByPoint = PointDto(
-                    latitude = 40.7128,
-                    longitude = -74.0060
-                ),
-                arrivalTime = "12:00 PM",
-                transportationMode = TransportationMode.DRIVE,
-                timeBeforeRemind = "30m"
-            )
-        ).onEach { }.launchIn(viewModelScope)
-    }
-
 
     sealed interface TravelsState {
         data class Success(val data: List<Travel>) : TravelsState

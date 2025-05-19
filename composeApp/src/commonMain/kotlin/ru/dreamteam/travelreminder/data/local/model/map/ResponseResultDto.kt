@@ -1,6 +1,6 @@
 package ru.dreamteam.travelreminder.data.local.model.map
 
-import ru.dreamteam.travelreminder.domen.model.error_response.ErrorResponse
+import ru.dreamteam.travelreminder.data.remoute.model.error_response.ErrorResponse
 
 sealed class ResponseResult<out T> {
 
