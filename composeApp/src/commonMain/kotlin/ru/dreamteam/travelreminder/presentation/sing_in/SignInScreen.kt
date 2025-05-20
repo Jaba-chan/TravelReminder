@@ -34,6 +34,7 @@ import ru.dreamteam.travelreminder.presentation.coomon_ui.ErrorText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.InnerButtonsText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.ScreenHeadingText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledButton
+import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledPlaceholder
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledTextField
 import travelreminder.composeapp.generated.resources.Res
 import travelreminder.composeapp.generated.resources.bt_sign_in
@@ -65,19 +66,23 @@ fun SignInScreen(
         StyledTextField(
             value                   = viewModel.email.value,
             onValueChange           = { viewModel.onEmailTextChanged(it) },
-            placeholder             = stringResource(Res.string.enter_email),
+            placeholder             = {
+                StyledPlaceholder(
+                    text = stringResource(Res.string.enter_email),
+                    textColor = MaterialTheme.colorScheme.onSecondary)
+            },
             visualTransformation    = VisualTransformation.None,
-            modifier = Modifier
-                .padding(horizontal = 28.dp)
         )
         Spacer(modifier = Modifier.height(80.dp))
         StyledTextField(
             value                   = viewModel.password.value,
             onValueChange           = { viewModel.onPasswordTextChanged(it) },
-            placeholder             = stringResource(Res.string.enter_password),
+            placeholder             = {
+                StyledPlaceholder(
+                    text = stringResource(Res.string.enter_password),
+                    textColor = MaterialTheme.colorScheme.onSecondary)
+            },
             visualTransformation    = PasswordVisualTransformation(),
-            modifier = Modifier
-                .padding(horizontal = 28.dp)
         )
 
         ErrorText(

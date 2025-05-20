@@ -2,35 +2,40 @@ package ru.dreamteam.travelreminder.presentation.coomon_ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.VisualTransformation
@@ -40,10 +45,7 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import ru.dreamteam.travelreminder.presentation.sing_in.SingInViewModel
 import travelreminder.composeapp.generated.resources.Res
-import travelreminder.composeapp.generated.resources.bt_sign_in
-import travelreminder.composeapp.generated.resources.empty_now
 import travelreminder.composeapp.generated.resources.retry
 import travelreminder.composeapp.generated.resources.something_error
 
@@ -106,48 +108,91 @@ fun EmptyScreen(
 @Composable
 fun StyledTextField(
     value: String,
-    placeholder: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    tint: Color = MaterialTheme.colorScheme.secondary,
-    textColor: Color = MaterialTheme.colorScheme.onSecondary,
+    onClick: (() -> Unit)? = null,
+    placeholder: @Composable () -> Unit,
+    readOnly: Boolean = false,
+    modifier: Modifier = Modifier.padding(horizontal = 28.dp),
     height: Dp = 40.dp,
-    contentPadding: PaddingValues = PaddingValues(12.dp)
+    backgroundColor: Color = MaterialTheme.colorScheme.secondary,
+    textColor: Color = MaterialTheme.colorScheme.onSecondary,
+    cursorBrush: Brush = SolidColor(MaterialTheme.colorScheme.primary),
+    textAlign: TextAlign = TextAlign.Start,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 12.dp),
+    trailingIcon: (@Composable () -> Unit)? = null,
 ) {
-    Box(
-        Modifier.then(modifier)
-            .fillMaxWidth()
-            .height(height)
-            .background(color = tint, shape = RoundedCornerShape(4.dp))
+    val selectionColors  = TextSelectionColors(
+        handleColor      = textColor,
+        backgroundColor  = textColor.copy(alpha = 0.3f)
+    )
 
+    CompositionLocalProvider(
+        LocalTextSelectionColors.provides(selectionColors)
     ) {
-        BasicTextField(
-            value = value,
-            onValueChange = onValueChange,
-            singleLine = true,
-            visualTransformation = visualTransformation,
-            textStyle = MaterialTheme.typography.bodyMedium.copy(color = textColor),
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-            modifier = Modifier
+        Row(
+            modifier = modifier
                 .fillMaxWidth()
+                .height(height)
+                .background(
+                    backgroundColor,
+                    RoundedCornerShape(4.dp)
+                )
                 .padding(contentPadding),
-            decorationBox = { inner ->
-                Box(
-                    Modifier.fillMaxSize(),
-                ) {
-                    if (value.isEmpty()) {
-                        Text(
-                            textAlign = TextAlign.Center,
-                            text = placeholder,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = textColor.copy(alpha = 0.5f)
-                        )
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            ) {
+                BasicTextField(
+                    value               = value,
+                    onValueChange       = onValueChange,
+                    singleLine          = true,
+                    readOnly            = readOnly,
+                    visualTransformation= visualTransformation,
+                    cursorBrush         = cursorBrush,
+                    textStyle           = MaterialTheme.typography.labelMedium.copy(
+                        color     = textColor,
+                        textAlign = textAlign
+                    ),
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    decorationBox = { inner ->
+                        val noRippleInteractionSource = remember { MutableInteractionSource() }
+                        Box(
+                            Modifier
+                                .fillMaxSize()
+                                .run {
+                                    if (onClick != null)
+                                        clickable(
+                                            interactionSource = noRippleInteractionSource,
+                                            indication = null
+                                        ) {
+                                            onClick()
+                                        }
+                                    else this
+                                     },
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            if (value.isEmpty()) placeholder()
+                            inner()
+                        }
                     }
-                    inner()
+                )
+            }
+            trailingIcon?.let {
+                Spacer(modifier = Modifier.width(8.dp))
+                Box(
+                    modifier = Modifier
+                                .wrapContentSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    it()
                 }
             }
-        )
+        }
     }
 }
 
@@ -266,4 +311,18 @@ fun ColumnScope.ErrorText(
         )
     }
 
+}
+
+@Composable
+fun StyledPlaceholder(
+    text: String,
+    textAlign: TextAlign = TextAlign.Center,
+    textColor: Color
+){
+    Text(
+        text = text,
+        textAlign = textAlign,
+        style = MaterialTheme.typography.labelMedium,
+        color = textColor
+    )
 }

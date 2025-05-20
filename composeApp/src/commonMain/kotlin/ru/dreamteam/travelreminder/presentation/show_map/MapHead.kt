@@ -17,19 +17,19 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Place
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
@@ -159,7 +159,7 @@ fun MapHead(
         selectedMode = mode,
         onModeSelected = { viewModel.onTransportationModeChanged(it) })
     Spacer(modifier = Modifier.height(16.dp))
-    Divider(thickness = 2.dp)
+    HorizontalDivider(thickness = 2.dp)
 }
 
 @Composable
@@ -240,6 +240,7 @@ fun TransportationModeSelector(
         Spacer(modifier = Modifier.weight(1f))
     }
 }
+
 
 @Composable
 private fun durationToDHM(duration: String): List<String> {

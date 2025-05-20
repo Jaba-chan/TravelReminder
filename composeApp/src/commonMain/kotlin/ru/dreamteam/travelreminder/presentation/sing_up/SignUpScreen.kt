@@ -23,8 +23,8 @@ import ru.dreamteam.travelreminder.presentation.coomon_ui.ErrorText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.HeadingTextWithIcon
 import ru.dreamteam.travelreminder.presentation.coomon_ui.InnerButtonsText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledButton
+import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledPlaceholder
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledTextField
-import ru.dreamteam.travelreminder.presentation.sing_in.SingInViewModel
 import travelreminder.composeapp.generated.resources.Res
 import travelreminder.composeapp.generated.resources.bt_sign_up
 import travelreminder.composeapp.generated.resources.enter_email
@@ -57,21 +57,33 @@ fun SignUpScreen(
         StyledTextField(
             value                   = viewModel.email.value,
             onValueChange           = { viewModel.onEmailTextChanged(it) },
-            placeholder             = stringResource(Res.string.enter_email),
+            placeholder             = {
+                StyledPlaceholder(
+                    text = stringResource(Res.string.enter_email),
+                    textColor = MaterialTheme.colorScheme.onSecondary)
+            },
             visualTransformation    = VisualTransformation.None
         )
         Spacer(modifier = Modifier.height(80.dp))
         StyledTextField(
             value                   = viewModel.password.value,
             onValueChange           = { viewModel.onPasswordTextChanged(it) },
-            placeholder             = stringResource(Res.string.enter_password),
+            placeholder             = {
+                StyledPlaceholder(
+                    text = stringResource(Res.string.enter_password),
+                    textColor = MaterialTheme.colorScheme.onSecondary)
+            },
             visualTransformation    = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.height(12.dp))
         StyledTextField(
             value                   = viewModel.passwordAgain.value,
             onValueChange           = { viewModel.onPasswordAgainTextChanged(it) },
-            placeholder             = stringResource(Res.string.enter_password_again),
+            placeholder             = {
+                StyledPlaceholder(
+                    text = stringResource(Res.string.enter_password_again),
+                    textColor = MaterialTheme.colorScheme.onSecondary)
+            },
             visualTransformation    = PasswordVisualTransformation()
         )
         ErrorText(
