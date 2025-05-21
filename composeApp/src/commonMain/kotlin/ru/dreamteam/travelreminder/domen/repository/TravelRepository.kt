@@ -1,13 +1,14 @@
 package ru.dreamteam.travelreminder.domen.repository
 
 import ru.dreamteam.travelreminder.data.remoute.model.travel.TravelDto
+import ru.dreamteam.travelreminder.domen.model.travel.Travel
 
 interface TravelRepository {
-    suspend fun getTravels(): List<TravelDto>
+    suspend fun getTravels(): List<Travel>
 
-    fun deleteTravelById(id: Int)
+    suspend fun deleteTravel(travel: Travel)
 
-    suspend fun addTravel(travel: TravelDto)
+    suspend fun addTravel(travel: Travel)
 
-    suspend fun editTravel(travel: TravelDto)
+    suspend fun editTravel(travel: Travel)
 }

@@ -9,7 +9,7 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
 @JsonIgnoreUnknownKeys
-data class ErrorResponseDto(
+data class ErrorResponse(
     @SerialName("error")
     val error: Error
 )

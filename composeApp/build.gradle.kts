@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -9,7 +8,6 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.room)
 }
 
 kotlin {
@@ -19,7 +17,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -30,22 +28,25 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
+            implementation(libs.ktor.client.okhttp)
             implementation(libs.android.driver)
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
             implementation(libs.androidx.security.crypto)
+            implementation(libs.android.googleMap)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -53,6 +54,8 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.runtime)
             implementation(libs.kotlinx.datetime)
@@ -67,7 +70,6 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.lifecycle.viewmodel)
             implementation(libs.navigation.compose)
-
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -75,8 +77,13 @@ kotlin {
         }
     }
 }
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
 
 android {
+
+
     namespace = "ru.dreamteam.travelreminder"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
@@ -86,7 +93,16 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
-        buildConfigField("String", "FIREBASE_API_KEY", "\"${project.findProperty("FIREBASE_API_KEY")}\"")
+        buildConfigField(
+            "String",
+            "FIREBASE_API_KEY",
+            "\"${project.findProperty("FIREBASE_API_KEY")}\""
+        )
+        buildConfigField(
+            "String",
+            "GOOGLE_API_SERVICES_KEY",
+            "\"${project.findProperty("GOOGLE_API_SERVICES_KEY")}\""
+        )
     }
     packaging {
         resources {
@@ -105,12 +121,12 @@ android {
     buildFeatures {
         buildConfig = true
     }
-    room {
-        schemaDirectory("$projectDir/schemas")
-    }
+
 }
 
 dependencies {
+    implementation(libs.play.services.location)
+    implementation(libs.play.services.maps)
     add("kspAndroid", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     add("kspIosX64", libs.androidx.room.compiler)

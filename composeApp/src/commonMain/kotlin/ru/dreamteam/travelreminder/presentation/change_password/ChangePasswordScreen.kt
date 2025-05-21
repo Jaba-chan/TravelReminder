@@ -49,9 +49,9 @@ fun ChangePasswordScreen(viewModel: ChangePasswordViewModel) {
             content = { Text("SingUp") }
         )
         when (state) {
-            is ChangePasswordViewModel.State.Error -> Text(text = (state as ChangePasswordViewModel.State.Error).error)
-            ChangePasswordViewModel.State.Loading -> Text(text = "Loading...")
-            is ChangePasswordViewModel.State.Success -> Text(text = (state as ChangePasswordViewModel.State.Success).data)
+            is ChangePasswordViewModel.ChangePasswordState.Error -> Text(text = "Error")
+            ChangePasswordViewModel.ChangePasswordState.Loading -> Text(text = "Loading...")
+            is ChangePasswordViewModel.ChangePasswordState.Success -> Text(text = "Success")
         }
     }
 }

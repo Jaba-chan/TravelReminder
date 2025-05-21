@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="app_name">Travel Reminder</string>
+    <string name="email">Email</string>
+    <string name="enter_email">E-mail</string>
+    <string name="enter_password">Пароль</string>
+    <string name="enter_password_again">Повторите пароль</string>
+    <string name="password">Password</string>
+    <string name="bt_sign_in_with">Войти с </string>
+    <string name="bt_sign_in">Войти</string>
+    <string name="t_bank">T-Bank</string>
+    <string name="sign_in">Авторизация</string>
+    <string name="bt_sign_up">Зарегистрироваться</string>
+    <string name="sign_up">Регистрирация</string>
+    <string name="my_travels">Мои Поездки</string>
+    <string name="date_patter">Дата: </string>
+    <string name="time_pattern">Время: </string>
+    <string name="transportation_mode">Способ передвижения:</string>
+    <string name="empty_now">Пока здесь пусто... Но это легко исправить! Нажмите "+" и начните планировать свою следующую поездку прямо сейчас.</string>
+    <string name="something_error">Упс, что-то пошло не так во время загрузки данных.</string>
+    <string name="retry">Попробовать снова</string>
+    <string name="search">Поиск</string>
+    <string name="minutes_pattern"> м.</string>
+    <string name="hours_pattern"> ч.</string>
+    <string name="days_pattern"> д.</string>
+
+    <string name="auth_error_default_error">Упс. Что-то пошло не так. Пожалуйста, обратитесь в поддержку</string>
+
+    <string name="auth_error_invalid_email">Неверный формат почты</string>
+    <string name="auth_error_invalid_login_credentials">Неверная почта или пароль</string>
+    <string name="auth_error_missing_password">Введите пароль</string>
+    <string name="auth_error_user_disabled">Пользователь недоступен</string>
+
+    <string name="auth_error_weak_password">Слабый пароль</string>
+    <string name="auth_error_email_exists">Пользователь с такой почтой уже существует</string>
+    <string name="auth_error_operation_not_allowed">Вход с паролем недоступен</string>
+    <string name="auth_error_too_many_attempts_try_later">Подозрительная активность. Повторите попытку позже</string>
+
+    <string name="auth_error_user_not_found">Пользователь не найден</string>
+
+    <string name="travel_name">Название поездки</string>
+    <string name="travel_date">Дата</string>
+    <string name="travel_time">Время</string>
+    <string name="travel_destination">Пункт назначения</string>
+    <string name="cancel">Отмена</string>
+    <string name="ok">ОК</string>
+</resources>

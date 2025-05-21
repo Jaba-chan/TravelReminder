@@ -1,41 +1,63 @@
 package ru.dreamteam.travelreminder.presentation.sing_in
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import ru.dreamteam.travelreminder.domen.use_cases.SignInByEmailAndPasswordUseCase
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import ru.dreamteam.travelreminder.common.CaughtError
 import ru.dreamteam.travelreminder.common.Resource
-import ru.dreamteam.travelreminder.domen.model.SignInByEmailAndPasswordParams
+import ru.dreamteam.travelreminder.domen.model.params.SignInByEmailAndPasswordParams
+import ru.dreamteam.travelreminder.domen.use_cases.SignInByEmailAndPasswordUseCase
 
 
-class SingInViewModel(private val signInUseCase: SignInByEmailAndPasswordUseCase
+class SingInViewModel(
+    private val signInUseCase: SignInByEmailAndPasswordUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<State>(State.Loading)
-    val state = _state.asStateFlow()
+    private val _state          = MutableStateFlow<SignInState>(SignInState.Idle)
+    val state                   = _state.asStateFlow()
 
-    fun onSignInButtonPressed(email: String, password: String){
-        singIn(SignInByEmailAndPasswordParams(email = email, password = password))
+    private val _email          = mutableStateOf("")
+    val email: State<String>    = _email
+
+    private val _password       = mutableStateOf("")
+    val password: State<String> = _password
+
+    fun onSignInButtonPressed() {
+        singIn(SignInByEmailAndPasswordParams(
+            email       = email.value,
+            password    = password.value)
+        )
+    }
+
+    fun onEmailTextChanged(newText: String) {
+        _email.value = newText
+            .filter { it.code < 128 }
+    }
+
+    fun onPasswordTextChanged(newText: String) {
+        _password.value = newText
     }
 
     private fun singIn(params: SignInByEmailAndPasswordParams) {
         signInUseCase(params).onEach { result ->
             when (result) {
-                is Resource.Error -> _state.value = State.Error(result.message ?: "aaa")
-
-                is Resource.Loading -> _state.value = State.Loading
-                is Resource.Success -> _state.value = State.Success(result.data?.email.toString())
+                is Resource.Error   -> _state.value = SignInState.Error(result.error)
+                is Resource.Loading -> _state.value = SignInState.Loading
+                is Resource.Success -> _state.value = SignInState.Success
             }
         }.launchIn(viewModelScope)
     }
 
-    sealed interface State{
-        object Loading: State
-        data class Success(val data: String) : State
-        data class Error(val error: String): State
+    sealed interface SignInState {
+        object Loading : SignInState
+        object Idle    : SignInState
+        object Success : SignInState
+        data class Error(val error: CaughtError) : SignInState
     }
 
 }

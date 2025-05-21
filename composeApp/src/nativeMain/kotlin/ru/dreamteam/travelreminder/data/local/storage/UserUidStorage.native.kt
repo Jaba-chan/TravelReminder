@@ -21,4 +21,7 @@ actual class UserUidStorage {
 
     actual fun setRefreshToken(token: String?) {
     }
+
+    actual fun clear() {
+    }
 }

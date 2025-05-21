@@ -2,28 +2,63 @@ package ru.dreamteam.travelreminder.presentation.travels_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
-import ru.dreamteam.travelreminder.data.remoute.model.travel.TravelDto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import ru.dreamteam.travelreminder.domen.repository.TravelRepository
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import ru.dreamteam.travelreminder.common.Resource
+import ru.dreamteam.travelreminder.data.remoute.model.travel.PointDto
+import ru.dreamteam.travelreminder.domen.model.travel.TransportationMode
+import ru.dreamteam.travelreminder.domen.model.travel.Travel
+import ru.dreamteam.travelreminder.domen.use_cases.AddTravelUseCase
+import ru.dreamteam.travelreminder.domen.use_cases.DeleteTravelUseCase
+import ru.dreamteam.travelreminder.domen.use_cases.GetTravelsUseCase
 
 
-class TravelsViewModel(private val repository: TravelRepository
+class TravelsViewModel(
+    private val getTravelsUseCase: GetTravelsUseCase,
+    private val deleteTravelUseCase: DeleteTravelUseCase
 ) : ViewModel() {
 
-    private val _travels = MutableStateFlow<List<TravelDto>>(emptyList())
-    val travels: StateFlow<List<TravelDto>> = _travels
+    private val _state                  = MutableStateFlow<TravelsState>(TravelsState.Loading)
+    val state: StateFlow<TravelsState>  = _state
 
     fun loadTravels() {
-        viewModelScope.launch {
-                val travelsList = repository.getTravels()
-                _travels.value = travelsList
+        getTravelsUseCase.invoke().onEach { result ->
+            when (result) {
+                is Resource.Error   -> TravelsState.Error("Something wrong")
+                is Resource.Loading -> _state.value = TravelsState.Loading
+                is Resource.Success -> {
+                    val data = result.data
+                    _state.value = when {
+                        data.isEmpty() -> TravelsState.Empty
+                        else -> TravelsState.Success(result.data)
+                    }
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    fun onTravelDeleted(travel: Travel) {
+        deleteTravelUseCase(travel).onEach {}.launchIn(viewModelScope)
+        val currentState = _state.value
+        if (currentState is TravelsState.Success) {
+            val updatedList = currentState.data
+                .toMutableList()
+                .apply { remove(travel) }
+            _state.value = if (updatedList.isEmpty()) {
+                TravelsState.Empty
+            } else {
+                TravelsState.Success(updatedList)
+            }
         }
     }
 
-    fun onButtonPressed(){
-        loadTravels()
+    sealed interface TravelsState {
+        data class Success(val data: List<Travel>) : TravelsState
+        object Loading                             : TravelsState
+        data class Error(val reason: String)       : TravelsState
+        object Empty                               : TravelsState
     }
 
 }
