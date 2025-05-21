@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ru.dreamteam.travelreminder.presentation.coomon_ui.Preview
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledPlaceholder
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledTextField
 import travelreminder.composeapp.generated.resources.Res
@@ -172,6 +173,7 @@ fun DatePickerModalInput(
             )
         }
     ) {
-        DatePicker(state = datePickerState)
+        DatePicker(state = datePickerState,
+            showModeToggle = false)
     }
 }

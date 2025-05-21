@@ -69,7 +69,7 @@ fun SignInScreen(
             placeholder             = {
                 StyledPlaceholder(
                     text = stringResource(Res.string.enter_email),
-                    textColor = MaterialTheme.colorScheme.onSecondary)
+                    textColor = MaterialTheme.colorScheme.onSecondary,)
             },
             visualTransformation    = VisualTransformation.None,
         )

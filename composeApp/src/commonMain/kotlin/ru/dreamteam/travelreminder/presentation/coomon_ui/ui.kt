@@ -320,6 +320,8 @@ fun StyledPlaceholder(
     textColor: Color
 ){
     Text(
+        modifier = Modifier
+            .fillMaxWidth(),
         text = text,
         textAlign = textAlign,
         style = MaterialTheme.typography.labelMedium,
