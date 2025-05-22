@@ -28,7 +28,7 @@ import ru.dreamteam.travelreminder.domen.repository.MapRepository
 class MapRepositoryImpl(
     private val client: HttpClient,
     private val apiKey: String
-): MapRepository {
+) : MapRepository {
     private val regionCode = Locale.current.region
     override suspend fun buildRoute(
         origin: Point,
@@ -62,11 +62,13 @@ class MapRepositoryImpl(
         }
 
 
-
         val response: RouteResponse = client.post(url) {
             contentType(ContentType.Application.Json)
             setBody(payload)
-            header("X-Goog-FieldMask", "routes.distanceMeters,routes.duration,routes.polyline.encodedPolyline")
+            header(
+                "X-Goog-FieldMask",
+                "routes.distanceMeters,routes.duration,routes.polyline.encodedPolyline"
+            )
         }.body()
 
         return response.routes.first().toDomain()
@@ -92,8 +94,8 @@ class MapRepositoryImpl(
         return response.suggestions.mapNotNull { suggestion ->
             suggestion.placePrediction?.let { place ->
                 PlaceSuggestion(
-                    placeId     = place.placeId,
-                    title       = place.structured.mainText.text,
+                    placeId = place.placeId,
+                    title = place.structured.mainText.text,
                     description = place.structured.secondaryText.text
                 )
             }
@@ -110,7 +112,7 @@ class MapRepositoryImpl(
             putJsonObject("locationRestriction") {
                 putJsonObject("circle") {
                     putJsonObject("center") {
-                        put("latitude",  point.latitude)
+                        put("latitude", point.latitude)
                         put("longitude", point.longitude)
                     }
                     put("radius", 300)
@@ -131,12 +133,13 @@ class MapRepositoryImpl(
         val fallbackKey = "${point.latitude},${point.longitude}"
 
         return Place(
-            placeId     = found?.placeId             ?: fallbackKey,
-            title       = found?.displayName?.text   ?: fallbackKey,
-            description = found?.formattedAddress    ?: "",
-            point       = Point(
+            placeId = found?.placeId ?: fallbackKey,
+            title = found?.displayName?.text ?: fallbackKey,
+            description = found?.formattedAddress ?: "",
+            point = Point(
                 found?.location?.latitude ?: point.latitude,
-                found?.location?.longitude ?: point.longitude)
+                found?.location?.longitude ?: point.longitude
+            )
         )
     }
 
@@ -144,7 +147,7 @@ class MapRepositoryImpl(
         val resourceId = placeSuggestion.placeId.substringAfter("places/")
         val url = "https://places.googleapis.com/v1/places/$resourceId?key=$apiKey"
 
-        val response: PlaceDetailsResponseDto =  client.get(url) {
+        val response: PlaceDetailsResponseDto = client.get(url) {
             header("X-Goog-FieldMask", "location")
         }.body()
         val location = response.location

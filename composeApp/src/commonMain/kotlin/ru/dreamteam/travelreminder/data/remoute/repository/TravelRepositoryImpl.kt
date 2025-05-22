@@ -22,7 +22,8 @@ class TravelRepositoryImpl(
     private val storage: UserUidStorage,
 ) : TravelRepository {
 
-    private val baseUrl = "https://travel-reminder-a8175-default-rtdb.europe-west1.firebasedatabase.app"
+    private val baseUrl =
+        "https://travel-reminder-a8175-default-rtdb.europe-west1.firebasedatabase.app"
     private val userPath get() = "users/${storage.getUserUid()}"
     private val authQuery get() = "auth=${storage.getIdToken()}"
 

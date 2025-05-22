@@ -56,7 +56,6 @@ class MapViewModel(
 
     private var isOriginPoint = true
     private var isReversed = false
-    private var sessionToken = Random.nextInt().toString()
 
     fun setPointSelectorAsOrigin() {
         isOriginPoint = true
@@ -66,14 +65,14 @@ class MapViewModel(
         isOriginPoint = false
     }
 
-    fun setPlaceSuggestionsQuery(isOriginPlace: Boolean){
+    fun setPlaceSuggestionsQuery(isOriginPlace: Boolean) {
         if (isOriginPlace) {
             _placeSuggestionsQuery.value = _selectedPoints.value.first?.title ?: ""
         } else _placeSuggestionsQuery.value = _selectedPoints.value.second?.title ?: ""
         getPlaceSuggestions()
     }
 
-    fun onReverseButtonPressed(){
+    fun onReverseButtonPressed() {
         isReversed = !isReversed
         _selectedPoints.value = Pair(_selectedPoints.value.second, _selectedPoints.value.first)
         getRoute()
@@ -90,7 +89,7 @@ class MapViewModel(
         _suggestions.value = emptyList()
     }
 
-    fun onTransportationModeChanged(mode: TransportationMode){
+    fun onTransportationModeChanged(mode: TransportationMode) {
         _transportationMode.value = mode
         getRoute()
     }
@@ -108,7 +107,7 @@ class MapViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private fun getRoute(){
+    private fun getRoute() {
         if (selectedPoints.value.first != null && selectedPoints.value.second != null) {
             getNavigationRouteUseCase(
                 origin = selectedPoints.value.first!!.point,

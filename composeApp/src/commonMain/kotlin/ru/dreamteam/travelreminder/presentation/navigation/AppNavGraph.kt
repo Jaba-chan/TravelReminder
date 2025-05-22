@@ -45,8 +45,7 @@ fun AppNavGraph(
         composable(
             route = Screen.PlaceSuggestionsScreen.route,
             arguments = listOf(navArgument("isOriginPlace") { type = NavType.BoolType })
-        ) {
-            backStackEntry ->
+        ) { backStackEntry ->
             val isOriginPlace = backStackEntry.arguments?.getBoolean("isOriginPlace") ?: true
             placeSuggestionsScreen(isOriginPlace)
         }

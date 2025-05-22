@@ -18,19 +18,21 @@ class SingInViewModel(
     private val signInUseCase: SignInByEmailAndPasswordUseCase
 ) : ViewModel() {
 
-    private val _state          = MutableStateFlow<SignInState>(SignInState.Idle)
-    val state                   = _state.asStateFlow()
+    private val _state = MutableStateFlow<SignInState>(SignInState.Idle)
+    val state = _state.asStateFlow()
 
-    private val _email          = mutableStateOf("")
-    val email: State<String>    = _email
+    private val _email = mutableStateOf("")
+    val email: State<String> = _email
 
-    private val _password       = mutableStateOf("")
+    private val _password = mutableStateOf("")
     val password: State<String> = _password
 
     fun onSignInButtonPressed() {
-        singIn(SignInByEmailAndPasswordParams(
-            email       = email.value,
-            password    = password.value)
+        singIn(
+            SignInByEmailAndPasswordParams(
+                email = email.value,
+                password = password.value
+            )
         )
     }
 
@@ -46,7 +48,7 @@ class SingInViewModel(
     private fun singIn(params: SignInByEmailAndPasswordParams) {
         signInUseCase(params).onEach { result ->
             when (result) {
-                is Resource.Error   -> _state.value = SignInState.Error(result.error)
+                is Resource.Error -> _state.value = SignInState.Error(result.error)
                 is Resource.Loading -> _state.value = SignInState.Loading
                 is Resource.Success -> _state.value = SignInState.Success
             }
@@ -55,7 +57,7 @@ class SingInViewModel(
 
     sealed interface SignInState {
         object Loading : SignInState
-        object Idle    : SignInState
+        object Idle : SignInState
         object Success : SignInState
         data class Error(val error: CaughtError) : SignInState
     }

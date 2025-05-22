@@ -20,13 +20,13 @@ class TravelsViewModel(
     private val deleteTravelUseCase: DeleteTravelUseCase
 ) : ViewModel() {
 
-    private val _state                  = MutableStateFlow<TravelsState>(TravelsState.Loading)
-    val state: StateFlow<TravelsState>  = _state
+    private val _state = MutableStateFlow<TravelsState>(TravelsState.Loading)
+    val state: StateFlow<TravelsState> = _state
 
     fun loadTravels() {
         getTravelsUseCase.invoke().onEach { result ->
             when (result) {
-                is Resource.Error   -> TravelsState.Error("Something wrong")
+                is Resource.Error -> TravelsState.Error("Something wrong")
                 is Resource.Loading -> _state.value = TravelsState.Loading
                 is Resource.Success -> {
                     val data = result.data
@@ -56,9 +56,9 @@ class TravelsViewModel(
 
     sealed interface TravelsState {
         data class Success(val data: List<Travel>) : TravelsState
-        object Loading                             : TravelsState
-        data class Error(val reason: String)       : TravelsState
-        object Empty                               : TravelsState
+        object Loading : TravelsState
+        data class Error(val reason: String) : TravelsState
+        object Empty : TravelsState
     }
 
 }

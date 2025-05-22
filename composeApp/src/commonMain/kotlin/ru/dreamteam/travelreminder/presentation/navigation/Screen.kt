@@ -8,7 +8,8 @@ sealed class Screen(val route: String) {
     object ChangePasswordScreen : Screen(ROUTE_CHANGE_PASSWORD)
     object ShowMap : Screen(ROUTE_SHOW_MAP)
     object PlaceSuggestionsScreen : Screen(ROUTE_WITH_ARG_PLACE_SUGGESTIONS) {
-        fun createRoute(isOriginPlace: Boolean) = "$BASE_ROUTE_PLACE_SUGGESTIONS?isOriginPlace=$isOriginPlace"
+        fun createRoute(isOriginPlace: Boolean) =
+            "$BASE_ROUTE_PLACE_SUGGESTIONS?isOriginPlace=$isOriginPlace"
     }
 
     companion object {
