@@ -21,19 +21,21 @@ class SignUpViewModel(
     private val _state = MutableStateFlow<SignUpState>(SignUpState.Idle)
     val state = _state.asStateFlow()
 
-    private val _email                  = mutableStateOf("")
-    val email: State<String>            = _email
+    private val _email = mutableStateOf("")
+    val email: State<String> = _email
 
-    private val _password               = mutableStateOf("")
-    val password: State<String>         = _password
+    private val _password = mutableStateOf("")
+    val password: State<String> = _password
 
-    private val _passwordAgain          = mutableStateOf("")
-    val passwordAgain: State<String>    = _passwordAgain
+    private val _passwordAgain = mutableStateOf("")
+    val passwordAgain: State<String> = _passwordAgain
 
     fun onSignUpButtonPressed() {
-        singUp(SignUpByEmailAndPasswordParams(
-            email = email.value,
-            password = password.value)
+        singUp(
+            SignUpByEmailAndPasswordParams(
+                email = email.value,
+                password = password.value
+            )
         )
     }
 
@@ -53,7 +55,7 @@ class SignUpViewModel(
     private fun singUp(params: SignUpByEmailAndPasswordParams) {
         signUpUseCase(params).onEach { result ->
             when (result) {
-                is Resource.Error   -> _state.value = SignUpState.Error(result.error)
+                is Resource.Error -> _state.value = SignUpState.Error(result.error)
                 is Resource.Loading -> _state.value = SignUpState.Loading
                 is Resource.Success -> _state.value = SignUpState.Success
             }
@@ -62,7 +64,7 @@ class SignUpViewModel(
 
     sealed interface SignUpState {
         object Loading : SignUpState
-        object Idle    : SignUpState
+        object Idle : SignUpState
         object Success : SignUpState
         data class Error(val error: CaughtError) : SignUpState
     }

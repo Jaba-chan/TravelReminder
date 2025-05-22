@@ -44,7 +44,7 @@ import travelreminder.composeapp.generated.resources.travel_time
 fun AddTravelScreen(
     viewModel: AddTravelViewModel,
     onNavigateToTravelList: () -> Unit
-){
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -55,14 +55,14 @@ fun AddTravelScreen(
         LocalTextFieldStyle(
             value = viewModel.travelName.value,
             placeholderText = stringResource(Res.string.travel_name),
-            onValueChange = {viewModel.onTravelNameTextChanged(it)},
+            onValueChange = { viewModel.onTravelNameTextChanged(it) },
             readOnly = false
         )
         Spacer(modifier = Modifier.height(32.dp))
         LocalTextFieldStyle(
             value = "",
             placeholderText = stringResource(Res.string.travel_date),
-            onValueChange = {viewModel.onTravelNameTextChanged(it)},
+            onValueChange = { viewModel.onTravelNameTextChanged(it) },
             readOnly = true,
             onClick = { },
             trailingIcon = {
@@ -78,10 +78,10 @@ fun AddTravelScreen(
         LocalTextFieldStyle(
             value = "",
             placeholderText = stringResource(Res.string.travel_time),
-            onValueChange = {viewModel.onTravelNameTextChanged(it)},
+            onValueChange = { viewModel.onTravelNameTextChanged(it) },
             readOnly = true,
-            onClick = {showModal = true
-                      println("DDDDDDD")
+            onClick = {
+                showModal = true
             },
             trailingIcon = {
                 Icon(
@@ -100,7 +100,7 @@ fun AddTravelScreen(
         LocalTextFieldStyle(
             value = "",
             placeholderText = stringResource(Res.string.travel_destination),
-            onValueChange = {viewModel.onTravelNameTextChanged(it)},
+            onValueChange = { viewModel.onTravelNameTextChanged(it) },
             readOnly = true,
             onClick = {},
             trailingIcon = {
@@ -121,14 +121,14 @@ fun LocalTextFieldStyle(
     onValueChange: (String) -> Unit,
     onClick: (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
-){
+) {
     StyledTextField(
         value = value,
         readOnly = readOnly,
         textColor = MaterialTheme.colorScheme.onPrimary,
         backgroundColor = MaterialTheme.colorScheme.primary,
         trailingIcon = trailingIcon,
-        placeholder             = {
+        placeholder = {
             StyledPlaceholder(
                 text = placeholderText,
                 textColor = MaterialTheme.colorScheme.onPrimary,
@@ -173,7 +173,9 @@ fun DatePickerModalInput(
             )
         }
     ) {
-        DatePicker(state = datePickerState,
-            showModeToggle = false)
+        DatePicker(
+            state = datePickerState,
+            showModeToggle = false
+        )
     }
 }

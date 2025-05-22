@@ -43,23 +43,24 @@ import travelreminder.composeapp.generated.resources.ic_check
 fun App() {
     AppTheme {
         KoinContext {
-            val mainActivityViewModel   = koinViewModel<MainActivityViewModel>()
-            val singInViewModel         = koinViewModel<SingInViewModel>()
-            val travelsViewModel        = koinViewModel<TravelsViewModel>()
-            val signUpViewModel         = koinViewModel<SignUpViewModel>()
+            val mainActivityViewModel = koinViewModel<MainActivityViewModel>()
+            val singInViewModel = koinViewModel<SingInViewModel>()
+            val travelsViewModel = koinViewModel<TravelsViewModel>()
+            val signUpViewModel = koinViewModel<SignUpViewModel>()
             val changePasswordViewModel = koinViewModel<ChangePasswordViewModel>()
-            val mapViewModel            = koinViewModel<MapViewModel>()
-            val addTravelViewModel      = koinViewModel<AddTravelViewModel>()
+            val mapViewModel = koinViewModel<MapViewModel>()
+            val addTravelViewModel = koinViewModel<AddTravelViewModel>()
 
-            val navController   = rememberNavController()
-            val navState        = remember { NavigationState(navController) }
+            val navController = rememberNavController()
+            val navState = remember { NavigationState(navController) }
 
             val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute    = navBackStackEntry?.destination?.route
+            val currentRoute = navBackStackEntry?.destination?.route
 
             SetStatusBarColor(
-                color       = MaterialTheme.colorScheme.background,
-                darkIcons   = true)
+                color = MaterialTheme.colorScheme.background,
+                darkIcons = true
+            )
             Scaffold(
                 floatingActionButton = {
                     when (currentRoute) {
@@ -73,10 +74,12 @@ fun App() {
                                 },
                                 content = {
                                     Icon(
-                                        painter             = if (currentRoute == Screen.TravelsListScreen.route)
-                                            painterResource(Res.drawable.ic_add) else painterResource(Res.drawable.ic_check),
-                                        contentDescription  = null,
-                                        tint                = MaterialTheme.colorScheme.onPrimary
+                                        painter = if (currentRoute == Screen.TravelsListScreen.route)
+                                            painterResource(Res.drawable.ic_add) else painterResource(
+                                            Res.drawable.ic_check
+                                        ),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onPrimary
                                     )
                                 }
                             )
@@ -84,50 +87,56 @@ fun App() {
                 }
             ) {
                 AppNavGraph(
-                    viewModel           = mainActivityViewModel,
-                    navHostController   = navController,
+                    viewModel = mainActivityViewModel,
+                    navHostController = navController,
                     signInScreenContent = {
                         SignInScreen(
-                            viewModel                   = singInViewModel,
-                            onNavigateToTravelsList     = { navState.navigateToTravelListForSignedUser() },
-                            onNavigateToSignUpScreen    = { navState.navigateTo(Screen.SignUpScreen.route) })
+                            viewModel = singInViewModel,
+                            onNavigateToTravelsList = { navState.navigateToTravelListForSignedUser() },
+                            onNavigateToSignUpScreen = { navState.navigateTo(Screen.SignUpScreen.route) })
                     },
                     signUpScreenContent = {
                         SignUpScreen(
-                            viewModel                   = signUpViewModel,
-                            onNavigateToSignIn          = { navState.navigateToSignIn() }
+                            viewModel = signUpViewModel,
+                            onNavigateToSignIn = { navState.navigateToSignIn() }
                         )
                     },
                     travelsListScreenContent = {
                         TravelsListScreen(
-                            viewModel                   = travelsViewModel,
-                            logOut                      = { navState.navigateToSignIn() }
+                            viewModel = travelsViewModel,
+                            logOut = { navState.navigateToSignIn() }
                         )
                     },
                     addTravelScreenContent = {
                         AddTravelScreen(
-                            viewModel                   = addTravelViewModel,
-                            onNavigateToTravelList      = { navState.navigateTo(Screen.TravelsListScreen.route) }
+                            viewModel = addTravelViewModel,
+                            onNavigateToTravelList = { navState.navigateTo(Screen.TravelsListScreen.route) }
                         )
                     },
                     changePasswordScreenContent = {
                         ChangePasswordScreen(
-                            viewModel                  = changePasswordViewModel
+                            viewModel = changePasswordViewModel
                         )
                     },
                     showMap = {
                         GoogleMapView(
-                            modifier                   = Modifier,
-                            viewModel                  = mapViewModel,
-                            changeAddress              = { navState.navigateTo(Screen.PlaceSuggestionsScreen.createRoute(it)) },
-                            returnToAddTravel          = { navState.navigateTo(Screen.AddTravelScreen.route) }
+                            modifier = Modifier,
+                            viewModel = mapViewModel,
+                            changeAddress = {
+                                navState.navigateTo(
+                                    Screen.PlaceSuggestionsScreen.createRoute(
+                                        it
+                                    )
+                                )
+                            },
+                            returnToAddTravel = { navState.navigateTo(Screen.AddTravelScreen.route) }
                         )
                     },
-                    placeSuggestionsScreen  = { isOriginPlace ->
+                    placeSuggestionsScreen = { isOriginPlace ->
                         PlaceSuggestionsScreen(
-                            viewModel                  = mapViewModel,
-                            returnToMap                = { navState.navigateTo(Screen.ShowMap.route) },
-                            isOriginPlace              = isOriginPlace
+                            viewModel = mapViewModel,
+                            returnToMap = { navState.navigateTo(Screen.ShowMap.route) },
+                            isOriginPlace = isOriginPlace
                         )
                     }
                 )

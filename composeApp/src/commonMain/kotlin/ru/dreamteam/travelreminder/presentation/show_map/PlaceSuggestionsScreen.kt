@@ -39,25 +39,26 @@ fun PlaceSuggestionsScreen(
     isOriginPlace: Boolean,
     returnToMap: () -> Unit,
 ) {
-    Column(modifier = Modifier
-        .fillMaxSize()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
 
     ) {
         OutlinedTextField(
-            value           = viewModel.placeSuggestionsQuery.value,
-            onValueChange   = { viewModel.onPlaceSuggestionsQueryTextChanged(it) },
-            singleLine      = true,
+            value = viewModel.placeSuggestionsQuery.value,
+            onValueChange = { viewModel.onPlaceSuggestionsQueryTextChanged(it) },
+            singleLine = true,
 
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            placeholder     = {
+            placeholder = {
                 Text(stringResource(Res.string.search))
-                              },
+            },
             leadingIcon = {
                 Icon(
-                    imageVector         = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription  = null,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = null,
                     modifier = Modifier
                         .clickable(onClick = returnToMap)
                 )
@@ -65,8 +66,8 @@ fun PlaceSuggestionsScreen(
             trailingIcon = {
                 if (viewModel.placeSuggestionsQuery.value.isNotEmpty()) {
                     Icon(
-                        imageVector         = Icons.Default.Close,
-                        contentDescription  = null,
+                        imageVector = Icons.Default.Close,
+                        contentDescription = null,
                         modifier = Modifier
                             .clickable { viewModel.onClearQueryButtonPressed() }
                     )
@@ -77,7 +78,7 @@ fun PlaceSuggestionsScreen(
             )
         )
         SuggestionsList(
-            suggestions       = viewModel.suggestions.value,
+            suggestions = viewModel.suggestions.value,
             onSuggestionClick = {
                 returnToMap()
                 viewModel.getPlaceCoordinates(it, isOriginPlace)
@@ -91,13 +92,14 @@ fun SuggestionsList(
     suggestions: List<PlaceSuggestion>,
     onSuggestionClick: (PlaceSuggestion) -> Unit,
 ) {
-    LazyColumn(modifier = Modifier
-        .fillMaxSize()
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         items(suggestions) { suggestion ->
             SuggestionRow(
-                suggestion  = suggestion,
-                onClick     = { onSuggestionClick(suggestion) },
+                suggestion = suggestion,
+                onClick = { onSuggestionClick(suggestion) },
             )
             Divider()
         }
@@ -112,16 +114,16 @@ private fun SuggestionRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick  = onClick)
+            .clickable(onClick = onClick)
             .padding(
-                vertical   = 12.dp,
-                horizontal = 16.dp)
-        ,
+                vertical = 12.dp,
+                horizontal = 16.dp
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector         = Icons.Default.Place,
-            contentDescription  = null,
+            imageVector = Icons.Default.Place,
+            contentDescription = null,
             modifier = Modifier.size(24.dp)
         )
 
@@ -129,14 +131,14 @@ private fun SuggestionRow(
 
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text    = suggestion.title,
-                style   = MaterialTheme.typography.labelLarge
+                text = suggestion.title,
+                style = MaterialTheme.typography.labelLarge
             )
             Spacer(Modifier.height(4.dp))
             Text(
-                text    = suggestion.description,
-                style   = MaterialTheme.typography.labelLarge.copy(letterSpacing = 0.5.sp),
-                color   = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f)
+                text = suggestion.description,
+                style = MaterialTheme.typography.labelLarge.copy(letterSpacing = 0.5.sp),
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f)
             )
         }
 

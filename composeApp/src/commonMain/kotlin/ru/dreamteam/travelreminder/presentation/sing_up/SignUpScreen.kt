@@ -48,65 +48,68 @@ fun SignUpScreen(
     ) {
         Spacer(modifier = Modifier.height(24.dp))
         HeadingTextWithIcon(
-            iconRes         = Res.drawable.ic_arrow_back,
-            iconSize        = 24.dp,
-            text            = stringResource(Res.string.sign_up),
-            onIconClicked   = onNavigateToSignIn
+            iconRes = Res.drawable.ic_arrow_back,
+            iconSize = 24.dp,
+            text = stringResource(Res.string.sign_up),
+            onIconClicked = onNavigateToSignIn
         )
         Spacer(modifier = Modifier.height(96.dp))
         StyledTextField(
-            value                   = viewModel.email.value,
-            onValueChange           = { viewModel.onEmailTextChanged(it) },
-            placeholder             = {
+            value = viewModel.email.value,
+            onValueChange = { viewModel.onEmailTextChanged(it) },
+            placeholder = {
                 StyledPlaceholder(
                     text = stringResource(Res.string.enter_email),
-                    textColor = MaterialTheme.colorScheme.onSecondary)
+                    textColor = MaterialTheme.colorScheme.onSecondary
+                )
             },
-            visualTransformation    = VisualTransformation.None
+            visualTransformation = VisualTransformation.None
         )
         Spacer(modifier = Modifier.height(80.dp))
         StyledTextField(
-            value                   = viewModel.password.value,
-            onValueChange           = { viewModel.onPasswordTextChanged(it) },
-            placeholder             = {
+            value = viewModel.password.value,
+            onValueChange = { viewModel.onPasswordTextChanged(it) },
+            placeholder = {
                 StyledPlaceholder(
                     text = stringResource(Res.string.enter_password),
-                    textColor = MaterialTheme.colorScheme.onSecondary)
+                    textColor = MaterialTheme.colorScheme.onSecondary
+                )
             },
-            visualTransformation    = PasswordVisualTransformation()
+            visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.height(12.dp))
         StyledTextField(
-            value                   = viewModel.passwordAgain.value,
-            onValueChange           = { viewModel.onPasswordAgainTextChanged(it) },
-            placeholder             = {
+            value = viewModel.passwordAgain.value,
+            onValueChange = { viewModel.onPasswordAgainTextChanged(it) },
+            placeholder = {
                 StyledPlaceholder(
                     text = stringResource(Res.string.enter_password_again),
-                    textColor = MaterialTheme.colorScheme.onSecondary)
+                    textColor = MaterialTheme.colorScheme.onSecondary
+                )
             },
-            visualTransformation    = PasswordVisualTransformation()
+            visualTransformation = PasswordVisualTransformation()
         )
         ErrorText(
             modifier = Modifier
                 .padding(
-                    horizontal  = 28.dp,
-                    vertical    = 4.dp
+                    horizontal = 28.dp,
+                    vertical = 4.dp
                 ),
             text = ((state as? SignUpViewModel.SignUpState.Error)?.error as? CaughtErrorImpl.ErrorForUser)
                 ?.let {
-                        stringResource(it.resId)
+                    stringResource(it.resId)
                 } ?: ""
         )
         Spacer(modifier = Modifier.height(80.dp))
         StyledButton(
-            onButtonClicked     = viewModel::onSignUpButtonPressed,
-            paddingValues       = PaddingValues(horizontal = 28.dp),
+            onButtonClicked = viewModel::onSignUpButtonPressed,
+            paddingValues = PaddingValues(horizontal = 28.dp),
             content = {
                 when (state) {
-                    is SignUpViewModel.SignUpState.Loading  -> CircularProgressBar(size = 24.dp)
-                    is SignUpViewModel.SignUpState.Error    -> InnerButtonsText(stringResource(Res.string.bt_sign_up))
-                    is SignUpViewModel.SignUpState.Idle     -> InnerButtonsText(stringResource(Res.string.bt_sign_up))
-                    SignUpViewModel.SignUpState.Success     -> onNavigateToSignIn()
+                    is SignUpViewModel.SignUpState.Loading -> CircularProgressBar(size = 24.dp)
+                    is SignUpViewModel.SignUpState.Error -> InnerButtonsText(stringResource(Res.string.bt_sign_up))
+                    is SignUpViewModel.SignUpState.Idle -> InnerButtonsText(stringResource(Res.string.bt_sign_up))
+                    SignUpViewModel.SignUpState.Success -> onNavigateToSignIn()
                 }
             }
         )

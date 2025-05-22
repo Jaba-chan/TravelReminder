@@ -66,7 +66,7 @@ fun MapHead(
         ) {
             viewModel.route.value?.let {
                 val time = durationToDHM(it.duration)
-                repeat(time.size){ pos ->
+                repeat(time.size) { pos ->
                     Text(
                         text = time[pos],
                         style = MaterialTheme.typography.labelLarge.copy(fontSize = 13.sp),
@@ -76,7 +76,7 @@ fun MapHead(
                 }
             }
         }
-       Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(8.dp))
 
         Column(
             verticalArrangement = Arrangement.Center,
@@ -247,18 +247,18 @@ private fun durationToDHM(duration: String): List<String> {
     val seconds = duration.removeSuffix("s").toIntOrNull() ?: return listOf("0")
     val totalMinutes = (seconds + 30) / 60
 
-    val days    = totalMinutes / (24 * 60)
-    val hours   = (totalMinutes % (24 * 60)) / 60
+    val days = totalMinutes / (24 * 60)
+    val hours = (totalMinutes % (24 * 60)) / 60
     val minutes = totalMinutes % 60
 
     val list = mutableListOf<String>()
     return list.apply {
-        if (days != 0){
-            list.add( "$days${stringResource(Res.string.days_pattern)}" )
+        if (days != 0) {
+            list.add("$days${stringResource(Res.string.days_pattern)}")
         }
-        if (hours != 0){
-            list.add( "$hours${stringResource(Res.string.hours_pattern)}" )
+        if (hours != 0) {
+            list.add("$hours${stringResource(Res.string.hours_pattern)}")
         }
-            list.add( "$minutes${stringResource(Res.string.minutes_pattern)}" )
+        list.add("$minutes${stringResource(Res.string.minutes_pattern)}")
     }
 }

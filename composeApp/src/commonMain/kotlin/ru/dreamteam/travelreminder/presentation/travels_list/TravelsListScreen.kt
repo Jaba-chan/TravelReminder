@@ -58,20 +58,20 @@ fun TravelsListScreen(
     ) {
         Spacer(modifier = Modifier.height(24.dp))
         HeadingTextWithIcon(
-            iconRes         = Res.drawable.ic_logout,
-            iconSize        = 28.dp,
-            text            = stringResource(Res.string.my_travels),
-            onIconClicked   = logOut,
+            iconRes = Res.drawable.ic_logout,
+            iconSize = 28.dp,
+            text = stringResource(Res.string.my_travels),
+            onIconClicked = logOut,
         )
         when (state) {
-            TravelsViewModel.TravelsState.Empty         -> EmptyScreen(text = stringResource(Res.string.empty_now))
-            is TravelsViewModel.TravelsState.Error      -> SomethingErrorScreen(onRetryButtonClicked = {})
-            TravelsViewModel.TravelsState.Loading       -> FullScreenLoading()
-            is TravelsViewModel.TravelsState.Success    ->
+            TravelsViewModel.TravelsState.Empty -> EmptyScreen(text = stringResource(Res.string.empty_now))
+            is TravelsViewModel.TravelsState.Error -> SomethingErrorScreen(onRetryButtonClicked = {})
+            TravelsViewModel.TravelsState.Loading -> FullScreenLoading()
+            is TravelsViewModel.TravelsState.Success ->
                 TravelsColumn(
-                    travels         = state.data,
-                    onDeleteTravel  = { viewModel.onTravelDeleted(it) }
-                    )
+                    travels = state.data,
+                    onDeleteTravel = { viewModel.onTravelDeleted(it) }
+                )
         }
     }
 
@@ -99,7 +99,7 @@ fun TravelsColumn(
                 }
             )
             SwipeToDismiss(
-                state      = dismissState,
+                state = dismissState,
                 directions = setOf(DismissDirection.EndToStart),
                 background = {
                     Box(
@@ -113,10 +113,10 @@ fun TravelsColumn(
                         contentAlignment = Alignment.CenterEnd
                     ) {
                         Icon(
-                            modifier            = Modifier.padding(end = 16.dp),
-                            imageVector         = Icons.Default.Delete,
-                            contentDescription  = null,
-                            tint                = MaterialTheme.colorScheme.onError
+                            modifier = Modifier.padding(end = 16.dp),
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onError
                         )
                     }
                 },
@@ -133,8 +133,8 @@ fun TravelsColumn(
 fun TravelCard(travel: Travel) {
     Column {
         Text(
-            text    = travel.title,
-            style   = MaterialTheme.typography.headlineMedium
+            text = travel.title,
+            style = MaterialTheme.typography.headlineMedium
         )
         Column(
             modifier = Modifier
@@ -146,18 +146,18 @@ fun TravelCard(travel: Travel) {
                 .padding(20.dp)
         ) {
             Text(
-                text    = "${stringResource(Res.string.date_patter)}${travel.date}",
-                color   = MaterialTheme.colorScheme.onTertiary
+                text = "${stringResource(Res.string.date_patter)}${travel.date}",
+                color = MaterialTheme.colorScheme.onTertiary
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text    = "${stringResource(Res.string.time_pattern)}${travel.arrivalTime}",
-                color   = MaterialTheme.colorScheme.onTertiary
+                text = "${stringResource(Res.string.time_pattern)}${travel.arrivalTime}",
+                color = MaterialTheme.colorScheme.onTertiary
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text    = travel.destinationByAddress ?: "",
-                color   = MaterialTheme.colorScheme.onTertiary
+                text = travel.destinationByAddress ?: "",
+                color = MaterialTheme.colorScheme.onTertiary
             )
         }
     }

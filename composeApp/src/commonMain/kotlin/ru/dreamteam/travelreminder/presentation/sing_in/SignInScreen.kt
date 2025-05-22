@@ -64,32 +64,34 @@ fun SignInScreen(
         ScreenHeadingText(text = stringResource(Res.string.sign_in))
         Spacer(modifier = Modifier.height(96.dp))
         StyledTextField(
-            value                   = viewModel.email.value,
-            onValueChange           = { viewModel.onEmailTextChanged(it) },
-            placeholder             = {
+            value = viewModel.email.value,
+            onValueChange = { viewModel.onEmailTextChanged(it) },
+            placeholder = {
                 StyledPlaceholder(
                     text = stringResource(Res.string.enter_email),
-                    textColor = MaterialTheme.colorScheme.onSecondary,)
+                    textColor = MaterialTheme.colorScheme.onSecondary,
+                )
             },
-            visualTransformation    = VisualTransformation.None,
+            visualTransformation = VisualTransformation.None,
         )
         Spacer(modifier = Modifier.height(80.dp))
         StyledTextField(
-            value                   = viewModel.password.value,
-            onValueChange           = { viewModel.onPasswordTextChanged(it) },
-            placeholder             = {
+            value = viewModel.password.value,
+            onValueChange = { viewModel.onPasswordTextChanged(it) },
+            placeholder = {
                 StyledPlaceholder(
                     text = stringResource(Res.string.enter_password),
-                    textColor = MaterialTheme.colorScheme.onSecondary)
+                    textColor = MaterialTheme.colorScheme.onSecondary
+                )
             },
-            visualTransformation    = PasswordVisualTransformation(),
+            visualTransformation = PasswordVisualTransformation(),
         )
 
         ErrorText(
             modifier = Modifier
                 .padding(
-                    horizontal  = 28.dp,
-                    vertical    = 4.dp
+                    horizontal = 28.dp,
+                    vertical = 4.dp
                 ),
             text = ((state as? SingInViewModel.SignInState.Error)?.error as? CaughtErrorImpl.ErrorForUser)
                 ?.let {
@@ -103,10 +105,20 @@ fun SignInScreen(
             paddingValues = PaddingValues(horizontal = 28.dp),
             content = {
                 when (state) {
-                    is SingInViewModel.SignInState.Loading  -> CircularProgressBar(size = 24.dp)
-                    is SingInViewModel.SignInState.Error    -> InnerButtonsText(text = stringResource(Res.string.bt_sign_in))
-                    is SingInViewModel.SignInState.Idle     -> InnerButtonsText(text = stringResource(Res.string.bt_sign_in))
-                    SingInViewModel.SignInState.Success     -> {
+                    is SingInViewModel.SignInState.Loading -> CircularProgressBar(size = 24.dp)
+                    is SingInViewModel.SignInState.Error -> InnerButtonsText(
+                        text = stringResource(
+                            Res.string.bt_sign_in
+                        )
+                    )
+
+                    is SingInViewModel.SignInState.Idle -> InnerButtonsText(
+                        text = stringResource(
+                            Res.string.bt_sign_in
+                        )
+                    )
+
+                    SingInViewModel.SignInState.Success -> {
                         InnerButtonsText(text = stringResource(Res.string.bt_sign_in))
                         onNavigateToTravelsList()
                     }
@@ -115,12 +127,12 @@ fun SignInScreen(
         )
         Spacer(modifier = Modifier.height(80.dp))
         StyledButton(
-            onButtonClicked = {  },
+            onButtonClicked = { },
             paddingValues = PaddingValues(horizontal = 78.dp),
             content = {
                 Text(
                     text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)){
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Normal)) {
                             append(stringResource(Res.string.bt_sign_in_with))
                         }
                         withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)) {
@@ -131,9 +143,9 @@ fun SignInScreen(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Icon(
-                    painter             = painterResource(Res.drawable.ic_t_bank),
-                    contentDescription  = null,
-                    tint                = Color.Unspecified
+                    painter = painterResource(Res.drawable.ic_t_bank),
+                    contentDescription = null,
+                    tint = Color.Unspecified
                 )
             }
         )
@@ -141,9 +153,9 @@ fun SignInScreen(
         Text(
             modifier = Modifier
                 .clickable { onNavigateToSignUpScreen() },
-            text            = stringResource(Res.string.bt_sign_up),
-            style           = MaterialTheme.typography.headlineMedium,
-            textDecoration  = TextDecoration.Underline,
+            text = stringResource(Res.string.bt_sign_up),
+            style = MaterialTheme.typography.headlineMedium,
+            textDecoration = TextDecoration.Underline,
         )
     }
 }

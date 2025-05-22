@@ -52,25 +52,26 @@ import travelreminder.composeapp.generated.resources.something_error
 @Composable
 fun SomethingErrorScreen(
     onRetryButtonClicked: () -> Unit
-){
+) {
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         Spacer(modifier = Modifier.weight(1f))
         Icon(
             modifier = Modifier
                 .size(152.dp),
-            imageVector         = Icons.Default.Warning,
-            contentDescription  = null,
-            tint                = MaterialTheme.colorScheme.error)
+            imageVector = Icons.Default.Warning,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.error
+        )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            textAlign   = TextAlign.Center,
-            text        = stringResource(Res.string.something_error),
-            style       = MaterialTheme.typography.headlineMedium,
-            color       = MaterialTheme.colorScheme.error
+            textAlign = TextAlign.Center,
+            text = stringResource(Res.string.something_error),
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.error
         )
         Spacer(modifier = Modifier.height(20.dp))
         StyledButton(
@@ -90,15 +91,15 @@ fun SomethingErrorScreen(
 @Composable
 fun EmptyScreen(
     text: String
-){
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
         Spacer(modifier = Modifier.weight(1F))
         Text(
-            textAlign   = TextAlign.Center,
-            text        = text
+            textAlign = TextAlign.Center,
+            text = text
 
         )
         Spacer(modifier = Modifier.weight(1F))
@@ -122,9 +123,9 @@ fun StyledTextField(
     contentPadding: PaddingValues = PaddingValues(horizontal = 12.dp),
     trailingIcon: (@Composable () -> Unit)? = null,
 ) {
-    val selectionColors  = TextSelectionColors(
-        handleColor      = textColor,
-        backgroundColor  = textColor.copy(alpha = 0.3f)
+    val selectionColors = TextSelectionColors(
+        handleColor = textColor,
+        backgroundColor = textColor.copy(alpha = 0.3f)
     )
 
     CompositionLocalProvider(
@@ -147,14 +148,14 @@ fun StyledTextField(
                     .fillMaxHeight()
             ) {
                 BasicTextField(
-                    value               = value,
-                    onValueChange       = onValueChange,
-                    singleLine          = true,
-                    readOnly            = readOnly,
-                    visualTransformation= visualTransformation,
-                    cursorBrush         = cursorBrush,
-                    textStyle           = MaterialTheme.typography.labelMedium.copy(
-                        color     = textColor,
+                    value = value,
+                    onValueChange = onValueChange,
+                    singleLine = true,
+                    readOnly = readOnly,
+                    visualTransformation = visualTransformation,
+                    cursorBrush = cursorBrush,
+                    textStyle = MaterialTheme.typography.labelMedium.copy(
+                        color = textColor,
                         textAlign = textAlign
                     ),
                     modifier = Modifier
@@ -173,7 +174,7 @@ fun StyledTextField(
                                             onClick()
                                         }
                                     else this
-                                     },
+                                },
                             contentAlignment = Alignment.CenterStart
                         ) {
                             if (value.isEmpty()) placeholder()
@@ -186,7 +187,7 @@ fun StyledTextField(
                 Spacer(modifier = Modifier.width(8.dp))
                 Box(
                     modifier = Modifier
-                                .wrapContentSize(),
+                        .wrapContentSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     it()
@@ -201,20 +202,21 @@ fun StyledButton(
     onButtonClicked: () -> Unit,
     content: @Composable RowScope.() -> Unit,
     paddingValues: PaddingValues
-){
+) {
     Button(
         modifier = Modifier
             .padding(paddingValues)
             .fillMaxWidth()
             .background(
                 color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(14.dp))
+                shape = RoundedCornerShape(14.dp)
+            )
             .height(40.dp),
         onClick = { onButtonClicked() },
         content = content,
-        colors  = ButtonDefaults.buttonColors(
-            containerColor  = MaterialTheme.colorScheme.primary,
-            contentColor    = MaterialTheme.colorScheme.onPrimary
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
         ),
     )
 }
@@ -225,20 +227,20 @@ fun CircularProgressBar(
     modifier: Modifier = Modifier,
     size: Dp,
     strokeWidth: Dp = 2.dp
-){
+) {
     CircularProgressIndicator(
         modifier = Modifier
             .size(size),
-        color       = MaterialTheme.colorScheme.onPrimary,
+        color = MaterialTheme.colorScheme.onPrimary,
         strokeWidth = strokeWidth
     )
 }
 
 @Composable
-fun InnerButtonsText(text: String){
+fun InnerButtonsText(text: String) {
     Text(
-        text    = text,
-        style   = MaterialTheme.typography.headlineMedium
+        text = text,
+        style = MaterialTheme.typography.headlineMedium
     )
 }
 
@@ -246,11 +248,11 @@ fun InnerButtonsText(text: String){
 fun ScreenHeadingText(
     modifier: Modifier = Modifier,
     text: String
-){
+) {
     Text(
         modifier = modifier,
-        text    = text,
-        style   = MaterialTheme.typography.displayLarge
+        text = text,
+        style = MaterialTheme.typography.displayLarge
     )
 }
 
@@ -260,7 +262,7 @@ fun HeadingTextWithIcon(
     iconRes: DrawableResource,
     iconSize: Dp,
     onIconClicked: () -> Unit
-){
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -270,8 +272,8 @@ fun HeadingTextWithIcon(
             modifier = Modifier
                 .size(iconSize)
                 .clickable { onIconClicked() },
-            painter             = painterResource(iconRes),
-            contentDescription  = null
+            painter = painterResource(iconRes),
+            contentDescription = null
         )
         ScreenHeadingText(
             modifier = Modifier
@@ -283,14 +285,14 @@ fun HeadingTextWithIcon(
 
 @Composable
 fun FullScreenLoading(
-){
+) {
     Box(
         modifier = Modifier
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressBar(
-            size        = 48.dp,
+            size = 48.dp,
             strokeWidth = 4.dp
         )
     }
@@ -300,14 +302,15 @@ fun FullScreenLoading(
 fun ColumnScope.ErrorText(
     modifier: Modifier = Modifier,
     text: String
-){
-    Box(modifier = modifier
-                    .align(Alignment.Start)
-    ){
+) {
+    Box(
+        modifier = modifier
+            .align(Alignment.Start)
+    ) {
         Text(
-            text    = text,
-            color   = MaterialTheme.colorScheme.error,
-            style   = MaterialTheme.typography.labelSmall
+            text = text,
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.labelSmall
         )
     }
 
@@ -318,7 +321,7 @@ fun StyledPlaceholder(
     text: String,
     textAlign: TextAlign = TextAlign.Center,
     textColor: Color
-){
+) {
     Text(
         modifier = Modifier
             .fillMaxWidth(),
