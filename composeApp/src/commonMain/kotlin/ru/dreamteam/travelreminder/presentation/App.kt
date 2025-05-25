@@ -110,7 +110,8 @@ fun App() {
                     addTravelScreenContent = {
                         AddTravelScreen(
                             viewModel = addTravelViewModel,
-                            onNavigateToTravelList = { navState.navigateTo(Screen.TravelsListScreen.route) }
+                            onNavigateToTravelList = { navState.navigateTo(Screen.TravelsListScreen.route) },
+                            onNavigateToMap = { navState.navigateTo(Screen.ShowMap.route) }
                         )
                     },
                     changePasswordScreenContent = {

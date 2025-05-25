@@ -1,6 +1,4 @@
-package ru.dreamteam.travelreminder.domen.model
-
-import ru.dreamteam.travelreminder.domen.model.travel.Point
+package ru.dreamteam.travelreminder.domen.model.travel
 
 data class Place(
     val placeId: String,

@@ -156,7 +156,7 @@ fun TravelCard(travel: Travel) {
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = travel.destinationByAddress ?: "",
+                text = travel.destinationPlace.title,
                 color = MaterialTheme.colorScheme.onTertiary
             )
         }

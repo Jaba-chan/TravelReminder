@@ -32,6 +32,7 @@ import ru.dreamteam.travelreminder.presentation.MainActivityViewModel
 import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
 import ru.dreamteam.travelreminder.presentation.change_password.ChangePasswordViewModel
 import ru.dreamteam.travelreminder.presentation.show_map.MapViewModel
+import ru.dreamteam.travelreminder.presentation.show_map.SharedPlaceFlow
 import ru.dreamteam.travelreminder.presentation.sing_in.SingInViewModel
 import ru.dreamteam.travelreminder.presentation.sing_up.SignUpViewModel
 import ru.dreamteam.travelreminder.presentation.travels_list.TravelsViewModel
@@ -69,12 +70,13 @@ val sharedModule = module {
     single { GetNearbyPlacesUseCase(get(), get()) }
     single { GetPlaceCoordinatesUseCase(get(), get()) }
     single { GetNavigationRouteUseCase(get(), get()) }
+    single { SharedPlaceFlow() }
 
     viewModel { MainActivityViewModel(get()) }
     viewModel { TravelsViewModel(get(), get()) }
     viewModel { SingInViewModel(get()) }
     viewModel { SignUpViewModel(get()) }
     viewModel { ChangePasswordViewModel(get()) }
-    viewModel { AddTravelViewModel() }
-    viewModel { MapViewModel(get(), get(), get(), get(), get()) }
+    viewModel { AddTravelViewModel(get(), get(), get()) }
+    viewModel { MapViewModel(get(), get(), get(), get(), get(), get()) }
 }
