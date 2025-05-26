@@ -11,6 +11,8 @@ import ru.dreamteam.travelreminder.data.remoute.model.response.SignUpResponse
 interface AuthRepository {
     fun isFirstLaunch(): Boolean
 
+    fun logOut()
+
     suspend fun refreshToken(refreshToken: String?)
 
     suspend fun signInByEmailAndPassword(params: SignInByEmailAndPasswordParams)

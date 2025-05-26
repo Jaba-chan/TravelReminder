@@ -1,7 +1,7 @@
 package ru.dreamteam.travelreminder.domen.repository
 
-import ru.dreamteam.travelreminder.data.local.model.map.Route
-import ru.dreamteam.travelreminder.domen.model.Place
+import ru.dreamteam.travelreminder.domen.model.travel.Route
+import ru.dreamteam.travelreminder.domen.model.travel.Place
 import ru.dreamteam.travelreminder.domen.model.PlaceSuggestion
 import ru.dreamteam.travelreminder.domen.model.travel.Point
 import ru.dreamteam.travelreminder.domen.model.travel.TransportationMode

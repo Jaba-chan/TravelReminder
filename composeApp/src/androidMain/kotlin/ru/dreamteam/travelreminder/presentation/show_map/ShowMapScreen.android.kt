@@ -10,7 +10,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -30,21 +33,20 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import ru.dreamteam.travelreminder.R
-import ru.dreamteam.travelreminder.domen.model.Place
+import ru.dreamteam.travelreminder.domen.model.travel.Place
 import ru.dreamteam.travelreminder.domen.model.travel.Point
-import ru.dreamteam.travelreminder.presentation.coomon_ui.CircularProgressBar
-import ru.dreamteam.travelreminder.presentation.coomon_ui.FullScreenLoading
+import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
 
 @Composable
 actual fun GoogleMapView(
     modifier: Modifier,
-    viewModel: MapViewModel,
+    viewModel: AddTravelViewModel,
     changeAddress: (Boolean) -> Unit,
     returnToAddTravel: () -> Unit
 ) {
-    val userLocation  = viewModel.userLocation.value
-    val cameraState   = rememberCameraPositionState()
-    val padding       = PaddingValues(bottom = 64.dp)
+    val userLocation = viewModel.userLocation.value
+    val cameraState = rememberCameraPositionState()
+    val padding = PaddingValues(bottom = 64.dp, end = 12.dp)
 
     LaunchedEffect(userLocation) {
         userLocation?.let { p ->
@@ -58,19 +60,18 @@ actual fun GoogleMapView(
 
     Column(Modifier.fillMaxSize()) {
         MapHead(
-            viewModel           = viewModel,
-            changeAddress       = changeAddress,
-            returnToAddTravel   = returnToAddTravel
+            viewModel = viewModel,
+            changeAddress = changeAddress,
         )
 
         Box(Modifier.weight(1f)) {
             MapContent(
-                modifier            = modifier,
-                cameraState         = cameraState,
-                contentPadding      = padding,
-                onMapClick          = { viewModel.onMapClicked(it) },
-                selectedPoints      = viewModel.selectedPoints.value,
-                routePoints         = viewModel.route.value?.poly
+                modifier = modifier,
+                cameraState = cameraState,
+                contentPadding = padding,
+                onMapClick = { viewModel.onMapClicked(it) },
+                selectedPoints = viewModel.selectedPoints.value,
+                routePoints = viewModel.route.value?.poly
             )
 
         }
@@ -106,38 +107,48 @@ private fun MapContent(
     routePoints: List<Point>?
 ) {
 
-
+    var isMapLoaded by remember { mutableStateOf(false) }
 
     GoogleMap(
-        modifier             = modifier.fillMaxSize(),
-        cameraPositionState  = cameraState,
-        uiSettings           = remember { MapUiSettings(zoomGesturesEnabled = true, myLocationButtonEnabled = true) },
-        properties           = remember { MapProperties(isMyLocationEnabled = true) },
-        contentPadding       = contentPadding,
-        onMapClick           = { onMapClick(Point(it.latitude, it.longitude)) }
+        modifier = modifier.fillMaxSize(),
+        cameraPositionState = cameraState,
+        uiSettings = remember {
+            MapUiSettings(
+                zoomGesturesEnabled = true,
+                myLocationButtonEnabled = true
+            )
+        },
+        properties = remember { MapProperties(isMyLocationEnabled = true) },
+        contentPadding = contentPadding,
+        onMapClick = { onMapClick(Point(it.latitude, it.longitude)) },
+        onMapLoaded = { isMapLoaded = true }
     ) {
         val (start, end) = selectedPoints
-        val icon         = rememberMarkerIcon(R.drawable.ic_circle, Color.Blue)
+        val icon = if (isMapLoaded) rememberMarkerIcon(R.drawable.ic_circle, Color.Blue) else null
 
         start?.let {
             MapMarker(
                 point = it.point,
-                icon  = icon,
-                title = "Начало маршрута")
+                icon = icon,
+                title = "Начало маршрута"
+            )
         }
         end?.let {
             MapMarker(
                 point = it.point,
-                icon  = null,
-                title = "Конец маршрута")
+                icon = null,
+                title = "Конец маршрута"
+            )
         }
         routePoints
             ?.takeIf(List<Point>::isNotEmpty)
             ?.map { LatLng(it.latitude, it.longitude) }
-            ?.let { Polyline(
-                points = it,
-                color = Color.Blue,
-                width = 5f)
+            ?.let {
+                Polyline(
+                    points = it,
+                    color = Color.Blue,
+                    width = 5f
+                )
             }
     }
 }
@@ -146,7 +157,7 @@ private fun MapContent(
 private fun MapMarker(point: Point, icon: BitmapDescriptor?, title: String) {
     Marker(
         state = MarkerState(LatLng(point.latitude, point.longitude)),
-        icon  = icon,
+        icon = icon,
         title = title
     )
 }

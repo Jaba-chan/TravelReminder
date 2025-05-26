@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Place
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.dreamteam.travelreminder.domen.model.travel.TransportationMode
+import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
 import travelreminder.composeapp.generated.resources.Res
 import travelreminder.composeapp.generated.resources.days_pattern
 import travelreminder.composeapp.generated.resources.hours_pattern
@@ -50,9 +50,8 @@ import travelreminder.composeapp.generated.resources.minutes_pattern
 
 @Composable
 fun MapHead(
-    viewModel: MapViewModel,
+    viewModel: AddTravelViewModel,
     changeAddress: (isOriginPlace: Boolean) -> Unit,
-    returnToAddTravel: () -> Unit
 ) {
     Spacer(modifier = Modifier.height(8.dp))
     Row(modifier = Modifier.fillMaxWidth()) {
@@ -243,7 +242,7 @@ fun TransportationModeSelector(
 
 
 @Composable
-private fun durationToDHM(duration: String): List<String> {
+fun durationToDHM(duration: String): List<String> {
     val seconds = duration.removeSuffix("s").toIntOrNull() ?: return listOf("0")
     val totalMinutes = (seconds + 30) / 60
 

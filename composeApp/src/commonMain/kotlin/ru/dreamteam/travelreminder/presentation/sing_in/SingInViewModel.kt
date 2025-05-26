@@ -45,6 +45,10 @@ class SingInViewModel(
         _password.value = newText
     }
 
+    fun resetStateToIdle(){
+        _state.value = SignInState.Idle
+    }
+
     private fun singIn(params: SignInByEmailAndPasswordParams) {
         signInUseCase(params).onEach { result ->
             when (result) {

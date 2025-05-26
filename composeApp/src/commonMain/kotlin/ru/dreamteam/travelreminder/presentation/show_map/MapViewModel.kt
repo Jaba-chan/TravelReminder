@@ -6,19 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.joinAll
 import ru.dreamteam.travelreminder.common.Resource
 import ru.dreamteam.travelreminder.domen.model.PlaceSuggestion
 import ru.dreamteam.travelreminder.data.local.provider.LocaleProvider
-import ru.dreamteam.travelreminder.data.local.model.map.Route
-import ru.dreamteam.travelreminder.domen.model.Place
+import ru.dreamteam.travelreminder.domen.model.travel.Route
+import ru.dreamteam.travelreminder.domen.model.travel.Place
 import ru.dreamteam.travelreminder.domen.model.travel.Point
 import ru.dreamteam.travelreminder.domen.model.travel.TransportationMode
 import ru.dreamteam.travelreminder.domen.use_cases.GetNavigationRouteUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.GetNearbyPlacesUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.GetPlaceCoordinatesUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.GetPlaceSuggestionUseCase
-import kotlin.random.Random
 
 
 class MapViewModel(
@@ -26,15 +24,14 @@ class MapViewModel(
     private val getNavigationRouteUseCase: GetNavigationRouteUseCase,
     private val getNearbyPlacesUseCase: GetNearbyPlacesUseCase,
     private val getPlaceCoordinatesUseCase: GetPlaceCoordinatesUseCase,
-    localeProvider: LocaleProvider
+    localeProvider: LocaleProvider,
+    private val sharedPlaceFlow: SharedPlaceFlow
 ) : ViewModel() {
 
-    init {
-        localeProvider.startLocationUpdate()
-        localeProvider.setOnLocationChangedListener {
-            _userLocation.value = it
-        }
-    }
+    private var _selectedPoints = mutableStateOf<Pair<Place?, Place?>>(Pair(null, null))
+    val selectedPoints: State<Pair<Place?, Place?>> = _selectedPoints
+
+
 
     private val _placeSuggestionsQuery = mutableStateOf("")
     val placeSuggestionsQuery: State<String> = _placeSuggestionsQuery
@@ -48,8 +45,7 @@ class MapViewModel(
     private var _userLocation = mutableStateOf<Point?>(null)
     val userLocation: State<Point?> = _userLocation
 
-    private var _selectedPoints = mutableStateOf<Pair<Place?, Place?>>(Pair(null, null))
-    val selectedPoints: State<Pair<Place?, Place?>> = _selectedPoints
+
 
     private var _transportationMode = mutableStateOf(TransportationMode.DRIVE)
     val transportationMode: State<TransportationMode> = _transportationMode

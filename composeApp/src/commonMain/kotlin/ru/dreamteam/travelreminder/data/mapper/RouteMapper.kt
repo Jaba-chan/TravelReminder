@@ -1,13 +1,26 @@
 package ru.dreamteam.travelreminder.data.mapper
 
-import ru.dreamteam.travelreminder.data.local.model.map.Route
+import ru.dreamteam.travelreminder.data.local.model.map.RouteSaveDto
+import ru.dreamteam.travelreminder.domen.model.travel.Route
 import ru.dreamteam.travelreminder.data.remoute.model.response.RouteDto
 import ru.dreamteam.travelreminder.domen.model.travel.Point
 
 fun RouteDto.toDomain() = Route(
     poly = decodePolyline(polyline.encodedPolyline),
-    duration =duration,
+    duration = duration,
     distance = distanceMeters
+)
+
+fun RouteSaveDto.toDomain() = Route(
+    poly = poly.map { it.toDomain() },
+    duration = duration,
+    distance = distance
+)
+
+fun Route.toDto() = RouteSaveDto(
+    poly = poly.map { it.toDto() },
+    duration = duration,
+    distance = distance
 )
 
 private fun decodePolyline(encoded: String): List<Point> {

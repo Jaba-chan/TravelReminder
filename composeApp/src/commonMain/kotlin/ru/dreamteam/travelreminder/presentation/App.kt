@@ -4,8 +4,10 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -56,6 +58,13 @@ fun App() {
 
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
+            val snackBarHostState = remember { SnackbarHostState() }
+
+            LaunchedEffect(Unit) {
+                addTravelViewModel.snackBarMessages.collect { message ->
+                    snackBarHostState.showSnackbar(message)
+                }
+            }
 
             SetStatusBarColor(
                 color = MaterialTheme.colorScheme.background,
@@ -68,9 +77,7 @@ fun App() {
                             FloatingActionButton(
                                 backgroundColor = MaterialTheme.colorScheme.primary,
                                 onClick = {
-                                    if (currentRoute == Screen.TravelsListScreen.route)
                                         navState.navigateTo(Screen.AddTravelScreen.route)
-                                    else navState.navigateTo(Screen.ShowMap.route)
                                 },
                                 content = {
                                     Icon(
@@ -84,7 +91,10 @@ fun App() {
                                 }
                             )
                     }
-                }
+                },
+                snackbarHost = {
+                    SnackbarHost(hostState = snackBarHostState)
+                },
             ) {
                 AppNavGraph(
                     viewModel = mainActivityViewModel,
@@ -92,8 +102,13 @@ fun App() {
                     signInScreenContent = {
                         SignInScreen(
                             viewModel = singInViewModel,
-                            onNavigateToTravelsList = { navState.navigateToTravelListForSignedUser() },
-                            onNavigateToSignUpScreen = { navState.navigateTo(Screen.SignUpScreen.route) })
+                            onNavigateToTravelsList = {
+                                navState.navigateToTravelListForSignedUser()
+                            },
+                            onNavigateToSignUpScreen = {
+                                navState.navigateTo(Screen.SignUpScreen.route)
+                            }
+                        )
                     },
                     signUpScreenContent = {
                         SignUpScreen(
@@ -104,13 +119,23 @@ fun App() {
                     travelsListScreenContent = {
                         TravelsListScreen(
                             viewModel = travelsViewModel,
-                            logOut = { navState.navigateToSignIn() }
+                            onNavigateToEditScreen = {
+                                navState.navigateTo(Screen.AddTravelScreen.createRoute(it))
+                            },
+                            logOut = {
+                                mainActivityViewModel.logOut()
+                                navState.navigateToSignIn()
+                            }
                         )
                     },
-                    addTravelScreenContent = {
+                    addTravelScreenContent = { travelId ->
                         AddTravelScreen(
                             viewModel = addTravelViewModel,
-                            onNavigateToTravelList = { navState.navigateTo(Screen.TravelsListScreen.route) }
+                            onNavigateToTravelList = {
+                                navState.navigateTo(Screen.TravelsListScreen.route)
+                            },
+                            onNavigateToMap = { navState.navigateTo(Screen.ShowMap.route) },
+                            editedTravelId = travelId
                         )
                     },
                     changePasswordScreenContent = {
@@ -121,20 +146,16 @@ fun App() {
                     showMap = {
                         GoogleMapView(
                             modifier = Modifier,
-                            viewModel = mapViewModel,
+                            viewModel = addTravelViewModel,
                             changeAddress = {
-                                navState.navigateTo(
-                                    Screen.PlaceSuggestionsScreen.createRoute(
-                                        it
-                                    )
-                                )
+                                navState.navigateTo(Screen.PlaceSuggestionsScreen.createRoute(it))
                             },
                             returnToAddTravel = { navState.navigateTo(Screen.AddTravelScreen.route) }
                         )
                     },
                     placeSuggestionsScreen = { isOriginPlace ->
                         PlaceSuggestionsScreen(
-                            viewModel = mapViewModel,
+                            viewModel = addTravelViewModel,
                             returnToMap = { navState.navigateTo(Screen.ShowMap.route) },
                             isOriginPlace = isOriginPlace
                         )

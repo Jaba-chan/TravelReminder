@@ -47,6 +47,16 @@ class TravelRepositoryImpl(
         return dtoMap.values.map(TravelDto::toDomain)
     }
 
+    override suspend fun getTravelById(travelId: String): Travel {
+        val url = travelUrl(travelId)
+        val rawJson = client
+            .get(url)
+            .body<String>()
+
+        val dto = Json.decodeFromString<TravelDto>(rawJson)
+        return dto.toDomain()
+    }
+
     override suspend fun deleteTravel(travel: Travel) {
         client.delete(travelUrl(travel.id))
     }

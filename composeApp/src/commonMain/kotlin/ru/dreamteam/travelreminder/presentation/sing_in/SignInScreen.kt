@@ -32,7 +32,7 @@ import ru.dreamteam.travelreminder.presentation.CaughtErrorImpl
 import ru.dreamteam.travelreminder.presentation.coomon_ui.CircularProgressBar
 import ru.dreamteam.travelreminder.presentation.coomon_ui.ErrorText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.InnerButtonsText
-import ru.dreamteam.travelreminder.presentation.coomon_ui.ScreenHeadingText
+import ru.dreamteam.travelreminder.presentation.coomon_ui.HeadingText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledButton
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledPlaceholder
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledTextField
@@ -61,7 +61,7 @@ fun SignInScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(24.dp))
-        ScreenHeadingText(text = stringResource(Res.string.sign_in))
+        HeadingText(text = stringResource(Res.string.sign_in))
         Spacer(modifier = Modifier.height(96.dp))
         StyledTextField(
             value = viewModel.email.value,
@@ -93,7 +93,7 @@ fun SignInScreen(
                     horizontal = 28.dp,
                     vertical = 4.dp
                 ),
-            text = ((state as? SingInViewModel.SignInState.Error)?.error as? CaughtErrorImpl.ErrorForUser)
+            text = ((state as? SingInViewModel.SignInState.Error)?.error as? CaughtErrorImpl.CommonError)
                 ?.let {
                     stringResource(it.resId)
                 } ?: ""
@@ -106,22 +106,11 @@ fun SignInScreen(
             content = {
                 when (state) {
                     is SingInViewModel.SignInState.Loading -> CircularProgressBar(size = 24.dp)
-                    is SingInViewModel.SignInState.Error -> InnerButtonsText(
-                        text = stringResource(
-                            Res.string.bt_sign_in
-                        )
-                    )
-
-                    is SingInViewModel.SignInState.Idle -> InnerButtonsText(
-                        text = stringResource(
-                            Res.string.bt_sign_in
-                        )
-                    )
-
                     SingInViewModel.SignInState.Success -> {
-                        InnerButtonsText(text = stringResource(Res.string.bt_sign_in))
+                        viewModel.resetStateToIdle()
                         onNavigateToTravelsList()
                     }
+                    else -> InnerButtonsText(text = stringResource(Res.string.bt_sign_in))
                 }
             },
         )

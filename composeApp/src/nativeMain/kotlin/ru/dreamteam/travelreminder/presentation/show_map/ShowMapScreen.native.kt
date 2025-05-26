@@ -2,11 +2,13 @@ package ru.dreamteam.travelreminder.presentation.show_map
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import ru.dreamteam.travelreminder.presentation.MainActivityViewModel
+import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
 
 @Composable
 actual fun GoogleMapView(
     modifier: Modifier,
-    viewModel: MapViewModel,
+    viewModel: AddTravelViewModel,
     changeAddress: (isOriginPlace: Boolean) -> Unit,
     returnToAddTravel: () -> Unit
 ) {

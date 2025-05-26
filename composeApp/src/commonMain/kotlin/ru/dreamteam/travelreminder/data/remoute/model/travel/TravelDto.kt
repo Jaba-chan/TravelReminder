@@ -2,6 +2,7 @@ package ru.dreamteam.travelreminder.data.remoute.model.travel
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.dreamteam.travelreminder.data.local.model.map.RouteSaveDto
 import ru.dreamteam.travelreminder.domen.model.travel.TransportationMode
 
 @Serializable
@@ -11,15 +12,17 @@ data class TravelDto(
     @SerialName("title")
     val title: String,
     @SerialName("date")
-    val date: String,
-    @SerialName("destinationByAddress")
-    val destinationByAddress: String? = null,
-    @SerialName("destinationByPoint")
-    val destinationByPoint: PointDto? = null,
+    val date: DateDto,
+    @SerialName("destinationPlace")
+    val startPlace: PlaceDto,
+    @SerialName("startPlace")
+    val destinationPlace: PlaceDto,
     @SerialName("arrivalTime")
-    val arrivalTime: String,
+    val arrivalTime: TimeDto,
     @SerialName("transportationMode")
     val transportationMode: TransportationMode,
     @SerialName("timeBeforeRemind")
-    val timeBeforeRemind: String,
+    val timeBeforeRemind: TimeDto,
+    @SerialName("route")
+    val route: RouteSaveDto
 )

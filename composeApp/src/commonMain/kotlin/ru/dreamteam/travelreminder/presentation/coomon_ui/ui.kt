@@ -25,6 +25,7 @@ import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -201,23 +202,21 @@ fun StyledTextField(
 fun StyledButton(
     onButtonClicked: () -> Unit,
     content: @Composable RowScope.() -> Unit,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    colors: ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary
+    )
 ) {
     Button(
         modifier = Modifier
+            .height(40.dp)
             .padding(paddingValues)
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(14.dp)
-            )
-            .height(40.dp),
+            .fillMaxWidth(),
         onClick = { onButtonClicked() },
         content = content,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
-        ),
+        colors = colors,
+        shape = RoundedCornerShape(14.dp)
     )
 }
 
@@ -245,7 +244,7 @@ fun InnerButtonsText(text: String) {
 }
 
 @Composable
-fun ScreenHeadingText(
+fun HeadingText(
     modifier: Modifier = Modifier,
     text: String
 ) {
@@ -275,7 +274,7 @@ fun HeadingTextWithIcon(
             painter = painterResource(iconRes),
             contentDescription = null
         )
-        ScreenHeadingText(
+        HeadingText(
             modifier = Modifier
                 .align(Alignment.Center),
             text = text

@@ -13,12 +13,12 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
-import ru.dreamteam.travelreminder.data.local.model.map.Route
+import ru.dreamteam.travelreminder.domen.model.travel.Route
 import ru.dreamteam.travelreminder.data.mapper.toDomain
 import ru.dreamteam.travelreminder.data.remoute.model.response.AutocompleteResponseDto
 import ru.dreamteam.travelreminder.data.remoute.model.response.NearbySearchResponseDto
 import ru.dreamteam.travelreminder.data.remoute.model.response.PlaceDetailsResponseDto
-import ru.dreamteam.travelreminder.domen.model.Place
+import ru.dreamteam.travelreminder.domen.model.travel.Place
 import ru.dreamteam.travelreminder.domen.model.PlaceSuggestion
 import ru.dreamteam.travelreminder.data.remoute.model.response.RouteResponse
 import ru.dreamteam.travelreminder.domen.model.travel.Point
@@ -30,6 +30,8 @@ class MapRepositoryImpl(
     private val apiKey: String
 ) : MapRepository {
     private val regionCode = Locale.current.region
+    private val languageCode = Locale.current.language
+
     override suspend fun buildRoute(
         origin: Point,
         destination: Point,
@@ -82,7 +84,7 @@ class MapRepositoryImpl(
         val requestBody = buildJsonObject {
             put("input", stringText)
             put("regionCode", regionCode)
-            put("languageCode", regionCode)
+            put("languageCode", languageCode)
             put("sessionToken", null)
         }
 
@@ -108,7 +110,7 @@ class MapRepositoryImpl(
         val body = buildJsonObject {
             put("maxResultCount", 1)
             put("regionCode", regionCode)
-            put("languageCode", regionCode)
+            put("languageCode", languageCode)
             putJsonObject("locationRestriction") {
                 putJsonObject("circle") {
                     putJsonObject("center") {
