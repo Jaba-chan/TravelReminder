@@ -6,6 +6,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import kotlinx.serialization.json.Json
+import ru.dreamteam.travelreminder.data.mapper.toDomain
+import ru.dreamteam.travelreminder.data.remoute.model.travel.TravelDto
+import ru.dreamteam.travelreminder.domen.model.travel.Travel
 import ru.dreamteam.travelreminder.presentation.MainActivityViewModel
 
 @Composable
@@ -16,7 +20,7 @@ fun AppNavGraph(
     signUpScreenContent: @Composable () -> Unit,
     travelsListScreenContent: @Composable () -> Unit,
     changePasswordScreenContent: @Composable () -> Unit,
-    addTravelScreenContent: @Composable () -> Unit,
+    addTravelScreenContent: @Composable (editedTravel: String?) -> Unit,
     showMap: @Composable () -> Unit,
     placeSuggestionsScreen: @Composable (isOriginPlace: Boolean) -> Unit
 ) {
@@ -30,8 +34,20 @@ fun AppNavGraph(
         composable(Screen.TravelsListScreen.route) {
             travelsListScreenContent()
         }
-        composable(Screen.AddTravelScreen.route) {
-            addTravelScreenContent()
+        composable(
+            route = Screen.AddTravelScreen.route,
+            arguments = listOf(
+                navArgument("editedTravelId") {
+                    nullable = true
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+            var travelId = backStackEntry.arguments?.getString("editedTravelId")
+            if( travelId == "{editedTravelId}"){
+                travelId = null
+            }
+            addTravelScreenContent(travelId)
         }
         composable(Screen.SignUpScreen.route) {
             signUpScreenContent()

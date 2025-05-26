@@ -2,6 +2,7 @@ package ru.dreamteam.travelreminder.presentation.add_travel
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,11 +23,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimeInput
-import androidx.compose.material3.TimePickerColors
 import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
@@ -39,45 +42,82 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ru.dreamteam.travelreminder.common.CaughtError
 import ru.dreamteam.travelreminder.domen.model.travel.Date
 import ru.dreamteam.travelreminder.domen.model.travel.Time
 import ru.dreamteam.travelreminder.presentation.CaughtErrorImpl
 import ru.dreamteam.travelreminder.presentation.coomon_ui.CircularProgressBar
 import ru.dreamteam.travelreminder.presentation.coomon_ui.ErrorText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.HeadingText
+import ru.dreamteam.travelreminder.presentation.coomon_ui.HeadingTextWithIcon
 import ru.dreamteam.travelreminder.presentation.coomon_ui.InnerButtonsText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledButton
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledPlaceholder
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledTextField
-import ru.dreamteam.travelreminder.presentation.sing_in.SingInViewModel
-import ru.dreamteam.travelreminder.presentation.sing_up.SignUpViewModel
 import travelreminder.composeapp.generated.resources.Res
-import travelreminder.composeapp.generated.resources.bt_sign_in
 import travelreminder.composeapp.generated.resources.cancel
+import travelreminder.composeapp.generated.resources.editing
 import travelreminder.composeapp.generated.resources.enter_time
+import travelreminder.composeapp.generated.resources.hours_pattern
+import travelreminder.composeapp.generated.resources.ic_arrow_back
 import travelreminder.composeapp.generated.resources.ic_date
+import travelreminder.composeapp.generated.resources.ic_notifications
 import travelreminder.composeapp.generated.resources.ic_time
+import travelreminder.composeapp.generated.resources.minutes_pattern
+import travelreminder.composeapp.generated.resources.my_travels
+import travelreminder.composeapp.generated.resources.new_travel
 import travelreminder.composeapp.generated.resources.ok
+import travelreminder.composeapp.generated.resources.remind
 import travelreminder.composeapp.generated.resources.save
 import travelreminder.composeapp.generated.resources.time_before_remind
 import travelreminder.composeapp.generated.resources.travel_date
 import travelreminder.composeapp.generated.resources.travel_destination
 import travelreminder.composeapp.generated.resources.travel_name
+import travelreminder.composeapp.generated.resources.travel_successfully_added
+import travelreminder.composeapp.generated.resources.travel_successfully_edited
 import travelreminder.composeapp.generated.resources.travel_time
 
 @Composable
 fun AddTravelScreen(
     viewModel: AddTravelViewModel,
     onNavigateToTravelList: () -> Unit,
-    onNavigateToMap: () -> Unit
+    onNavigateToMap: () -> Unit,
+    editedTravelId: String?
 ) {
+    val state by viewModel.state.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.resetErrors()
+    }
+
+    LaunchedEffect(Unit){
+        if (editedTravelId != null)
+            viewModel.setAsEditMode(editedTravelId)
+    }
+
+    val successMessage = if (viewModel.editedTravelId.value == null) stringResource(Res.string.travel_successfully_added)
+                            else stringResource(Res.string.travel_successfully_edited)
+    LaunchedEffect(state){
+        if (viewModel.state.value is AddTravelViewModel.AddTravelState.Success){
+            viewModel.showSnackBarMessage(successMessage)
+            if (viewModel.editedTravelId.value == null) viewModel.resetFields()
+            viewModel.setStateToIdle()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
     ) {
-        val state = viewModel.state.value
-
+        Spacer(modifier = Modifier.height(24.dp))
+        HeadingTextWithIcon(
+            iconRes = Res.drawable.ic_arrow_back,
+            iconSize = 28.dp,
+            text =  if (viewModel.editedTravelId.value == null)
+                        stringResource(Res.string.new_travel)
+                    else stringResource(Res.string.editing),
+            onIconClicked = onNavigateToTravelList,
+        )
         Spacer(modifier = Modifier.height(96.dp))
         LocalTextFieldStyle(
             value = viewModel.travelName.value,
@@ -85,19 +125,7 @@ fun AddTravelScreen(
             onValueChange = { viewModel.onTravelNameTextChanged(it) },
             readOnly = false
         )
-        ErrorText(
-            modifier = Modifier
-                .padding(
-                    horizontal = 28.dp,
-                    vertical = 4.dp
-                ),
-            text = ((state as? AddTravelViewModel.AddTravelState.ValidationError)?.error as? CaughtErrorImpl.ValidationError)
-                ?.let {
-                    if (AddTravelFieldsValidationErrors.entries[it.ordinal] == AddTravelFieldsValidationErrors.EMPTY_NAME)
-                        stringResource(it.resId)
-                    else ""
-                } ?: ""
-        )
+        LocalError(viewModel.fieldErrors.value[FieldKey.NAME])
         DefaultVerticalPadding()
         LocalTextFieldStyle(
             value = viewModel.travelDate.value?.format() ?: "",
@@ -118,9 +146,11 @@ fun AddTravelScreen(
                 onDismiss = { viewModel.hideDatePicker() }
             )
         }
+        LocalError(viewModel.fieldErrors.value[FieldKey.DATE])
         DefaultVerticalPadding()
+
         LocalTextFieldStyle(
-            value = viewModel.travelTime.value?.format() ?: "",
+            value = viewModel.arrivalTime.value?.format() ?: "",
             placeholderText = stringResource(Res.string.travel_time),
             onValueChange = { },
             readOnly = true,
@@ -138,13 +168,18 @@ fun AddTravelScreen(
                 onDismiss = { viewModel.hideTimePicker() }
             )
         }
+        LocalError(viewModel.fieldErrors.value[FieldKey.TIME])
         DefaultVerticalPadding()
+
         LocalTextFieldStyle(
             value = viewModel.selectedPoints.value.second?.title ?: "",
             placeholderText = stringResource(Res.string.travel_destination),
             onValueChange = { },
             readOnly = true,
-            onClick = { onNavigateToMap() },
+            onClick = {
+                onNavigateToMap()
+                viewModel.resetNoRouteError()
+            },
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Outlined.Place,
@@ -152,29 +187,33 @@ fun AddTravelScreen(
                 )
             }
         )
+        LocalError(viewModel.fieldErrors.value[FieldKey.ROUTE])
         DefaultVerticalPadding()
+
         LocalTextFieldStyle(
-            value = viewModel.timeBeforeRemind.value?.format() ?: "",
+            value = viewModel.timeBeforeRemind.value?.beforeRemindFormat() ?: "",
             placeholderText = stringResource(Res.string.time_before_remind),
             onValueChange = { },
             readOnly = true,
-            onClick = { viewModel.showTimePicker() },
+            onClick = { viewModel.showTimeRemindPicker() },
             trailingIcon = {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_time),
+                    painter = painterResource(Res.drawable.ic_notifications),
                     contentDescription = null
                 )
             }
         )
-        if (viewModel.isTimePickerVisible.value) {
+        if (viewModel.isTimeRemindPickerVisible.value) {
             TimePickerModalInput(
                 onTimeSelected = { viewModel.setTimeBeforeRemind(it) },
-                onDismiss = { viewModel.hideTimePicker() }
+                onDismiss = { viewModel.hideTimeRemindPicker() }
             )
         }
+        LocalError(viewModel.fieldErrors.value[FieldKey.TIME_BEFORE_REMIND])
         Spacer(modifier = Modifier.weight(1f))
+
         StyledButton(
-            onButtonClicked = { viewModel.addTravel() },
+            onButtonClicked = { viewModel.onSaveButtonPressed() },
             paddingValues = PaddingValues(horizontal = 78.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.tertiary,
@@ -192,7 +231,7 @@ fun AddTravelScreen(
 }
 
 @Composable
-fun LocalTextFieldStyle(
+private fun LocalTextFieldStyle(
     value: String,
     placeholderText: String,
     readOnly: Boolean = false,
@@ -220,9 +259,25 @@ fun LocalTextFieldStyle(
     )
 }
 
+@Composable
+private fun ColumnScope.LocalError(
+    error: CaughtError?
+){
+    ErrorText(
+        modifier = Modifier
+            .padding(
+                horizontal = 28.dp,
+                vertical = 4.dp
+            ),
+        text = (error as? CaughtErrorImpl.SingleError)?.let {
+            stringResource(it.resId)
+        } ?: ""
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerModalInput(
+private fun DatePickerModalInput(
     onDateSelected: (Date?) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -260,13 +315,13 @@ fun DatePickerModalInput(
 }
 
 @Composable
-fun DefaultVerticalPadding() {
-    Spacer(modifier = Modifier.height(32.dp))
+private fun DefaultVerticalPadding() {
+    Spacer(modifier = Modifier.height(12.dp))
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimePickerModalInput(
+private fun TimePickerModalInput(
     onTimeSelected: (Time) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -321,7 +376,7 @@ fun TimePickerModalInput(
 }
 
 @Composable
-fun DialogButton(
+private fun DialogButton(
     text: String,
     onClick: () -> Unit
 ) {
@@ -338,10 +393,18 @@ fun DialogButton(
 }
 
 
+@Composable
+fun Time.beforeRemindFormat(): String {
+    return "${stringResource(Res.string.remind)} " +
+            "$hours${stringResource(Res.string.hours_pattern)} " +
+            "$minutes${stringResource(Res.string.minutes_pattern)}"
+}
+
+@Composable
 fun Time.format(): String {
-    val hoursStr = if (hours < 10) "0$hours" else "$hours"
-    val minutesStr = if (minutes < 10) "0$minutes" else "$minutes"
-    return "$hoursStr:$minutesStr"
+        val hoursStr = if (hours < 10) "0$hours" else "$hours"
+        val minutesStr = if (minutes < 10) "0$minutes" else "$minutes"
+        return "$hoursStr:$minutesStr"
 }
 
 fun Date.format(): String {

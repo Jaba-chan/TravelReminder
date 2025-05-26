@@ -16,7 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Place
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -30,12 +30,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.stringResource
 import ru.dreamteam.travelreminder.domen.model.PlaceSuggestion
+import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
 import travelreminder.composeapp.generated.resources.Res
 import travelreminder.composeapp.generated.resources.search
 
 @Composable
 fun PlaceSuggestionsScreen(
-    viewModel: MapViewModel,
+    viewModel: AddTravelViewModel,
     isOriginPlace: Boolean,
     returnToMap: () -> Unit,
 ) {
@@ -53,12 +54,16 @@ fun PlaceSuggestionsScreen(
                 .fillMaxWidth()
                 .padding(16.dp),
             placeholder = {
-                Text(stringResource(Res.string.search))
+                Text(
+                    text = stringResource(Res.string.search),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
                         .clickable(onClick = returnToMap)
                 )
@@ -68,6 +73,7 @@ fun PlaceSuggestionsScreen(
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier
                             .clickable { viewModel.onClearQueryButtonPressed() }
                     )
@@ -101,7 +107,7 @@ fun SuggestionsList(
                 suggestion = suggestion,
                 onClick = { onSuggestionClick(suggestion) },
             )
-            Divider()
+            HorizontalDivider()
         }
     }
 }

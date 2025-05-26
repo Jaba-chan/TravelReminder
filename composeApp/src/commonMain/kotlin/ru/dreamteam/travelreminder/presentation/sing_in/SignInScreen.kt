@@ -93,7 +93,7 @@ fun SignInScreen(
                     horizontal = 28.dp,
                     vertical = 4.dp
                 ),
-            text = ((state as? SingInViewModel.SignInState.Error)?.error as? CaughtErrorImpl.ErrorForUser)
+            text = ((state as? SingInViewModel.SignInState.Error)?.error as? CaughtErrorImpl.CommonError)
                 ?.let {
                     stringResource(it.resId)
                 } ?: ""
@@ -107,6 +107,7 @@ fun SignInScreen(
                 when (state) {
                     is SingInViewModel.SignInState.Loading -> CircularProgressBar(size = 24.dp)
                     SingInViewModel.SignInState.Success -> {
+                        viewModel.resetStateToIdle()
                         onNavigateToTravelsList()
                     }
                     else -> InnerButtonsText(text = stringResource(Res.string.bt_sign_in))

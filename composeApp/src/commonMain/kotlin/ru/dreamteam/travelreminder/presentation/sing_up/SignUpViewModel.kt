@@ -12,10 +12,13 @@ import ru.dreamteam.travelreminder.common.CaughtError
 import ru.dreamteam.travelreminder.common.Resource
 import ru.dreamteam.travelreminder.domen.model.params.SignUpByEmailAndPasswordParams
 import ru.dreamteam.travelreminder.domen.use_cases.SignUpByEmailAndPasswordUseCase
+import ru.dreamteam.travelreminder.presentation.DefaultErrorMapper
+import ru.dreamteam.travelreminder.presentation.sing_in.SingInViewModel.SignInState
 
 
 class SignUpViewModel(
-    private val signUpUseCase: SignUpByEmailAndPasswordUseCase
+    private val signUpUseCase: SignUpByEmailAndPasswordUseCase,
+    private val errorMapper: DefaultErrorMapper
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<SignUpState>(SignUpState.Idle)
@@ -31,12 +34,18 @@ class SignUpViewModel(
     val passwordAgain: State<String> = _passwordAgain
 
     fun onSignUpButtonPressed() {
-        singUp(
-            SignUpByEmailAndPasswordParams(
-                email = email.value,
-                password = password.value
+        if (_password.value != _passwordAgain.value) {
+            println("Ddddd")
+            _state.value =
+                SignUpState.Error(errorMapper.map(SignUpFieldsValidationErrors.PASSWORDS_DO_NOT_MATCH))
+            return
+        } else
+            singUp(
+                SignUpByEmailAndPasswordParams(
+                    email = email.value,
+                    password = password.value
+                )
             )
-        )
     }
 
     fun onEmailTextChanged(newText: String) {
@@ -50,6 +59,10 @@ class SignUpViewModel(
 
     fun onPasswordAgainTextChanged(newText: String) {
         _passwordAgain.value = newText
+    }
+
+    fun resetStateToIdle() {
+        _state.value = SignUpState.Idle
     }
 
     private fun singUp(params: SignUpByEmailAndPasswordParams) {

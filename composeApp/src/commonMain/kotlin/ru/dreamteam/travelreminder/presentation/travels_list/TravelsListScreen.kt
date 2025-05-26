@@ -1,6 +1,7 @@
 package ru.dreamteam.travelreminder.presentation.travels_list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,23 +28,43 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
+import ru.dreamteam.travelreminder.domen.model.travel.TransportationMode
 import ru.dreamteam.travelreminder.domen.model.travel.Travel
+import ru.dreamteam.travelreminder.presentation.add_travel.beforeRemindFormat
+import ru.dreamteam.travelreminder.presentation.add_travel.format
 import ru.dreamteam.travelreminder.presentation.coomon_ui.EmptyScreen
 import ru.dreamteam.travelreminder.presentation.coomon_ui.FullScreenLoading
 import ru.dreamteam.travelreminder.presentation.coomon_ui.HeadingTextWithIcon
 import ru.dreamteam.travelreminder.presentation.coomon_ui.SomethingErrorScreen
+import ru.dreamteam.travelreminder.presentation.show_map.durationToDHM
 import travelreminder.composeapp.generated.resources.Res
+import travelreminder.composeapp.generated.resources.arrival_time_pattern
 import travelreminder.composeapp.generated.resources.date_patter
 import travelreminder.composeapp.generated.resources.empty_now
+import travelreminder.composeapp.generated.resources.end_place_pattern
 import travelreminder.composeapp.generated.resources.ic_logout
 import travelreminder.composeapp.generated.resources.my_travels
-import travelreminder.composeapp.generated.resources.time_pattern
+import travelreminder.composeapp.generated.resources.remind_time_pattern
+import travelreminder.composeapp.generated.resources.start_place_pattern
+import travelreminder.composeapp.generated.resources.transportation_mode_bicycle
+import travelreminder.composeapp.generated.resources.transportation_mode_drive
+import travelreminder.composeapp.generated.resources.transportation_mode_pattern
+import travelreminder.composeapp.generated.resources.transportation_mode_transit
+import travelreminder.composeapp.generated.resources.transportation_mode_two_wheeler
+import travelreminder.composeapp.generated.resources.transportation_mode_walk
+import travelreminder.composeapp.generated.resources.travel_time_pattern
 
 
 @Composable
 fun TravelsListScreen(
+    onNavigateToEditScreen: (String) -> Unit,
     viewModel: TravelsViewModel,
     logOut: () -> Unit
 ) {
@@ -70,6 +91,7 @@ fun TravelsListScreen(
             is TravelsViewModel.TravelsState.Success ->
                 TravelsColumn(
                     travels = state.data,
+                    onNavigateToEditScreen = onNavigateToEditScreen,
                     onDeleteTravel = { viewModel.onTravelDeleted(it) }
                 )
         }
@@ -81,6 +103,7 @@ fun TravelsListScreen(
 @Composable
 fun TravelsColumn(
     travels: List<Travel>,
+    onNavigateToEditScreen: (String) -> Unit,
     onDeleteTravel: (Travel) -> Unit,
 ) {
     LazyColumn(
@@ -121,7 +144,10 @@ fun TravelsColumn(
                     }
                 },
                 dismissContent = {
-                    TravelCard(travel)
+                    TravelCard(
+                        onNavigateToEditScreen = onNavigateToEditScreen,
+                        travel = travel
+                    )
                 }
             )
         }
@@ -130,11 +156,20 @@ fun TravelsColumn(
 }
 
 @Composable
-fun TravelCard(travel: Travel) {
-    Column {
-        Text(
+fun TravelCard(
+    onNavigateToEditScreen: (String) -> Unit,
+    travel: Travel
+) {
+    Column(
+        modifier = Modifier
+            .clickable { onNavigateToEditScreen(travel.id) }
+    ) {
+        LocalText(
             text = travel.title,
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium.copy(
+                fontWeight = FontWeight.Medium
+            ),
+            color = MaterialTheme.colorScheme.onPrimary
         )
         Column(
             modifier = Modifier
@@ -144,22 +179,67 @@ fun TravelCard(travel: Travel) {
                     shape = RoundedCornerShape(4.dp)
                 )
                 .padding(20.dp)
+
         ) {
-            Text(
-                text = "${stringResource(Res.string.date_patter)}${travel.date}",
-                color = MaterialTheme.colorScheme.onTertiary
+            LocalText(text = stringResource(Res.string.date_patter) + travel.date.format())
+            DefaultVerticalPadding()
+            LocalText(text = stringResource(Res.string.arrival_time_pattern) + travel.arrivalTime.format())
+            DefaultVerticalPadding()
+            LocalText(text = stringResource(Res.string.start_place_pattern) + travel.startPlace.title)
+            DefaultVerticalPadding()
+            LocalText(text = stringResource(Res.string.end_place_pattern) + travel.destinationPlace.title)
+            DefaultVerticalPadding()
+            LocalText(
+                text = stringResource(Res.string.travel_time_pattern)
+                        + listTimeToString(durationToDHM(travel.route.duration))
             )
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = "${stringResource(Res.string.time_pattern)}${travel.arrivalTime}",
-                color = MaterialTheme.colorScheme.onTertiary
+            DefaultVerticalPadding()
+            LocalText(
+                text = stringResource(Res.string.transportation_mode_pattern) +
+                        transportationModeToTitle(travel.transportationMode)
             )
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = travel.destinationPlace.title,
-                color = MaterialTheme.colorScheme.onTertiary
-            )
+            DefaultVerticalPadding()
+            LocalText(text = travel.arrivalTime.beforeRemindFormat())
         }
     }
 
+}
+
+@Composable
+private fun LocalText(
+    text: String,
+    style: TextStyle = MaterialTheme.typography.headlineMedium,
+    color: Color = MaterialTheme.colorScheme.onTertiary
+) {
+    Text(
+        text = text,
+        style = style,
+        color = color
+    )
+}
+
+@Composable
+private fun DefaultVerticalPadding(
+) {
+    Spacer(modifier = Modifier.height(12.dp))
+}
+
+@Composable
+fun transportationModeToTitle(mode: TransportationMode): String {
+    return when (mode) {
+        TransportationMode.DRIVE -> stringResource(Res.string.transportation_mode_drive)
+        TransportationMode.BICYCLE -> stringResource(Res.string.transportation_mode_bicycle)
+        TransportationMode.WALK -> stringResource(Res.string.transportation_mode_walk)
+        TransportationMode.TWO_WHEELER -> stringResource(Res.string.transportation_mode_two_wheeler)
+        TransportationMode.TRANSIT -> stringResource(Res.string.transportation_mode_transit)
+    }
+}
+
+private fun listTimeToString(list: List<String>): String {
+    return buildString {
+        list.forEach {
+            append(it)
+            append(" ")
+        }
+    }
 }

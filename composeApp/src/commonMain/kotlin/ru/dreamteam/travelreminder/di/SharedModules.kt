@@ -20,11 +20,14 @@ import ru.dreamteam.travelreminder.domen.use_cases.AddTravelUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.ChangePasswordByEmailUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.CheckFirstLaunchUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.DeleteTravelUseCase
+import ru.dreamteam.travelreminder.domen.use_cases.EditTravelUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.GetNavigationRouteUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.GetNearbyPlacesUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.GetPlaceCoordinatesUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.GetPlaceSuggestionUseCase
+import ru.dreamteam.travelreminder.domen.use_cases.GetTravelByIdUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.GetTravelsUseCase
+import ru.dreamteam.travelreminder.domen.use_cases.LogOutUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.SignInByEmailAndPasswordUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.SignUpByEmailAndPasswordUseCase
 import ru.dreamteam.travelreminder.presentation.DefaultErrorMapper
@@ -70,13 +73,16 @@ val sharedModule = module {
     single { GetNearbyPlacesUseCase(get(), get()) }
     single { GetPlaceCoordinatesUseCase(get(), get()) }
     single { GetNavigationRouteUseCase(get(), get()) }
+    single { GetTravelByIdUseCase(get(), get()) }
+    single { EditTravelUseCase(get(), get()) }
+    single { LogOutUseCase(get()) }
     single { SharedPlaceFlow() }
 
-    viewModel { MainActivityViewModel(get()) }
+    viewModel { MainActivityViewModel(get(), get()) }
     viewModel { TravelsViewModel(get(), get()) }
     viewModel { SingInViewModel(get()) }
-    viewModel { SignUpViewModel(get()) }
+    viewModel { SignUpViewModel(get(), get()) }
     viewModel { ChangePasswordViewModel(get()) }
-    viewModel { AddTravelViewModel(get(), get(), get()) }
+    viewModel { AddTravelViewModel(get(), get(), get(), get(), get(), get() ,get(), get(), get()) }
     viewModel { MapViewModel(get(), get(), get(), get(), get(), get()) }
 }

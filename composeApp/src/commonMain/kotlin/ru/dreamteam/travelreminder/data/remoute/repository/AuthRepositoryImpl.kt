@@ -37,6 +37,10 @@ class AuthRepositoryImpl(
     override fun isFirstLaunch(): Boolean =
         storage.getUserUid() == null
 
+    override fun logOut() {
+        storage.clear()
+    }
+
     override suspend fun refreshToken(refreshToken: String?) {
         val body = mapOf("refresh_token" to (storage.getRefreshToken() ?: ""))
         val raw = client.post(refreshTokenUrl) {

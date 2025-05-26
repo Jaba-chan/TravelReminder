@@ -35,18 +35,18 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import ru.dreamteam.travelreminder.R
 import ru.dreamteam.travelreminder.domen.model.travel.Place
 import ru.dreamteam.travelreminder.domen.model.travel.Point
-import ru.dreamteam.travelreminder.presentation.MainActivityViewModel
+import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
 
 @Composable
 actual fun GoogleMapView(
     modifier: Modifier,
-    viewModel: MapViewModel,
+    viewModel: AddTravelViewModel,
     changeAddress: (Boolean) -> Unit,
     returnToAddTravel: () -> Unit
 ) {
     val userLocation = viewModel.userLocation.value
     val cameraState = rememberCameraPositionState()
-    val padding = PaddingValues(bottom = 64.dp)
+    val padding = PaddingValues(bottom = 64.dp, end = 12.dp)
 
     LaunchedEffect(userLocation) {
         userLocation?.let { p ->
@@ -62,7 +62,6 @@ actual fun GoogleMapView(
         MapHead(
             viewModel = viewModel,
             changeAddress = changeAddress,
-            returnToAddTravel = returnToAddTravel
         )
 
         Box(Modifier.weight(1f)) {

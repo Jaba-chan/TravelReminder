@@ -95,7 +95,7 @@ fun SignUpScreen(
                     horizontal = 28.dp,
                     vertical = 4.dp
                 ),
-            text = ((state as? SignUpViewModel.SignUpState.Error)?.error as? CaughtErrorImpl.ErrorForUser)
+            text = ((state as? SignUpViewModel.SignUpState.Error)?.error as? CaughtErrorImpl.CommonError)
                 ?.let {
                     stringResource(it.resId)
                 } ?: ""
@@ -109,7 +109,10 @@ fun SignUpScreen(
                     is SignUpViewModel.SignUpState.Loading -> CircularProgressBar(size = 24.dp)
                     is SignUpViewModel.SignUpState.Error -> InnerButtonsText(stringResource(Res.string.bt_sign_up))
                     is SignUpViewModel.SignUpState.Idle -> InnerButtonsText(stringResource(Res.string.bt_sign_up))
-                    SignUpViewModel.SignUpState.Success -> onNavigateToSignIn()
+                    SignUpViewModel.SignUpState.Success -> {
+                        viewModel.resetStateToIdle()
+                        onNavigateToSignIn()
+                    }
                 }
             }
         )
