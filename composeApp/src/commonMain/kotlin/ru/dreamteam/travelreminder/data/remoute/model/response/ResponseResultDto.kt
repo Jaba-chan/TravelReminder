@@ -1,4 +1,4 @@
-package ru.dreamteam.travelreminder.data.local.model.map
+package ru.dreamteam.travelreminder.data.remoute.model.response
 
 import ru.dreamteam.travelreminder.data.remoute.model.error_response.ErrorResponse
 

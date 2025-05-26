@@ -282,7 +282,7 @@ private fun DatePickerModalInput(
     onDismiss: () -> Unit
 ) {
     val datePickerState = rememberDatePickerState(
-        initialDisplayMode = DisplayMode.Input,
+        initialDisplayMode = DisplayMode.Picker,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 println(utcTimeMillis >= getTodayAtMidnightMillis())

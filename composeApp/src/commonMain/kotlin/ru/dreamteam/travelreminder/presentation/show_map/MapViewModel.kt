@@ -25,7 +25,6 @@ class MapViewModel(
     private val getNearbyPlacesUseCase: GetNearbyPlacesUseCase,
     private val getPlaceCoordinatesUseCase: GetPlaceCoordinatesUseCase,
     localeProvider: LocaleProvider,
-    private val sharedPlaceFlow: SharedPlaceFlow
 ) : ViewModel() {
 
     private var _selectedPoints = mutableStateOf<Pair<Place?, Place?>>(Pair(null, null))

@@ -31,7 +31,11 @@ import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.stringResource
 import ru.dreamteam.travelreminder.domen.model.PlaceSuggestion
 import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
+import ru.dreamteam.travelreminder.presentation.coomon_ui.CircleIconButton
+import ru.dreamteam.travelreminder.presentation.coomon_ui.CircularProgressBar
 import travelreminder.composeapp.generated.resources.Res
+import travelreminder.composeapp.generated.resources.ic_arrow_back
+import travelreminder.composeapp.generated.resources.ic_close
 import travelreminder.composeapp.generated.resources.search
 
 @Composable
@@ -60,22 +64,20 @@ fun PlaceSuggestionsScreen(
                 )
             },
             leadingIcon = {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = null,
+                CircleIconButton(
+                    iconRes = Res.drawable.ic_arrow_back,
                     tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier
-                        .clickable(onClick = returnToMap)
+                    iconSize = 24.dp,
+                    onClick = returnToMap
                 )
             },
             trailingIcon = {
                 if (viewModel.placeSuggestionsQuery.value.isNotEmpty()) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = null,
+                    CircleIconButton(
+                        iconRes = Res.drawable.ic_close,
                         tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier
-                            .clickable { viewModel.onClearQueryButtonPressed() }
+                        iconSize = 24.dp,
+                        onClick = { viewModel.onClearQueryButtonPressed() }
                     )
                 }
             },

@@ -50,7 +50,6 @@ fun App() {
             val travelsViewModel = koinViewModel<TravelsViewModel>()
             val signUpViewModel = koinViewModel<SignUpViewModel>()
             val changePasswordViewModel = koinViewModel<ChangePasswordViewModel>()
-            val mapViewModel = koinViewModel<MapViewModel>()
             val addTravelViewModel = koinViewModel<AddTravelViewModel>()
 
             val navController = rememberNavController()

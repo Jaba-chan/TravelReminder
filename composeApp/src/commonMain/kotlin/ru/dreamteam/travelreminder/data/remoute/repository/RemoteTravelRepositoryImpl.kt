@@ -17,7 +17,7 @@ import ru.dreamteam.travelreminder.data.remoute.model.travel.TravelDto
 import ru.dreamteam.travelreminder.domen.model.travel.Travel
 import ru.dreamteam.travelreminder.domen.repository.TravelRepository
 
-class TravelRepositoryImpl(
+class RemoteTravelRepositoryImpl(
     private val client: HttpClient,
     private val storage: UserUidStorage,
 ) : TravelRepository {

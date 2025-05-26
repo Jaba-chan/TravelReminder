@@ -1,6 +1,5 @@
 package ru.dreamteam.travelreminder.domen.repository
 
-import ru.dreamteam.travelreminder.data.remoute.model.travel.TravelDto
 import ru.dreamteam.travelreminder.domen.model.travel.Travel
 
 interface TravelRepository {

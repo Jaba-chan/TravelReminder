@@ -114,6 +114,7 @@ class AddTravelViewModel(
 
     fun onSaveButtonPressed() {
         validate().let {
+
             if (it != null)
                 if (_editedTravelId.value == null){
                     addTravelUseCase(it)
@@ -277,6 +278,7 @@ class AddTravelViewModel(
             _fieldErrors.value = errors
             return null
         }
+
         val id = if (_editedTravelId.value != null) _editedTravelId.value!! else "id+$name"
         return Travel(
             id = id,

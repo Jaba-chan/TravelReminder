@@ -1,6 +1,7 @@
 package ru.dreamteam.travelreminder.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -9,16 +10,20 @@ import ru.dreamteam.travelreminder.data.local.model.TravelEntity
 
 @Dao
 interface TravelsDao {
+    @Query("SELECT * FROM travel")
+    suspend fun getAll(): List<TravelEntity>
+
+    @Query("SELECT * FROM travel WHERE id = :id")
+    suspend fun getById(id: String): TravelEntity
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(travel: TravelEntity)
 
-    @Query("DELETE FROM travels WHERE id = :id")
-    fun deleteById(id: Int)
-
-    @Query("SELECT * FROM travels")
-    fun getAllUserId(): List<TravelEntity>
-
     @Update
-    suspend fun edit(item: TravelEntity)
+    suspend fun update(travel: TravelEntity)
 
+    @Delete
+    suspend fun delete(travel: TravelEntity)
+
+    
 }

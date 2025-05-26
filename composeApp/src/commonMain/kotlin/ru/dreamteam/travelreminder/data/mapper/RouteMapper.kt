@@ -1,6 +1,6 @@
 package ru.dreamteam.travelreminder.data.mapper
 
-import ru.dreamteam.travelreminder.data.local.model.map.RouteSaveDto
+import ru.dreamteam.travelreminder.data.remoute.model.travel.RouteSaveDto
 import ru.dreamteam.travelreminder.domen.model.travel.Route
 import ru.dreamteam.travelreminder.data.remoute.model.response.RouteDto
 import ru.dreamteam.travelreminder.domen.model.travel.Point

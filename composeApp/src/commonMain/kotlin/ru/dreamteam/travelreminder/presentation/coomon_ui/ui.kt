@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
@@ -29,6 +30,7 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,6 +38,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -95,6 +98,7 @@ fun EmptyScreen(
 ) {
     Column(
         modifier = Modifier
+            .padding(vertical = 16.dp)
             .fillMaxSize()
     ) {
         Spacer(modifier = Modifier.weight(1F))
@@ -267,17 +271,38 @@ fun HeadingTextWithIcon(
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
     ) {
-        Icon(
-            modifier = Modifier
-                .size(iconSize)
-                .clickable { onIconClicked() },
-            painter = painterResource(iconRes),
-            contentDescription = null
+        CircleIconButton(
+            iconRes = iconRes,
+            iconSize = iconSize,
+            tint = MaterialTheme.colorScheme.onPrimary,
+            onClick = onIconClicked
         )
         HeadingText(
             modifier = Modifier
                 .align(Alignment.Center),
             text = text
+        )
+    }
+}
+
+@Composable
+fun CircleIconButton(
+    onClick: () -> Unit,
+    iconSize: Dp,
+    iconRes: DrawableResource,
+    tint: Color
+){
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier
+            .clip(CircleShape)
+            .size(iconSize)
+
+    ) {
+        Icon(
+            painter = painterResource(iconRes),
+            tint = tint,
+            contentDescription = null,
         )
     }
 }
