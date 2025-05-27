@@ -11,11 +11,13 @@ import kotlinx.coroutines.flow.onEach
 import ru.dreamteam.travelreminder.common.CaughtError
 import ru.dreamteam.travelreminder.common.Resource
 import ru.dreamteam.travelreminder.domen.model.params.SignInByEmailAndPasswordParams
+import ru.dreamteam.travelreminder.domen.use_cases.FillTableUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.SignInByEmailAndPasswordUseCase
 
 
 class SingInViewModel(
-    private val signInUseCase: SignInByEmailAndPasswordUseCase
+    private val signInUseCase: SignInByEmailAndPasswordUseCase,
+    private val fillTableUseCase: FillTableUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<SignInState>(SignInState.Idle)
@@ -49,12 +51,20 @@ class SingInViewModel(
         _state.value = SignInState.Idle
     }
 
+    fun resetFields(){
+        _email.value = ""
+        _password.value = ""
+    }
+
     private fun singIn(params: SignInByEmailAndPasswordParams) {
         signInUseCase(params).onEach { result ->
             when (result) {
                 is Resource.Error -> _state.value = SignInState.Error(result.error)
                 is Resource.Loading -> _state.value = SignInState.Loading
-                is Resource.Success -> _state.value = SignInState.Success
+                is Resource.Success -> {
+                    _state.value = SignInState.Success
+                    fillTableUseCase()
+                }
             }
         }.launchIn(viewModelScope)
     }

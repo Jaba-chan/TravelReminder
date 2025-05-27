@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,6 +42,7 @@ import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
 actual fun GoogleMapView(
     modifier: Modifier,
     viewModel: AddTravelViewModel,
+    paddingValues: PaddingValues,
     changeAddress: (Boolean) -> Unit,
     returnToAddTravel: () -> Unit
 ) {
@@ -58,7 +60,11 @@ actual fun GoogleMapView(
         }
     }
 
-    Column(Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+    ) {
         MapHead(
             viewModel = viewModel,
             changeAddress = changeAddress,

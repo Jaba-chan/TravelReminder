@@ -1,8 +1,8 @@
 [versions]
 agp = "8.6.1"
-android-compileSdk = "34"
-android-minSdk = "21"
-android-targetSdk = "34"
+android-compileSdk = "35"
+android-minSdk = "24"
+android-targetSdk = "35"
 androidx-activityCompose = "1.9.3"
 androidx-paging = "3.3.5"
 androidx-lifecycle = "2.8.4"
@@ -27,6 +27,7 @@ kotlinSerializationjson = "1.6.0"
 androidGoogleMap = "4.3.0"
 playServicesLocation = "21.3.0"
 playServicesMaps = "19.2.0"
+lifecycleService = "2.9.0"
 
 
 [libraries]
@@ -65,6 +66,7 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "securityCrypto" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
+androidx-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycleService" }
 
 
 

@@ -36,6 +36,7 @@ import travelreminder.composeapp.generated.resources.sign_up
 @Composable
 fun SignUpScreen(
     viewModel: SignUpViewModel,
+    paddingValues: PaddingValues,
     onNavigateToSignIn: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
@@ -43,7 +44,8 @@ fun SignUpScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.background)
+            .padding(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(24.dp))

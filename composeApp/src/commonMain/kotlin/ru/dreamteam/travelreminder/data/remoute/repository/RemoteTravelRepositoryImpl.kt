@@ -15,12 +15,12 @@ import ru.dreamteam.travelreminder.data.mapper.toDomain
 import ru.dreamteam.travelreminder.data.mapper.toDto
 import ru.dreamteam.travelreminder.data.remoute.model.travel.TravelDto
 import ru.dreamteam.travelreminder.domen.model.travel.Travel
-import ru.dreamteam.travelreminder.domen.repository.TravelRepository
+import ru.dreamteam.travelreminder.domen.repository.RemoteTravelRepository
 
-class TravelRepositoryImpl(
+class RemoteTravelRepositoryImpl(
     private val client: HttpClient,
     private val storage: UserUidStorage,
-) : TravelRepository {
+) : RemoteTravelRepository {
 
     private val baseUrl =
         "https://travel-reminder-a8175-default-rtdb.europe-west1.firebasedatabase.app"

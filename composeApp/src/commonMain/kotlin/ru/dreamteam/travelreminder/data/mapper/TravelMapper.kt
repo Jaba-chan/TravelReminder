@@ -1,27 +1,39 @@
 package ru.dreamteam.travelreminder.data.mapper
 
+import kotlinx.serialization.json.Json
 import ru.dreamteam.travelreminder.data.local.model.TravelEntity
 import ru.dreamteam.travelreminder.data.mapper.params.toDomain
 import ru.dreamteam.travelreminder.data.mapper.params.toDto
-import ru.dreamteam.travelreminder.data.remoute.model.travel.PointDto
+import ru.dreamteam.travelreminder.data.remoute.model.travel.DateDto
+import ru.dreamteam.travelreminder.data.remoute.model.travel.PlaceDto
+import ru.dreamteam.travelreminder.data.remoute.model.travel.RouteSaveDto
+import ru.dreamteam.travelreminder.data.remoute.model.travel.TimeDto
 import ru.dreamteam.travelreminder.data.remoute.model.travel.TravelDto
-import ru.dreamteam.travelreminder.domen.model.travel.Date
-import ru.dreamteam.travelreminder.domen.model.travel.Place
-import ru.dreamteam.travelreminder.domen.model.travel.Point
-import ru.dreamteam.travelreminder.domen.model.travel.Route
-import ru.dreamteam.travelreminder.domen.model.travel.Time
+import ru.dreamteam.travelreminder.domen.model.travel.TransportationMode
 import ru.dreamteam.travelreminder.domen.model.travel.Travel
 
-fun TravelDto.toEntity(): TravelEntity = TravelEntity(
+fun Travel.toEntity(): TravelEntity = TravelEntity(
     id = id,
-    date = "date",
     title = title,
-    destinationByAddress = "destinationByAddress",
-    latitude = 10.0,
-    longitude = 10.0,
-    arrivalTime = "arrivalTime",
-    transportationMode = transportationMode,
-    timeBeforeRemind = "timeBeforeRemind"
+    date = Json.encodeToString(date.toDto()),
+    startPlaceJson = Json.encodeToString(startPlace.toDto()),
+    destinationPlaceJson = Json.encodeToString(destinationPlace.toDto()),
+    arrivalTimeJson = Json.encodeToString(arrivalTime.toDto()),
+    transportationMode = transportationMode.name,
+    timeBeforeRemindJson = Json.encodeToString(timeBeforeRemind.toDto()),
+    routeJson = Json.encodeToString(route.toDto())
+)
+
+fun TravelEntity.toDomain(): Travel = Travel(
+    id = id,
+    title = title,
+    date = Json.decodeFromString<DateDto>(date).toDomain(),
+    startPlace = Json.decodeFromString<PlaceDto>(startPlaceJson).toDomain(),
+    destinationPlace = Json.decodeFromString<PlaceDto>(destinationPlaceJson).toDomain(),
+    arrivalTime = Json.decodeFromString<TimeDto>(arrivalTimeJson).toDomain(),
+    transportationMode = TransportationMode.valueOf(transportationMode),
+    timeBeforeRemind = Json.decodeFromString<TimeDto>(timeBeforeRemindJson).toDomain(),
+    route = Json.decodeFromString<RouteSaveDto>(routeJson).toDomain()
 )
 
 fun TravelDto.toDomain(): Travel = Travel(
@@ -46,16 +58,4 @@ fun Travel.toDto(): TravelDto = TravelDto(
     transportationMode = transportationMode,
     timeBeforeRemind = timeBeforeRemind.toDto(),
     route = route.toDto()
-)
-
-fun TravelEntity.toDomain(): Travel = Travel(
-    id = id,
-    date = Date(1,2,3),
-    title = title,
-    startPlace = Place("ddd", "ddd", "ddd", Point(10.0, 10.0)),
-    destinationPlace = Place("ddd", "ddd", "ddd", Point(10.0, 10.0)),
-    arrivalTime = Time(1,2),
-    transportationMode = transportationMode,
-    timeBeforeRemind = Time(1,2),
-    route = Route(listOf(), distance = 100, duration = "ddd")
 )

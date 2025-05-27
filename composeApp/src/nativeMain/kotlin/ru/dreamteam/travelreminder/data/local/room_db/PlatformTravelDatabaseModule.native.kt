@@ -7,9 +7,12 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import platform.Foundation.NSHomeDirectory
 
-internal actual fun platformTravelDatabaseModule(fileName: String): Module =
+internal actual fun platformTravelDatabaseModule(
+    travelsDatabaseName: String,
+    syncActionsDatabaseName: String
+): Module =
     module(createdAtStart = true) {
-        single<TravelsDatabase> { getDatabase(fileName) }
+        single<TravelsDatabase> { getDatabase(travelsDatabaseName) }
     }
 
 private fun getDatabase(fileName: String): TravelsDatabase =

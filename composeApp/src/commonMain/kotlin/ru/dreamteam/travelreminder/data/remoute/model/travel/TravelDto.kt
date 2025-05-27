@@ -2,7 +2,6 @@ package ru.dreamteam.travelreminder.data.remoute.model.travel
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.dreamteam.travelreminder.data.local.model.map.RouteSaveDto
 import ru.dreamteam.travelreminder.domen.model.travel.TransportationMode
 
 @Serializable

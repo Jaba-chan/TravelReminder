@@ -21,16 +21,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.dreamteam.travelreminder.domen.model.travel.TransportationMode
@@ -41,6 +45,7 @@ import travelreminder.composeapp.generated.resources.hours_pattern
 import travelreminder.composeapp.generated.resources.ic_bicycle
 import travelreminder.composeapp.generated.resources.ic_circle
 import travelreminder.composeapp.generated.resources.ic_drive
+import travelreminder.composeapp.generated.resources.ic_location
 import travelreminder.composeapp.generated.resources.ic_more_vert
 import travelreminder.composeapp.generated.resources.ic_swap
 import travelreminder.composeapp.generated.resources.ic_transit
@@ -54,7 +59,9 @@ fun MapHead(
     changeAddress: (isOriginPlace: Boolean) -> Unit,
 ) {
     Spacer(modifier = Modifier.height(8.dp))
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
         val columnHeight = 100.dp
         Column(
             verticalArrangement = Arrangement.Center,
@@ -83,13 +90,11 @@ fun MapHead(
             modifier = Modifier
                 .height(columnHeight)
         ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_circle),
-                tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f),
-                contentDescription = null,
-                modifier = Modifier
-                    .clickable(onClick = viewModel::setPointSelectorAsOrigin)
-                    .size(16.dp)
+            CircleIconButton(
+                onClick = viewModel::setPointSelectorAsOrigin,
+                iconSize = 16.dp,
+                iconRes = Res.drawable.ic_circle,
+                tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f)
             )
             Spacer(modifier = Modifier.height(4.dp))
             Icon(
@@ -100,13 +105,11 @@ fun MapHead(
                     .height(20.dp)
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Icon(
-                imageVector = Icons.Outlined.Place,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error,
-                modifier = Modifier
-                    .clickable(onClick = viewModel::setPointSelectorAsDestination)
-                    .size(20.dp)
+            CircleIconButton(
+                onClick = viewModel::setPointSelectorAsDestination,
+                iconSize = 20.dp,
+                iconRes = Res.drawable.ic_location,
+                tint = MaterialTheme.colorScheme.error
             )
         }
         Spacer(modifier = Modifier.width(8.dp))
@@ -140,13 +143,11 @@ fun MapHead(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.height(columnHeight)
         ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_swap),
+            CircleIconButton(
+                iconRes = Res.drawable.ic_swap,
                 tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
-                contentDescription = null,
-                modifier = Modifier
-                    .clickable { viewModel.onReverseButtonPressed() }
-                    .size(24.dp)
+                iconSize = 24.dp,
+                onClick = viewModel::onReverseButtonPressed
             )
         }
         Spacer(modifier = Modifier.weight(1f))
@@ -240,6 +241,27 @@ fun TransportationModeSelector(
     }
 }
 
+@Composable
+private fun CircleIconButton(
+    onClick: () -> Unit,
+    iconSize: Dp,
+    iconRes: DrawableResource,
+    tint: Color
+){
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier
+            .clip(CircleShape)
+            .size(iconSize)
+
+    ) {
+        Icon(
+            painter = painterResource(iconRes),
+            tint = tint,
+            contentDescription = null,
+        )
+    }
+}
 
 @Composable
 fun durationToDHM(duration: String): List<String> {

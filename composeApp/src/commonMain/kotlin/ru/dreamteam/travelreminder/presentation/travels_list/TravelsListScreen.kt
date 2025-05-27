@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -64,8 +65,9 @@ import travelreminder.composeapp.generated.resources.travel_time_pattern
 
 @Composable
 fun TravelsListScreen(
-    onNavigateToEditScreen: (String) -> Unit,
     viewModel: TravelsViewModel,
+    paddingValues: PaddingValues,
+    onNavigateToEditScreen: (String) -> Unit,
     logOut: () -> Unit
 ) {
     val state = viewModel.state.collectAsState().value
@@ -76,6 +78,7 @@ fun TravelsListScreen(
     Column(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.background)
+            .padding(paddingValues)
     ) {
         Spacer(modifier = Modifier.height(24.dp))
         HeadingTextWithIcon(

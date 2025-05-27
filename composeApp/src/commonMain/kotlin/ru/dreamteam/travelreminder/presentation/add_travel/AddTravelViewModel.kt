@@ -124,6 +124,7 @@ class AddTravelViewModel(
                                 is Resource.Success -> _state.value = AddTravelState.Success
                             }
                         }.launchIn(viewModelScope)
+
                 } else {
                     editTravelUseCase(it)
                         .onEach { result ->
@@ -135,7 +136,6 @@ class AddTravelViewModel(
                                 is Resource.Success -> _state.value = AddTravelState.Success
                             }
                         }.launchIn(viewModelScope)
-                    resetFields()
                 }
         }
     }
@@ -171,6 +171,10 @@ class AddTravelViewModel(
                 }
             }.launchIn(viewModelScope)
         _editedTravelId.value = travelId
+    }
+
+    fun setAsAddMode(){
+        _editedTravelId.value = null
     }
 
     fun resetErrors() {
@@ -277,6 +281,7 @@ class AddTravelViewModel(
             _fieldErrors.value = errors
             return null
         }
+
         val id = if (_editedTravelId.value != null) _editedTravelId.value!! else "id+$name"
         return Travel(
             id = id,

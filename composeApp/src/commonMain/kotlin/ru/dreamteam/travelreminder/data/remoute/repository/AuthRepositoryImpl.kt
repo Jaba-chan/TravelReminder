@@ -7,6 +7,7 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.serialization.json.Json
+import ru.dreamteam.travelreminder.data.local.dao.TravelsDao
 import ru.dreamteam.travelreminder.data.local.storage.UserUidStorage
 import ru.dreamteam.travelreminder.data.mapper.params.toRequest
 import ru.dreamteam.travelreminder.data.mapper.params.toSignInRequest
@@ -37,7 +38,7 @@ class AuthRepositoryImpl(
     override fun isFirstLaunch(): Boolean =
         storage.getUserUid() == null
 
-    override fun logOut() {
+    override suspend fun logOut() {
         storage.clear()
     }
 

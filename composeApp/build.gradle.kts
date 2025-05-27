@@ -127,6 +127,7 @@ android {
 dependencies {
     implementation(libs.play.services.location)
     implementation(libs.play.services.maps)
+    implementation(libs.androidx.lifecycle.service)
     add("kspAndroid", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     add("kspIosX64", libs.androidx.room.compiler)
