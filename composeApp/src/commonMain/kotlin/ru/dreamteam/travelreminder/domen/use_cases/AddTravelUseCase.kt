@@ -7,9 +7,10 @@ import ru.dreamteam.travelreminder.common.ErrorMapper
 import ru.dreamteam.travelreminder.common.Resource
 import ru.dreamteam.travelreminder.data.repository.DefaultTravelRepository
 import ru.dreamteam.travelreminder.domen.model.travel.Travel
+import ru.dreamteam.travelreminder.domen.repository.TravelRepository
 
 class AddTravelUseCase(
-    private val travelRepository: DefaultTravelRepository,
+    private val travelRepository: TravelRepository,
     private val errorMapper: ErrorMapper
 ) {
     operator fun invoke(travel: Travel): Flow<Resource<Unit>> =
@@ -18,6 +19,7 @@ class AddTravelUseCase(
             travelRepository.addTravel(travel)
             emit(Resource.Success(Unit))
         }.catch { e ->
+            println("AddTravelUseCase" + e.message)
             val error = errorMapper.map(e)
             emit(Resource.Error(error = error, message = e.message))
         }

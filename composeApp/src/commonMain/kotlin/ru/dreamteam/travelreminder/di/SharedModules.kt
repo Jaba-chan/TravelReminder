@@ -18,9 +18,11 @@ import ru.dreamteam.travelreminder.data.remoute.provideHttpClient
 import ru.dreamteam.travelreminder.data.remoute.repository.AuthRepositoryImpl
 import ru.dreamteam.travelreminder.data.remoute.repository.MapRepositoryImpl
 import ru.dreamteam.travelreminder.data.remoute.repository.RemoteTravelRepositoryImpl
+import ru.dreamteam.travelreminder.data.repository.NotifyingTravelRepository
 import ru.dreamteam.travelreminder.domen.repository.AuthRepository
 import ru.dreamteam.travelreminder.domen.repository.LocalTravelRepository
 import ru.dreamteam.travelreminder.domen.repository.MapRepository
+import ru.dreamteam.travelreminder.domen.repository.NotificationScheduler
 import ru.dreamteam.travelreminder.domen.repository.RemoteTravelRepository
 import ru.dreamteam.travelreminder.domen.repository.SyncQueue
 import ru.dreamteam.travelreminder.domen.repository.TravelRepository
@@ -74,10 +76,21 @@ val sharedModule = module {
         )
     }.bind<MapRepository>()
 
+    single<TravelRepository> {
+        NotifyingTravelRepository(
+            delegate  = DefaultTravelRepository(
+                localRepository       = get(),
+                remoteTravelRepository= get(),
+                syncQueue             = get(),
+                networkObserver       = get()
+            ),
+            scheduler = get<NotificationScheduler>()
+        )
+    }
     single { LocalTravelRepositoryImpl(get()) }.bind<LocalTravelRepository>()
     single { RemoteTravelRepositoryImpl(get(), get()) }.bind<RemoteTravelRepository>()
     single { RoomSyncQueue(get()) }.bind<SyncQueue>()
-    single { DefaultTravelRepository(get(), get(), get(), get()) }.bind<TravelRepository>()
+
 
     single { LogOutUseCase(get(), get()) }
     single { FillTableUseCase(get()) }
@@ -101,7 +114,7 @@ val sharedModule = module {
 
     viewModel { MainActivityViewModel(get()) }
     viewModel { TravelsViewModel(get(), get(), get(), get(), get()) }
-    viewModel { SingInViewModel(get(), get()) }
+    viewModel { SingInViewModel(get(), get(), get()) }
     viewModel { SignUpViewModel(get(), get()) }
     viewModel { ChangePasswordViewModel(get()) }
     viewModel {

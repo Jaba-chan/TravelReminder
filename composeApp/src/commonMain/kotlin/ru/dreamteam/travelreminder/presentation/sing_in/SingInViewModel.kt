@@ -13,11 +13,13 @@ import ru.dreamteam.travelreminder.common.Resource
 import ru.dreamteam.travelreminder.domen.model.params.SignInByEmailAndPasswordParams
 import ru.dreamteam.travelreminder.domen.use_cases.FillTableUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.SignInByEmailAndPasswordUseCase
+import ru.dreamteam.travelreminder.presentation.DefaultErrorMapper
 
 
 class SingInViewModel(
     private val signInUseCase: SignInByEmailAndPasswordUseCase,
-    private val fillTableUseCase: FillTableUseCase
+    private val fillTableUseCase: FillTableUseCase,
+    private val errorMapper: DefaultErrorMapper
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<SignInState>(SignInState.Idle)
@@ -57,6 +59,7 @@ class SingInViewModel(
     }
 
     private fun singIn(params: SignInByEmailAndPasswordParams) {
+
         signInUseCase(params).onEach { result ->
             when (result) {
                 is Resource.Error -> _state.value = SignInState.Error(result.error)

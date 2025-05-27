@@ -64,7 +64,6 @@ import travelreminder.composeapp.generated.resources.ic_date
 import travelreminder.composeapp.generated.resources.ic_notifications
 import travelreminder.composeapp.generated.resources.ic_time
 import travelreminder.composeapp.generated.resources.minutes_pattern
-import travelreminder.composeapp.generated.resources.my_travels
 import travelreminder.composeapp.generated.resources.new_travel
 import travelreminder.composeapp.generated.resources.ok
 import travelreminder.composeapp.generated.resources.remind
@@ -95,16 +94,16 @@ fun AddTravelScreen(
             viewModel.setAsEditMode(editedTravelId)
         else {
             viewModel.setAsAddMode()
-            viewModel.resetFields()
         }
     }
 
-    val successMessage = if (viewModel.editedTravelId.value == null) stringResource(Res.string.travel_successfully_added)
-                            else stringResource(Res.string.travel_successfully_edited)
+    val successMessage = if (viewModel.editedTravelId.value == null)
+                            stringResource(Res.string.travel_successfully_added)
+                        else
+                            stringResource(Res.string.travel_successfully_edited)
     LaunchedEffect(state){
         if (viewModel.state.value is AddTravelViewModel.AddTravelState.Success){
             viewModel.showSnackBarMessage(successMessage)
-            if (viewModel.editedTravelId.value == null) viewModel.resetFields()
             viewModel.setStateToIdle()
         }
     }
@@ -227,7 +226,11 @@ fun AddTravelScreen(
             ),
             content = {
                 when (state) {
-                    is AddTravelViewModel.AddTravelState.Loading -> CircularProgressBar(size = 24.dp)
+                    is AddTravelViewModel.AddTravelState.Loading ->
+                        CircularProgressBar(
+                            size = 24.dp,
+                            color = MaterialTheme.colorScheme.onTertiary
+                        )
                     else -> InnerButtonsText(text = stringResource(Res.string.save))
                 }
             }

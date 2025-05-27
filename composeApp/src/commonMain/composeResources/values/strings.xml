@@ -38,6 +38,7 @@
     <string name="days_pattern"> д.</string>
 
     <string name="auth_error_default_error">Упс. Что-то пошло не так. Пожалуйста, обратитесь в поддержку</string>
+    <string name="auth_error_invalid_characters">Вы ввели недопустимые значения ; № " % :</string>
 
     <string name="auth_error_invalid_email">Неверный формат почты</string>
     <string name="auth_error_invalid_login_credentials">Неверная почта или пароль</string>

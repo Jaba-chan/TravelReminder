@@ -5,11 +5,11 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import ru.dreamteam.travelreminder.common.ErrorMapper
 import ru.dreamteam.travelreminder.common.Resource
-import ru.dreamteam.travelreminder.data.repository.DefaultTravelRepository
 import ru.dreamteam.travelreminder.domen.model.travel.Travel
+import ru.dreamteam.travelreminder.domen.repository.TravelRepository
 
 class GetTravelsUseCase(
-    private val travelRepository: DefaultTravelRepository,
+    private val travelRepository: TravelRepository,
     private val errorMapper: ErrorMapper
 ) {
     operator fun invoke(): Flow<Resource<List<Travel>>> =

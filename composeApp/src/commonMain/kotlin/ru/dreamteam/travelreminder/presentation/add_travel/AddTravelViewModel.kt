@@ -119,7 +119,8 @@ class AddTravelViewModel(
                     addTravelUseCase(it)
                         .onEach { result ->
                             when (result) {
-                                is Resource.Error -> _state.value = AddTravelState.Error(result.error)
+                                is Resource.Error -> _state.value =
+                                    AddTravelState.Error(result.error)
                                 is Resource.Loading -> _state.value = AddTravelState.Loading
                                 is Resource.Success -> _state.value = AddTravelState.Success
                             }

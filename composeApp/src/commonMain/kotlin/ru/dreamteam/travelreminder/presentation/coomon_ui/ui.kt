@@ -126,6 +126,7 @@ fun StyledTextField(
     textAlign: TextAlign = TextAlign.Start,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     contentPadding: PaddingValues = PaddingValues(horizontal = 12.dp),
+    maxLength: Int = 50,
     trailingIcon: (@Composable () -> Unit)? = null,
 ) {
     val selectionColors = TextSelectionColors(
@@ -154,7 +155,13 @@ fun StyledTextField(
             ) {
                 BasicTextField(
                     value = value,
-                    onValueChange = onValueChange,
+                    onValueChange = { new ->
+                        if (new.length <= maxLength) {
+                            onValueChange(new)
+                        } else {
+                            onValueChange(new.take(maxLength))
+                        }
+                    },
                     singleLine = true,
                     readOnly = readOnly,
                     visualTransformation = visualTransformation,
@@ -229,12 +236,13 @@ fun StyledButton(
 fun CircularProgressBar(
     modifier: Modifier = Modifier,
     size: Dp,
+    color: Color = MaterialTheme.colorScheme.onPrimary,
     strokeWidth: Dp = 2.dp
 ) {
     CircularProgressIndicator(
         modifier = Modifier
             .size(size),
-        color = MaterialTheme.colorScheme.onPrimary,
+        color = color,
         strokeWidth = strokeWidth
     )
 }
