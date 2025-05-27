@@ -7,9 +7,10 @@ import ru.dreamteam.travelreminder.common.ErrorMapper
 import ru.dreamteam.travelreminder.common.Resource
 import ru.dreamteam.travelreminder.data.repository.DefaultTravelRepository
 import ru.dreamteam.travelreminder.domen.model.travel.Travel
+import ru.dreamteam.travelreminder.domen.repository.TravelRepository
 
 class GetTravelByIdUseCase(
-    private val travelRepository: DefaultTravelRepository,
+    private val travelRepository: TravelRepository,
     private val errorMapper: ErrorMapper
 ) {
     operator fun invoke(id: String): Flow<Resource<Travel>> =

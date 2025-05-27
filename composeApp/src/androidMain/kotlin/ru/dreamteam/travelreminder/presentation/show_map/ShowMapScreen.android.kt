@@ -1,6 +1,7 @@
 package ru.dreamteam.travelreminder.presentation.show_map
 
 
+import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import androidx.annotation.DrawableRes
@@ -36,7 +37,6 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import ru.dreamteam.travelreminder.R
 import ru.dreamteam.travelreminder.domen.model.travel.Place
 import ru.dreamteam.travelreminder.domen.model.travel.Point
-import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
 
 @Composable
 actual fun GoogleMapView(

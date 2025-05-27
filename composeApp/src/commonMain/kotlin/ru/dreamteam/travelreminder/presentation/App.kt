@@ -44,7 +44,6 @@ import travelreminder.composeapp.generated.resources.ic_add
 import travelreminder.composeapp.generated.resources.ic_check
 
 @OptIn(KoinExperimentalAPI::class)
-@Preview
 @Composable
 fun App() {
     AppTheme {
@@ -82,7 +81,8 @@ fun App() {
                             FloatingActionButton(
                                 backgroundColor = MaterialTheme.colorScheme.primary,
                                 onClick = {
-                                        navState.navigateTo(Screen.AddTravelScreen.route)
+                                    if (currentRoute == Screen.TravelsListScreen.route) addTravelViewModel.resetFields()
+                                    navState.navigateTo(Screen.AddTravelScreen.route)
                                 },
                                 content = {
                                     Icon(

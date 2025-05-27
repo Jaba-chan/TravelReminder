@@ -7,10 +7,12 @@ import ru.dreamteam.travelreminder.common.CaughtError
 import ru.dreamteam.travelreminder.common.ErrorMapper
 import ru.dreamteam.travelreminder.data.remoute.model.FirebaseAuthException
 import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelFieldsValidationErrors
+import ru.dreamteam.travelreminder.presentation.sing_in.SignInFieldsValidationErrors
 import ru.dreamteam.travelreminder.presentation.sing_up.SignUpFieldsValidationErrors
 import travelreminder.composeapp.generated.resources.Res
 import travelreminder.composeapp.generated.resources.auth_error_default_error
 import travelreminder.composeapp.generated.resources.auth_error_email_exists
+import travelreminder.composeapp.generated.resources.auth_error_invalid_characters
 import travelreminder.composeapp.generated.resources.auth_error_invalid_email
 import travelreminder.composeapp.generated.resources.auth_error_invalid_login_credentials
 import travelreminder.composeapp.generated.resources.auth_error_missing_password

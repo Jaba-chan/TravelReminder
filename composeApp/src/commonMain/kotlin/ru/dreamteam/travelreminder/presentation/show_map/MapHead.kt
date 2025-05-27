@@ -1,5 +1,6 @@
 package ru.dreamteam.travelreminder.presentation.show_map
 
+import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,8 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,7 +37,6 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ru.dreamteam.travelreminder.domen.model.travel.TransportationMode
-import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
 import travelreminder.composeapp.generated.resources.Res
 import travelreminder.composeapp.generated.resources.days_pattern
 import travelreminder.composeapp.generated.resources.hours_pattern
@@ -265,7 +263,7 @@ private fun CircleIconButton(
 
 @Composable
 fun durationToDHM(duration: String): List<String> {
-    val seconds = duration.removeSuffix("s").toIntOrNull() ?: return listOf("0")
+    val seconds = duration.removeSuffix("s").toInt()
     val totalMinutes = (seconds + 30) / 60
 
     val days = totalMinutes / (24 * 60)
