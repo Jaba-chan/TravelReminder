@@ -59,7 +59,9 @@ fun MapHead(
     changeAddress: (isOriginPlace: Boolean) -> Unit,
 ) {
     Spacer(modifier = Modifier.height(8.dp))
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
         val columnHeight = 100.dp
         Column(
             verticalArrangement = Arrangement.Center,

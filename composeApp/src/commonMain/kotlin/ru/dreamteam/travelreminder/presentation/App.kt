@@ -1,5 +1,9 @@
 package ru.dreamteam.travelreminder.presentation
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material3.MaterialTheme
@@ -70,6 +74,8 @@ fun App() {
                 darkIcons = true
             )
             Scaffold(
+                modifier = Modifier
+                    .fillMaxSize(),
                 floatingActionButton = {
                     when (currentRoute) {
                         Screen.TravelsListScreen.route, Screen.ShowMap.route ->
@@ -93,14 +99,16 @@ fun App() {
                 },
                 snackbarHost = {
                     SnackbarHost(hostState = snackBarHostState)
-                },
+                }
             ) {
+                val innerPadding = WindowInsets.systemBars.asPaddingValues()
                 AppNavGraph(
                     viewModel = mainActivityViewModel,
                     navHostController = navController,
                     signInScreenContent = {
                         SignInScreen(
                             viewModel = singInViewModel,
+                            paddingValues = innerPadding,
                             onNavigateToTravelsList = {
                                 navState.navigateToTravelListForSignedUser()
                             },
@@ -112,17 +120,19 @@ fun App() {
                     signUpScreenContent = {
                         SignUpScreen(
                             viewModel = signUpViewModel,
+                            paddingValues = innerPadding,
                             onNavigateToSignIn = { navState.navigateToSignIn() }
                         )
                     },
                     travelsListScreenContent = {
                         TravelsListScreen(
                             viewModel = travelsViewModel,
+                            paddingValues = innerPadding,
                             onNavigateToEditScreen = {
                                 navState.navigateTo(Screen.AddTravelScreen.createRoute(it))
                             },
                             logOut = {
-                                mainActivityViewModel.logOut()
+                                travelsViewModel.logOut()
                                 navState.navigateToSignIn()
                             }
                         )
@@ -130,6 +140,7 @@ fun App() {
                     addTravelScreenContent = { travelId ->
                         AddTravelScreen(
                             viewModel = addTravelViewModel,
+                            paddingValues = innerPadding,
                             onNavigateToTravelList = {
                                 navState.navigateTo(Screen.TravelsListScreen.route)
                             },
@@ -139,13 +150,15 @@ fun App() {
                     },
                     changePasswordScreenContent = {
                         ChangePasswordScreen(
-                            viewModel = changePasswordViewModel
+                            viewModel = changePasswordViewModel,
+                            paddingValues = innerPadding,
                         )
                     },
                     showMap = {
                         GoogleMapView(
                             modifier = Modifier,
                             viewModel = addTravelViewModel,
+                            paddingValues = innerPadding,
                             changeAddress = {
                                 navState.navigateTo(Screen.PlaceSuggestionsScreen.createRoute(it))
                             },
@@ -155,6 +168,7 @@ fun App() {
                     placeSuggestionsScreen = { isOriginPlace ->
                         PlaceSuggestionsScreen(
                             viewModel = addTravelViewModel,
+                            paddingValues = innerPadding,
                             returnToMap = { navState.navigateTo(Screen.ShowMap.route) },
                             isOriginPlace = isOriginPlace
                         )

@@ -3,7 +3,7 @@ package ru.dreamteam.travelreminder.data.local.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "travel")
+@Entity(tableName = "travels")
 data class TravelEntity(
     @PrimaryKey val id: String,
     val title: String,

@@ -1,12 +1,10 @@
-package ru.dreamteam.travelreminder.domen.repository
+package ru.dreamteam.travelreminder.sync
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import android.os.Build
-import androidx.annotation.RequiresApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 

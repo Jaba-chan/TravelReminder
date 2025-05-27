@@ -80,6 +80,7 @@ import travelreminder.composeapp.generated.resources.travel_time
 @Composable
 fun AddTravelScreen(
     viewModel: AddTravelViewModel,
+    paddingValues: PaddingValues,
     onNavigateToTravelList: () -> Unit,
     onNavigateToMap: () -> Unit,
     editedTravelId: String?
@@ -92,6 +93,10 @@ fun AddTravelScreen(
     LaunchedEffect(Unit){
         if (editedTravelId != null)
             viewModel.setAsEditMode(editedTravelId)
+        else {
+            viewModel.setAsAddMode()
+            viewModel.resetFields()
+        }
     }
 
     val successMessage = if (viewModel.editedTravelId.value == null) stringResource(Res.string.travel_successfully_added)
@@ -108,6 +113,7 @@ fun AddTravelScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
+            .padding(paddingValues)
     ) {
         Spacer(modifier = Modifier.height(24.dp))
         HeadingTextWithIcon(

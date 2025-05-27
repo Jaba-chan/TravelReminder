@@ -31,8 +31,8 @@ import org.jetbrains.compose.resources.stringResource
 import ru.dreamteam.travelreminder.presentation.CaughtErrorImpl
 import ru.dreamteam.travelreminder.presentation.coomon_ui.CircularProgressBar
 import ru.dreamteam.travelreminder.presentation.coomon_ui.ErrorText
-import ru.dreamteam.travelreminder.presentation.coomon_ui.InnerButtonsText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.HeadingText
+import ru.dreamteam.travelreminder.presentation.coomon_ui.InnerButtonsText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledButton
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledPlaceholder
 import ru.dreamteam.travelreminder.presentation.coomon_ui.StyledTextField
@@ -49,17 +49,19 @@ import travelreminder.composeapp.generated.resources.t_bank
 @Composable
 fun SignInScreen(
     viewModel: SingInViewModel,
+    paddingValues: PaddingValues,
     onNavigateToTravelsList: () -> Unit,
     onNavigateToSignUpScreen: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.background)
+            .padding(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Spacer(modifier = Modifier.height(24.dp))
         HeadingText(text = stringResource(Res.string.sign_in))
         Spacer(modifier = Modifier.height(96.dp))
@@ -109,6 +111,7 @@ fun SignInScreen(
                     SingInViewModel.SignInState.Success -> {
                         viewModel.resetStateToIdle()
                         onNavigateToTravelsList()
+                        viewModel.resetFields()
                     }
                     else -> InnerButtonsText(text = stringResource(Res.string.bt_sign_in))
                 }

@@ -114,7 +114,6 @@ class AddTravelViewModel(
 
     fun onSaveButtonPressed() {
         validate().let {
-
             if (it != null)
                 if (_editedTravelId.value == null){
                     addTravelUseCase(it)
@@ -125,6 +124,7 @@ class AddTravelViewModel(
                                 is Resource.Success -> _state.value = AddTravelState.Success
                             }
                         }.launchIn(viewModelScope)
+
                 } else {
                     editTravelUseCase(it)
                         .onEach { result ->
@@ -136,7 +136,6 @@ class AddTravelViewModel(
                                 is Resource.Success -> _state.value = AddTravelState.Success
                             }
                         }.launchIn(viewModelScope)
-                    resetFields()
                 }
         }
     }
@@ -172,6 +171,10 @@ class AddTravelViewModel(
                 }
             }.launchIn(viewModelScope)
         _editedTravelId.value = travelId
+    }
+
+    fun setAsAddMode(){
+        _editedTravelId.value = null
     }
 
     fun resetErrors() {

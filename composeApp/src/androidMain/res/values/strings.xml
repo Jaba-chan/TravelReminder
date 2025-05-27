@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Travel Reminder</string>
+    <string name="travel_notification_channel_name">Уведомления о поездках</string>
+    <string name="travel_notification_channel_description">В этот канал приходят уведомления о предстоящих поездках</string>
+    <string name="sync_notification_channel_name">Синхронизация поездок</string>
+    <string name="sync_notification_channel_description">В этом канале отображается индикация, когда выполняется синхронизация ваших поездок</string>
+    <string name="sync_data">Синхронизация данных</string>
+    <string name="sync_data_progress">Синхронизировано</string>
 </resources>

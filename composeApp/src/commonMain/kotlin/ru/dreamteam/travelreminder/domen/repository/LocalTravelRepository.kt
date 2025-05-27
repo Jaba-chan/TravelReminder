@@ -2,7 +2,7 @@ package ru.dreamteam.travelreminder.domen.repository
 
 import ru.dreamteam.travelreminder.domen.model.travel.Travel
 
-interface TravelRepository {
+interface LocalTravelRepository {
     suspend fun getTravels(): List<Travel>
 
     suspend fun getTravelById(travelId: String): Travel
@@ -13,5 +13,7 @@ interface TravelRepository {
 
     suspend fun editTravel(travel: Travel)
 
-    suspend fun syncRemoteToLocal()
+    suspend fun clearTables()
+
+    suspend fun fillTables(travels: List<Travel>)
 }

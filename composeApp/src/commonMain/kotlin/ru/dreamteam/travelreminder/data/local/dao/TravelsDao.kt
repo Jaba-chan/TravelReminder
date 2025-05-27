@@ -10,10 +10,10 @@ import ru.dreamteam.travelreminder.data.local.model.TravelEntity
 
 @Dao
 interface TravelsDao {
-    @Query("SELECT * FROM travel")
+    @Query("SELECT * FROM travels")
     suspend fun getAll(): List<TravelEntity>
 
-    @Query("SELECT * FROM travel WHERE id = :id")
+    @Query("SELECT * FROM travels WHERE id = :id")
     suspend fun getById(id: String): TravelEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -25,5 +25,10 @@ interface TravelsDao {
     @Delete
     suspend fun delete(travel: TravelEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun fill(travels: List<TravelEntity>)
+
+    @Query("DELETE FROM travels")
+    suspend fun clearTable()
     
 }

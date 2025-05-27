@@ -7,7 +7,7 @@ import ru.dreamteam.travelreminder.domen.model.params.SignUpByEmailAndPasswordPa
 interface AuthRepository {
     fun isFirstLaunch(): Boolean
 
-    fun logOut()
+    suspend fun logOut()
 
     suspend fun refreshToken(refreshToken: String?)
 

@@ -7,13 +7,16 @@ import org.koin.core.qualifier.named
 import ru.dreamteam.travelreminder.data.local.provider.AndroidLocaleProvider
 import ru.dreamteam.travelreminder.data.local.provider.LocaleProvider
 import ru.dreamteam.travelreminder.data.local.storage.SecretApiKeys
-import ru.dreamteam.travelreminder.domen.repository.NetworkConnectivityObserver
+import ru.dreamteam.travelreminder.sync.NetworkConnectivityObserver
+import ru.dreamteam.travelreminder.sync.SyncController
+import ru.dreamteam.travelreminder.sync.SyncService
 
 
 actual val platformModule = module {
     single {UserUidStorage(androidContext())}
     single<LocaleProvider> { AndroidLocaleProvider(get() ) }
     single { NetworkConnectivityObserver(androidContext()) }
+    single { SyncController(androidContext()) }
     single<String>(qualifier = named("firebaseApiKey")) {
         SecretApiKeys.getFirebaseApiKey()
     }

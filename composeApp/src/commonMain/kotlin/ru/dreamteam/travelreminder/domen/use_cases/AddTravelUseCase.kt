@@ -5,23 +5,17 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import ru.dreamteam.travelreminder.common.ErrorMapper
 import ru.dreamteam.travelreminder.common.Resource
+import ru.dreamteam.travelreminder.data.repository.DefaultTravelRepository
 import ru.dreamteam.travelreminder.domen.model.travel.Travel
-import ru.dreamteam.travelreminder.domen.repository.NetworkConnectivityObserver
-import ru.dreamteam.travelreminder.domen.repository.TravelRepository
 
 class AddTravelUseCase(
-    private val localTravelRepository: TravelRepository,
-    private val remoteTravelRepository: TravelRepository,
-    private val networkObserver: NetworkConnectivityObserver,
+    private val travelRepository: DefaultTravelRepository,
     private val errorMapper: ErrorMapper
 ) {
     operator fun invoke(travel: Travel): Flow<Resource<Unit>> =
         flow {
             emit(Resource.Loading())
-            localTravelRepository.addTravel(travel)
-            if (networkObserver.isConnected()){
-                remoteTravelRepository.addTravel(travel)
-            }
+            travelRepository.addTravel(travel)
             emit(Resource.Success(Unit))
         }.catch { e ->
             val error = errorMapper.map(e)

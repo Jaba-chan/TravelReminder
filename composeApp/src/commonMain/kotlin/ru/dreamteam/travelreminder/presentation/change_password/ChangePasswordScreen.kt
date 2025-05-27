@@ -1,6 +1,8 @@
 package ru.dreamteam.travelreminder.presentation.change_password
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -10,11 +12,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 
 @Composable
-fun ChangePasswordScreen(viewModel: ChangePasswordViewModel) {
+fun ChangePasswordScreen(
+    viewModel: ChangePasswordViewModel,
+    paddingValues: PaddingValues,
+) {
     val state by viewModel.state.collectAsState()
-    Column {
+    Column (
+        modifier = Modifier
+            .padding(paddingValues)
+    ){
         var emailText by remember { mutableStateOf("") }
         OutlinedTextField(
             value = emailText,

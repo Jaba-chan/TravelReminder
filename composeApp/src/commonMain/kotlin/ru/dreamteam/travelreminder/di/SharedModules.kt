@@ -6,8 +6,12 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import ru.dreamteam.travelreminder.common.ErrorMapper
+import ru.dreamteam.travelreminder.data.local.dao.SyncActionDao
+import ru.dreamteam.travelreminder.data.repository.DefaultTravelRepository
 import ru.dreamteam.travelreminder.data.local.dao.TravelsDao
-import ru.dreamteam.travelreminder.data.local.repository.LocalTravelRepository
+import ru.dreamteam.travelreminder.data.local.repository.LocalTravelRepositoryImpl
+import ru.dreamteam.travelreminder.data.local.repository.RoomSyncQueue
+import ru.dreamteam.travelreminder.data.local.room_db.SyncActionsDatabase
 import ru.dreamteam.travelreminder.data.local.room_db.TravelsDatabase
 import ru.dreamteam.travelreminder.data.local.storage.provideFirebaseApiKey
 import ru.dreamteam.travelreminder.data.remoute.provideHttpClient
@@ -15,13 +19,17 @@ import ru.dreamteam.travelreminder.data.remoute.repository.AuthRepositoryImpl
 import ru.dreamteam.travelreminder.data.remoute.repository.MapRepositoryImpl
 import ru.dreamteam.travelreminder.data.remoute.repository.RemoteTravelRepositoryImpl
 import ru.dreamteam.travelreminder.domen.repository.AuthRepository
+import ru.dreamteam.travelreminder.domen.repository.LocalTravelRepository
 import ru.dreamteam.travelreminder.domen.repository.MapRepository
+import ru.dreamteam.travelreminder.domen.repository.RemoteTravelRepository
+import ru.dreamteam.travelreminder.domen.repository.SyncQueue
 import ru.dreamteam.travelreminder.domen.repository.TravelRepository
 import ru.dreamteam.travelreminder.domen.use_cases.AddTravelUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.ChangePasswordByEmailUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.CheckFirstLaunchUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.DeleteTravelUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.EditTravelUseCase
+import ru.dreamteam.travelreminder.domen.use_cases.FillTableUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.GetNavigationRouteUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.GetNearbyPlacesUseCase
 import ru.dreamteam.travelreminder.domen.use_cases.GetPlaceCoordinatesUseCase
@@ -38,14 +46,19 @@ import ru.dreamteam.travelreminder.presentation.change_password.ChangePasswordVi
 import ru.dreamteam.travelreminder.presentation.sing_in.SingInViewModel
 import ru.dreamteam.travelreminder.presentation.sing_up.SignUpViewModel
 import ru.dreamteam.travelreminder.presentation.travels_list.TravelsViewModel
+import ru.dreamteam.travelreminder.sync.SyncManager
 
 val sharedModule = module {
     single { provideHttpClient(get(), get()) }
     single { provideFirebaseApiKey() }
     single { DefaultErrorMapper() }.bind<ErrorMapper>()
+    single { SyncManager(get(), get()) }
 
     single<TravelsDao> {
         get<TravelsDatabase>().travelsDao()
+    }
+    single<SyncActionDao> {
+        get<SyncActionsDatabase>().syncDao()
     }
     single {
         AuthRepositoryImpl(
@@ -61,50 +74,24 @@ val sharedModule = module {
         )
     }.bind<MapRepository>()
 
-    single(named("local")) { LocalTravelRepository(get()) }.bind<TravelRepository>()
-    single(named("remote")) { RemoteTravelRepositoryImpl(get(), get()) }.bind<TravelRepository>()
+    single { LocalTravelRepositoryImpl(get()) }.bind<LocalTravelRepository>()
+    single { RemoteTravelRepositoryImpl(get(), get()) }.bind<RemoteTravelRepository>()
+    single { RoomSyncQueue(get()) }.bind<SyncQueue>()
+    single { DefaultTravelRepository(get(), get(), get(), get()) }.bind<TravelRepository>()
 
-    single { LogOutUseCase(get()) }
+    single { LogOutUseCase(get(), get()) }
+    single { FillTableUseCase(get()) }
     single { CheckFirstLaunchUseCase(get()) }
     single { SignInByEmailAndPasswordUseCase(get(), get()) }
     single { SignUpByEmailAndPasswordUseCase(get(), get()) }
     single { ChangePasswordByEmailUseCase(get(), get()) }
 
-    single {
-        DeleteTravelUseCase(
-            localTravelRepository = get(named("local")),
-            remoteTravelRepository = get(named("remote")),
-            get(), get()
-        )
-    }
-    single {
-        AddTravelUseCase(
-            localTravelRepository = get(named("local")),
-            remoteTravelRepository = get(named("remote")),
-            get(), get()
-        )
-    }
-    single {
-        GetTravelsUseCase(
-            localTravelRepository = get(named("local")),
-            remoteTravelRepository = get(named("remote")),
-            get(), get()
-        )
-    }
-    single {
-        GetTravelByIdUseCase(
-            localTravelRepository = get(named("local")),
-            remoteTravelRepository = get(named("remote")),
-            get(), get()
-        )
-    }
-    single {
-        EditTravelUseCase(
-            localTravelRepository = get(named("local")),
-            remoteTravelRepository = get(named("remote")),
-            get(), get()
-        )
-    }
+    single { DeleteTravelUseCase(get(), get()) }
+    single { AddTravelUseCase(get(), get()) }
+    single { GetTravelsUseCase(get(), get()) }
+    single { GetTravelByIdUseCase(get(), get()) }
+    single { EditTravelUseCase(get(), get()) }
+    single { EditTravelUseCase(get(), get()) }
 
     single { GetPlaceSuggestionUseCase(get(), get()) }
     single { GetNearbyPlacesUseCase(get(), get()) }
@@ -112,15 +99,16 @@ val sharedModule = module {
     single { GetNavigationRouteUseCase(get(), get()) }
 
 
-    viewModel { MainActivityViewModel(get(), get()) }
-    viewModel { TravelsViewModel(get(), get()) }
-    viewModel { SingInViewModel(get()) }
+    viewModel { MainActivityViewModel(get()) }
+    viewModel { TravelsViewModel(get(), get(), get(), get(), get()) }
+    viewModel { SingInViewModel(get(), get()) }
     viewModel { SignUpViewModel(get(), get()) }
     viewModel { ChangePasswordViewModel(get()) }
     viewModel {
         AddTravelViewModel(
             get(), get(), get(),
             get(), get(), get(),
-            get(), get(), get())
+            get(), get(), get()
+        )
     }
 }

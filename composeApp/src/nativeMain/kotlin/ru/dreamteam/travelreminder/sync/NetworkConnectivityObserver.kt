@@ -1,4 +1,4 @@
-package ru.dreamteam.travelreminder.domen.repository
+package ru.dreamteam.travelreminder.sync
 
 import kotlinx.coroutines.flow.Flow
 

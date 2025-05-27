@@ -2,6 +2,7 @@ package ru.dreamteam.travelreminder.presentation.show_map
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,13 +42,14 @@ import travelreminder.composeapp.generated.resources.search
 @Composable
 fun PlaceSuggestionsScreen(
     viewModel: AddTravelViewModel,
+    paddingValues: PaddingValues,
     isOriginPlace: Boolean,
     returnToMap: () -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-
+            .padding(paddingValues)
     ) {
         OutlinedTextField(
             value = viewModel.placeSuggestionsQuery.value,
