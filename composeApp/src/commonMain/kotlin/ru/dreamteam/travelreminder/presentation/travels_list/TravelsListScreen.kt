@@ -36,8 +36,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import ru.dreamteam.travelreminder.domen.model.travel.TransportationMode
 import ru.dreamteam.travelreminder.domen.model.travel.Travel
+import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
 import ru.dreamteam.travelreminder.presentation.add_travel.beforeRemindFormat
 import ru.dreamteam.travelreminder.presentation.add_travel.format
 import ru.dreamteam.travelreminder.presentation.coomon_ui.EmptyScreen
@@ -63,9 +66,10 @@ import travelreminder.composeapp.generated.resources.transportation_mode_walk
 import travelreminder.composeapp.generated.resources.travel_time_pattern
 
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun TravelsListScreen(
-    viewModel: TravelsViewModel,
+    viewModel: TravelsViewModel = koinViewModel<TravelsViewModel>(),
     paddingValues: PaddingValues,
     onNavigateToEditScreen: (String) -> Unit,
     logOut: () -> Unit
@@ -85,7 +89,10 @@ fun TravelsListScreen(
             iconRes = Res.drawable.ic_logout,
             iconSize = 28.dp,
             text = stringResource(Res.string.my_travels),
-            onIconClicked = logOut,
+            onIconClicked = {
+                viewModel.logOut()
+                logOut()
+            },
         )
         when (state) {
             TravelsViewModel.TravelsState.Empty -> EmptyScreen(text = stringResource(Res.string.empty_now))

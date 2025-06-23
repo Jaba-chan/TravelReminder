@@ -6,15 +6,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import kotlinx.serialization.json.Json
-import ru.dreamteam.travelreminder.data.mapper.toDomain
-import ru.dreamteam.travelreminder.data.remoute.model.travel.TravelDto
-import ru.dreamteam.travelreminder.domen.model.travel.Travel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import ru.dreamteam.travelreminder.presentation.MainActivityViewModel
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun AppNavGraph(
-    viewModel: MainActivityViewModel,
+    viewModel: MainActivityViewModel = koinViewModel<MainActivityViewModel>(),
     navHostController: NavHostController,
     signInScreenContent: @Composable () -> Unit,
     signUpScreenContent: @Composable () -> Unit,
