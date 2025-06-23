@@ -48,11 +48,6 @@ import travelreminder.composeapp.generated.resources.ic_check
 fun App() {
     AppTheme {
         KoinContext {
-            val mainActivityViewModel = koinViewModel<MainActivityViewModel>()
-            val singInViewModel = koinViewModel<SingInViewModel>()
-            val travelsViewModel = koinViewModel<TravelsViewModel>()
-            val signUpViewModel = koinViewModel<SignUpViewModel>()
-            val changePasswordViewModel = koinViewModel<ChangePasswordViewModel>()
             val addTravelViewModel = koinViewModel<AddTravelViewModel>()
 
             val navController = rememberNavController()
@@ -103,11 +98,9 @@ fun App() {
             ) {
                 val innerPadding = WindowInsets.systemBars.asPaddingValues()
                 AppNavGraph(
-                    viewModel = mainActivityViewModel,
                     navHostController = navController,
                     signInScreenContent = {
                         SignInScreen(
-                            viewModel = singInViewModel,
                             paddingValues = innerPadding,
                             onNavigateToTravelsList = {
                                 navState.navigateToTravelListForSignedUser()
@@ -119,20 +112,17 @@ fun App() {
                     },
                     signUpScreenContent = {
                         SignUpScreen(
-                            viewModel = signUpViewModel,
                             paddingValues = innerPadding,
                             onNavigateToSignIn = { navState.navigateToSignIn() }
                         )
                     },
                     travelsListScreenContent = {
                         TravelsListScreen(
-                            viewModel = travelsViewModel,
                             paddingValues = innerPadding,
                             onNavigateToEditScreen = {
                                 navState.navigateTo(Screen.AddTravelScreen.createRoute(it))
                             },
                             logOut = {
-                                travelsViewModel.logOut()
                                 navState.navigateToSignIn()
                             }
                         )
@@ -150,7 +140,6 @@ fun App() {
                     },
                     changePasswordScreenContent = {
                         ChangePasswordScreen(
-                            viewModel = changePasswordViewModel,
                             paddingValues = innerPadding,
                         )
                     },

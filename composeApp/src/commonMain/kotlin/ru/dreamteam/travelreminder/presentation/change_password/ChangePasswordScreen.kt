@@ -13,10 +13,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun ChangePasswordScreen(
-    viewModel: ChangePasswordViewModel,
+    viewModel: ChangePasswordViewModel = koinViewModel<ChangePasswordViewModel>(),
     paddingValues: PaddingValues,
 ) {
     val state by viewModel.state.collectAsState()

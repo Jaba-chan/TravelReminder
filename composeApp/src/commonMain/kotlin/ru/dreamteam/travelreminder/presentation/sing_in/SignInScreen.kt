@@ -28,6 +28,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import ru.dreamteam.travelreminder.presentation.CaughtErrorImpl
 import ru.dreamteam.travelreminder.presentation.coomon_ui.CircularProgressBar
 import ru.dreamteam.travelreminder.presentation.coomon_ui.ErrorText
@@ -46,9 +48,10 @@ import travelreminder.composeapp.generated.resources.ic_t_bank
 import travelreminder.composeapp.generated.resources.sign_in
 import travelreminder.composeapp.generated.resources.t_bank
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun SignInScreen(
-    viewModel: SingInViewModel,
+    viewModel: SingInViewModel = koinViewModel<SingInViewModel>(),
     paddingValues: PaddingValues,
     onNavigateToTravelsList: () -> Unit,
     onNavigateToSignUpScreen: () -> Unit

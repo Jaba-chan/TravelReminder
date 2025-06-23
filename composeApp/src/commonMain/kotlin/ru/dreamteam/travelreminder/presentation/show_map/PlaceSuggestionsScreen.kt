@@ -84,7 +84,9 @@ fun PlaceSuggestionsScreen(
                 }
             },
             colors = OutlinedTextFieldDefaults.colors(
-                unfocusedBorderColor = MaterialTheme.colorScheme.primary
+                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
             )
         )
         SuggestionsList(

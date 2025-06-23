@@ -17,7 +17,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import ru.dreamteam.travelreminder.presentation.CaughtErrorImpl
+import ru.dreamteam.travelreminder.presentation.add_travel.AddTravelViewModel
 import ru.dreamteam.travelreminder.presentation.coomon_ui.CircularProgressBar
 import ru.dreamteam.travelreminder.presentation.coomon_ui.ErrorText
 import ru.dreamteam.travelreminder.presentation.coomon_ui.HeadingTextWithIcon
@@ -33,9 +36,10 @@ import travelreminder.composeapp.generated.resources.enter_password_again
 import travelreminder.composeapp.generated.resources.ic_arrow_back
 import travelreminder.composeapp.generated.resources.sign_up
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun SignUpScreen(
-    viewModel: SignUpViewModel,
+    viewModel: SignUpViewModel = koinViewModel<SignUpViewModel>(),
     paddingValues: PaddingValues,
     onNavigateToSignIn: () -> Unit
 ) {
